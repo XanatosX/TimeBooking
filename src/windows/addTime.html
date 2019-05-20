@@ -3,13 +3,18 @@
   <head>
     <meta charset="UTF-8">
     <title>Time booking</title>
+    <link rel="stylesheet" href="../../assets/css/buttons.css">
     <link rel="stylesheet" href="../../assets/css/addTime.css">
     <script src="../scripts/addTime.js"></script>
   </head>
   <body>
     <div>
-      <input type="time" name="" value=""/>
-      <a id='closeButton'>Close</a>
+      <input id='timestamp' type="time" name=""/>
+    </div>
+    <br/>
+    <div class='pageEnd'>
+      <button class='btn btn-green btn-left' id='saveButton'>Save</button>
+      <button class='btn btn-red btn-right' id='closeButton'>Close</button>
     </div>
   </body>
 </html>

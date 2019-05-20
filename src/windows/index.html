@@ -3,12 +3,30 @@
   <head>
     <meta charset="UTF-8">
     <title>Time booking</title>
+    <link rel="stylesheet" href="../../assets/css/buttons.css">
     <link rel="stylesheet" href="../../assets/css/index.css">
     <script src="../scripts/index.js"></script>
   </head>
   <body>
     <div>
-      <button class="btn btn-blue" id="addStartTime">Add start time</button>
+      <table id='TimeBooking'>
+        <thead>
+          <tr>
+            <th class='th-blue'>
+              Start time
+            </th>
+            <th>
+              End time
+            </th>
+            <th>
+              Time passed
+            </th>
+          </tr>
+        </thead>
+      </table>
+    </div>
+    <div class='pageEnd'>
+      <button class="btn btn-blue btn-left" id="addStartTime">Add start time</button>
     </div>
   </body>
 </html>

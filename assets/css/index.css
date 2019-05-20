@@ -1,17 +1,25 @@
-.btn {
-  float:right;
-  border:none;
-  color:#fff;
-  text-transform:uppercase;
-  padding:10px;
-  margin-right: 30px;
-  cursor:pointer;
+#TimeBooking {
+  border-collapse: collapse;;
+  width: 100%;
 }
 
-.btn-blue {
-  background:#6699ff;
+#TimeBooking td, #TimeBooking th {
+  border: 1px solid #ddd;
+  padding: 8px;
 }
 
-.btn-red {
-  background:#FF0057;
+#TimeBooking tr:nth-child(even) {
+  background-color: #f2f2f2;
+}
+
+#TimeBooking tr:hover {
+  background-color: #ddd;
+}
+
+#TimeBooking th {
+  padding-top: 12px;
+  padding-bottom: 12px;
+  text-align: left;
+  background-color: #6699ff;
+  color: white;
 }

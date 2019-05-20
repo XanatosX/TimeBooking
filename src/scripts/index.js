@@ -1,8 +1,8 @@
 const electron = require('electron');
 const path = require('path');
+const Modal = require('../classes/Modal.js');
+const Window = electron.remote.getCurrentWindow();
 const BrowserWindow = electron.remote.BrowserWindow;
-
-
 
 document.addEventListener('DOMContentLoaded', function () {
   addListner();
@@ -11,16 +11,7 @@ document.addEventListener('DOMContentLoaded', function () {
 function addListner() {
   var addTimeButton = document.getElementById('addStartTime');
   addTimeButton.addEventListener('click', function (event) {
-      const modalPath = path.join('file://', __dirname, '../windows/addTime.html');
-      let win = new BrowserWindow({
-        //frame: false,
-        width: 400,
-        height: 200
-      });
-      win.on('close', function () {
-         win = null;
-       })
-      win.loadURL(modalPath);
-      win.show();
+    var addModal = new Modal(Window, 400, 200, 'addTime');
+    addModal.show();
   })
 };
