@@ -1,4 +1,4 @@
-class TimeSaver {
+class TimeContainer {
 
   constructor(path) {
     this.path = path;
@@ -32,4 +32,4 @@ class TimeSaver {
 
 }
 
-module.exports = TimeSaver;
+module.exports = TimeContainer;

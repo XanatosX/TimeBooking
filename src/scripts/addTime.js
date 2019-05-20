@@ -2,8 +2,6 @@ const electron = require('electron');
 const path = require('path');
 const remote = electron.remote
 
-
-
 document.addEventListener('DOMContentLoaded', function () {
   addListner();
 }, false);
