@@ -1,0 +1,14 @@
+{
+  "name": "timebooking",
+  "version": "0.0.1",
+  "description": "This project will allow you to log you time",
+  "main": "src/scripts/main.js",
+  "scripts": {
+    "start": "electron ."
+  },
+  "author": "Simon Aberle",
+  "license": "MIT",
+  "devDependencies": {
+    "electron-reload": "^1.4.0"
+  }
+}

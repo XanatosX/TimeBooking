@@ -1,0 +1,17 @@
+.btn {
+  float:right;
+  border:none;
+  color:#fff;
+  text-transform:uppercase;
+  padding:10px;
+  margin-right: 30px;
+  cursor:pointer;
+}
+
+.btn-blue {
+  background:#6699ff;
+}
+
+.btn-red {
+  background:#FF0057;
+}
