@@ -35,27 +35,66 @@ function fillTable () {
   var times = container.getTimes()
   var timings = container.getWorkTimes()
 
+  var index = 0;
   for (var i = 0; i < times.length; i += 2) {
     var row = document.createElement('tr')
     var start = times[i]
 
     var cell = document.createElement('td')
-    cell.textContent = start
+    cell.textContent = convertToTime(start)
     row.appendChild(cell)
 
     var end = times[i + 1]
+    var endVal = ''
+    if (end !== undefined) {
+      endVal = convertToTime(end)
+    }
 
     cell = document.createElement('td')
-    cell.textContent = end
+    cell.textContent = endVal
     row.appendChild(cell)
 
     cell = document.createElement('td')
     cell.textContent = ''
     row.appendChild(cell)
 
+    var timingVal = ''
+    if (timings[index] !== undefined) {
+      timingVal = getDifference(timings[index])
+    }
     cell = document.createElement('td')
-    cell.textContent = timings[i]
+    cell.textContent = timingVal
     row.appendChild(cell)
     tableBody.appendChild(row)
+    index++
   }
+
+  var endRow = document.createElement('tr')
+  var endCell = document.createElement('td')
+  endCell.setAttribute('colspan', '3')
+  endCell.textContent = ''
+  endRow.appendChild(endCell)
+
+  var timeComplete = document.createElement('td')
+  timeComplete.textContent = getDifference(container.getCompleteWorkTime())
+  endRow.appendChild(timeComplete)
+
+  tableBody.appendChild(endRow)
+}
+
+function convertToTime (value) {
+  var date = new Date(value)
+  var time = String(date.getHours()).padStart(2, '0') + ':'
+  time += String(date.getMinutes()).padStart(2, '0')
+  return time
+}
+
+function getDifference (value) {
+  var minutes = Math.floor((value / (1000 * 60)) % 60)
+  var hours = Math.floor((value / (1000 * 60 * 60)) % 24)
+
+  hours = (hours < 10) ? '0' + hours : hours
+  minutes = (minutes < 10) ? '0' + minutes : minutes
+
+  return hours + ' h ' + minutes + ' m'
 }

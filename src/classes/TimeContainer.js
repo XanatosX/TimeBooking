@@ -56,7 +56,6 @@ class TimeContainer {
     for (var i = 0; i < this.startTimes.length; i++) {
       var startTime = this.startTimes[i]
       var endTime = this.endTimes[i]
-      console.log(startTime)
       if (endTime === undefined) {
         break
       }
