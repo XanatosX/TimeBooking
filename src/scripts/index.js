@@ -57,6 +57,4 @@ function fillTable () {
     row.appendChild(cell)
     tableBody.appendChild(row)
   }
-
-
 }
