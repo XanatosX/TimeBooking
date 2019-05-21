@@ -1,35 +1,47 @@
 class TimeContainer {
-
-  constructor(path) {
-    this.path = path;
-    this.startTimes = [];
-    this.endTimes = [];
+  constructor () {
+    this.startTimes = []
+    this.endTimes = []
   }
 
-  addStartTime(datetime) {
-    this.startTimes.push(datetime);
+  addTime (datetime) {
+    if (this.startTimes.lenght > this.endTimes.lenght) {
+      this.addEndTime(datetime)
+      return
+    }
+    this.addStartTime(datetime)
   }
 
-  addEndTime(datetime) {
-    this.endTimes.push(datetime);
+  addStartTime (datetime) {
+    this.startTimes.push(datetime)
   }
 
-  getWorkTime() {
+  addEndTime (datetime) {
+    this.endTimes.push(datetime)
+  }
+
+  getWritable () {
+    var json = {}
+    json['startTimes'] = this.startTimes
+    json['endTimes'] = this.endTimes
+    return JSON.stringify(json)
+  }
+
+  getWorkTime () {
     if (this.endTimes.lenght !== this.startTimes.lenght) {
-      return 0;
+      return 0
     }
 
-    var passed = 0;
+    var passed = 0
     for (var i = 0; i < this.startTimes.length; i++) {
-      var startTime = this.startTimes[i];
-      var endTime = this.endTimes[i];
+      var startTime = this.startTimes[i]
+      var endTime = this.endTimes[i]
 
-      passed += endTime - startTime;
+      passed += endTime - startTime
     }
 
-    return passed;
+    return passed
   }
-
 }
 
-module.exports = TimeContainer;
+module.exports = TimeContainer
