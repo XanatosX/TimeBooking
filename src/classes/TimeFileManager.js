@@ -1,4 +1,5 @@
 var fs = require('fs')
+const TimeContainer = require('./TimeContainer.js')
 
 class TimeFileManager {
   constructor (path) {
@@ -13,9 +14,24 @@ class TimeFileManager {
   }
 
   getFiles () {
+    var returnFiles = fs.readdirSync(this.path)
+    return returnFiles
   }
 
-  loadFile (path) {
+  loadTodayFile () {
+    return this.loadFile(this.todayFile)
+  }
+
+  loadFile (name) {
+    var path = this.path + name + '.json'
+    if (!fs.existsSync(path)) {
+      return null
+    }
+    var content = fs.readFileSync(path)
+    var json = JSON.parse(content)
+    var container = new TimeContainer()
+    container.fromJson(json)
+    return container
   }
 
   saveFile (json) {

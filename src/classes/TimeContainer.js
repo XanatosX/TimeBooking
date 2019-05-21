@@ -5,7 +5,7 @@ class TimeContainer {
   }
 
   addTime (datetime) {
-    if (this.startTimes.lenght > this.endTimes.lenght) {
+    if (this.startTimes.length > this.endTimes.length) {
       this.addEndTime(datetime)
       return
     }
@@ -13,10 +13,25 @@ class TimeContainer {
   }
 
   addStartTime (datetime) {
+    if (datetime === '') {
+      return
+    }
     this.startTimes.push(datetime)
   }
 
+  getTimes () {
+    var times = []
+    for (var i = 0; i < this.startTimes.length; i++) {
+      times.push(this.startTimes[i])
+      times.push(this.endTimes[i])
+    }
+    return times
+  }
+
   addEndTime (datetime) {
+    if (datetime === '') {
+      return
+    }
     this.endTimes.push(datetime)
   }
 
@@ -25,6 +40,15 @@ class TimeContainer {
     json['startTimes'] = this.startTimes
     json['endTimes'] = this.endTimes
     return JSON.stringify(json)
+  }
+
+  fromJson (json) {
+    json['startTimes'].forEach(function (datetime) {
+      this.addStartTime(datetime)
+    }.bind(this))
+    json['endTimes'].forEach(function (datetime) {
+      this.addEndTime(datetime)
+    }.bind(this))
   }
 
   getWorkTime () {

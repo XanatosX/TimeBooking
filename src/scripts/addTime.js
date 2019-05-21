@@ -12,7 +12,7 @@ function setTime () {
   var timeInput = document.getElementById('timestamp')
 
   var today = new Date()
-  var time = today.getHours() + ':' + today.getMinutes()
+  var time = String(today.getHours()).padStart(2, '0') + ':' + String(today.getMinutes()).padStart(2, '0')
   timeInput.value = time
 }
 
@@ -26,10 +26,15 @@ function addListner () {
   saveBtn.addEventListener('click', function (event) {
     var timeInput = document.getElementById('timestamp')
     var folder = remote.app.getPath('userData')
-    var container = new TimeContainer()
     var manager = new TimeFileManager(folder)
+    var container = manager.loadTodayFile()
+    if (container === null) {
+      container = new TimeContainer()
+    }
     container.addTime(timeInput.value)
     manager.saveFile(container.getWritable())
-    console.log(container)
+
+    // var window = remote.getCurrentWindow()
+    // window.close()
   })
 };

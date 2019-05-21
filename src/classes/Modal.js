@@ -3,7 +3,8 @@ const path = require('path')
 const BrowserWindow = electron.remote.BrowserWindow
 
 class Modal {
-  constructor (parent, width, height, window) {
+  constructor (parent, width, height, window, closeFunction) {
+    this.closeCallback = closeFunction
     this.parent = parent
     this.width = width
     this.height = height
@@ -29,6 +30,9 @@ class Modal {
     })
     win.on('close', function () {
       win = null
+      if (this.closeCallback !== undefined) {
+        this.closeCallback()
+      }
     })
     win.loadURL(modalPath)
     win.once('ready-to-show', () => {
