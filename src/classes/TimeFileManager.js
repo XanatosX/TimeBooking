@@ -2,15 +2,14 @@ var fs = require('fs')
 const TimeContainer = require('./TimeContainer.js')
 
 class TimeFileManager {
-  constructor (path) {
+  constructor (path, datetime) {
     this.path = path + '/bookings/'
     if (!fs.existsSync(this.path)) {
       fs.mkdirSync(this.path)
     }
-    var today = new Date()
-    var dd = String(today.getDate()).padStart(2, '0')
-    var mm = String(today.getMonth() + 1).padStart(2, '0')
-    this.todayFile = today.getFullYear() + mm + dd
+    var dd = String(datetime.getDate()).padStart(2, '0')
+    var mm = String(datetime.getMonth() + 1).padStart(2, '0')
+    this.todayFile = datetime.getFullYear() + mm + dd
   }
 
   getFiles () {

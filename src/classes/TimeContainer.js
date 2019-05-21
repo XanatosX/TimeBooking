@@ -1,7 +1,10 @@
+const TimeDataSet = require('./TimeDataSet.js')
+
 class TimeContainer {
   constructor () {
     this.startTimes = []
     this.endTimes = []
+    this.times = []
   }
 
   addTime (datetime) {
@@ -12,78 +15,47 @@ class TimeContainer {
     this.addStartTime(datetime)
   }
 
-  addStartTime (datetime) {
-    if (datetime === '') {
-      return
-    }
-    this.startTimes.push(datetime.getTime())
+  addTime (data) {
+    this.times.push(data)
   }
 
   getTimes () {
-    var times = []
-    for (var i = 0; i < this.startTimes.length; i++) {
-      times.push(this.startTimes[i])
-      times.push(this.endTimes[i])
-    }
-    return times
-  }
-
-  addEndTime (datetime) {
-    if (datetime === '') {
-      return
-    }
-    this.endTimes.push(datetime.getTime())
+    return this.times
   }
 
   getWritable () {
     var json = {}
-    json['startTimes'] = this.startTimes
-    json['endTimes'] = this.endTimes
+    this.times.forEach(function (item) {
+      json['timings'] = item
+    })
     return JSON.stringify(json)
   }
 
   fromJson (json) {
-    json['startTimes'].forEach(function (datetime) {
-      this.startTimes.push(datetime)
-    }.bind(this))
-    json['endTimes'].forEach(function (datetime) {
-      this.endTimes.push(datetime)
-    }.bind(this))
-  }
-
-  getWorkTimes () {
-    var timings = []
-    for (var i = 0; i < this.startTimes.length; i++) {
-      var startTime = this.startTimes[i]
-      var endTime = this.endTimes[i]
-      if (endTime === undefined) {
-        break
-      }
-
-      var diff = endTime - startTime
-      timings.push(diff)
-    }
-
-    return timings
   }
 
   getCompleteWorkTime () {
-    if (this.endTimes.lenght !== this.startTimes.lenght) {
+    if (this.times.lenght === 0) {
       return 0
     }
 
     var passed = 0
-    for (var i = 0; i < this.startTimes.length; i++) {
-      var startTime = this.startTimes[i]
-      var endTime = this.endTimes[i]
+    this.times.forEach(function (item) {
+      passed += item.getWorkTime()
+    })
 
-      passed += endTime - startTime
-    }
-
-    if (isNaN(passed)) {
-      passed = undefined
-    }
     return passed
+  }
+
+  fromJson (data) {
+    if (data.timings === undefined) {
+      return
+    }
+
+    data.timings.forEach(function (item) {
+      var timestamp = new TimeDataSet();
+      timestamp.fromJson(item)
+    })
   }
 }
 
