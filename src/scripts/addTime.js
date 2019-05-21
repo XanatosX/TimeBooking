@@ -38,8 +38,8 @@ function addListner () {
     var date = String(today.getFullYear()) + '-'
     date += String(today.getMonth() + 1).padStart(2, '0') + '-'
     date += String(today.getDate()).padStart(2, '0')
-
-    container.addTime(new Date(date + time))
+    var timeStamp = new Date(date + time)
+    container.addTime(timeStamp)
     manager.saveFile(container.getWritable())
 
     var window = remote.getCurrentWindow()

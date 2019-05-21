@@ -44,10 +44,10 @@ class TimeContainer {
 
   fromJson (json) {
     json['startTimes'].forEach(function (datetime) {
-      this.addStartTime(datetime)
+      this.startTimes.push(datetime)
     }.bind(this))
     json['endTimes'].forEach(function (datetime) {
-      this.addEndTime(datetime)
+      this.endTimes.push(datetime)
     }.bind(this))
   }
 
