@@ -28,9 +28,10 @@ class TimeFileManager {
     }
     var content = fs.readFileSync(path)
     var json = JSON.parse(content)
-    var container = new TimeContainer()
-    container.fromJson(json)
-    return container
+
+    //var container = new TimeContainer()
+    //container.fromJson(json)
+    // return container
   }
 
   saveFile (json) {

@@ -13,7 +13,7 @@ class TimeDataSet {
       }
 
     setStartTime (datetime) {
-        this.startTime = datetime.getTime()
+       this.startTime = datetime.getTime()
     }
 
     getStartTime () {

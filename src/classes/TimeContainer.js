@@ -26,7 +26,7 @@ class TimeContainer {
   getWritable () {
     var json = {}
     this.times.forEach(function (item) {
-      json['timings'] = item
+      json['timings'] = item.getSaveableDataSet()
     })
     return JSON.stringify(json)
   }

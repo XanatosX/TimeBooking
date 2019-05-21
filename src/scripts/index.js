@@ -3,9 +3,20 @@ const remote = electron.remote
 const Modal = require('../classes/Modal.js')
 const Window = electron.remote.getCurrentWindow()
 const TimeFileManager = require('../classes/TimeFileManager.js')
-// const TimeContainer = require('../classes/TimeContainer.js')
+const TimeDataSet = require('../classes/TimeDataSet.js')
+const TimeContainer = require('../classes/TimeContainer.js')
 
 var time = new Date()
+
+var dataSet = new TimeDataSet()
+var time = new Date()
+dataSet.setStartTime(time)
+dataSet.setEndTime(time)
+var container = new TimeContainer()
+container.addTime(dataSet)
+
+var writer = new TimeFileManager(remote.app.getPath('userData'), new Date())
+writer.saveFile(container.getWritable())
 
 document.addEventListener('DOMContentLoaded', function () {
   addListner()
@@ -33,7 +44,7 @@ function fillTable () {
   if (container === null) {
     return
   }
-
+  return
   var times = container.getTimes()
   var timings = container.getWorkTimes()
 
