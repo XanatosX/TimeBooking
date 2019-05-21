@@ -9,10 +9,15 @@ class Modal {
     this.width = width
     this.height = height
     this.window = window
+    this.debug = false
     this.x = this.parent.getPosition()[0]
     this.x += this.parent.getSize()[0] / 2 - this.width / 2
     this.y = this.parent.getPosition()[1]
     this.y += this.parent.getSize()[1] / 2 - this.height / 2
+  }
+
+  isDebug () {
+    this.debug = true
   }
 
   show () {
@@ -24,18 +29,25 @@ class Modal {
       center: false,
       x: this.x,
       y: this.y,
-      // frame: false,
+      frame: this.debug,
       width: this.width,
-      height: this.height
+      height: this.height,
+      webPreferences: {
+        nodeIntegration: true
+      }
     })
     win.on('close', function () {
       win = null
       if (this.closeCallback !== undefined) {
         this.closeCallback()
       }
-    })
+    }.bind(this))
     win.loadURL(modalPath)
+
     win.once('ready-to-show', () => {
+      if (this.debug) {
+        win.webContents.openDevTools()
+      }
       win.show()
     })
   }

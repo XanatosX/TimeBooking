@@ -14,9 +14,9 @@ function addListner () {
   var addTimeButton = document.getElementById('addStartTime')
   addTimeButton.addEventListener('click', function (event) {
     var addModal = new Modal(Window, 400, 200, 'addTime', function () {
-      console.log('reload')
       Window.reload()
     })
+    addModal.isDebug()
     addModal.show()
   })
 };
