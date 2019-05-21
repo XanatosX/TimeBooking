@@ -76,7 +76,13 @@ function fillTable () {
   endRow.appendChild(endCell)
 
   var timeComplete = document.createElement('td')
-  timeComplete.textContent = getDifference(container.getCompleteWorkTime())
+  var workTimeToday = container.getCompleteWorkTime()
+  var workTimeTodayString = ''
+  console.log(workTimeToday)
+  if (workTimeToday !== undefined) {
+      workTimeTodayString = getDifference(workTimeToday)
+  }
+  timeComplete.textContent = workTimeTodayString
   endRow.appendChild(timeComplete)
 
   tableBody.appendChild(endRow)

@@ -80,6 +80,9 @@ class TimeContainer {
       passed += endTime - startTime
     }
 
+    if (isNaN(passed)) {
+      passed = undefined
+    }
     return passed
   }
 }
