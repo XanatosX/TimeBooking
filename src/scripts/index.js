@@ -72,7 +72,7 @@ function fillTable () {
   var endRow = document.createElement('tr')
   var endCell = document.createElement('td')
   endCell.setAttribute('colspan', '3')
-  endCell.textContent = ''
+  endCell.textContent = 'Total worktime:'
   endRow.appendChild(endCell)
 
   var timeComplete = document.createElement('td')
