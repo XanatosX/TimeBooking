@@ -31,10 +31,18 @@ function addListner () {
     if (container === null) {
       container = new TimeContainer()
     }
-    container.addTime(timeInput.value)
+
+    var time = 'T' + timeInput.value + ':00'
+    var today = new Date()
+
+    var date = String(today.getFullYear()) + '-'
+    date += String(today.getMonth() + 1).padStart(2, '0') + '-'
+    date += String(today.getDate()).padStart(2, '0')
+
+    container.addTime(new Date(date + time))
     manager.saveFile(container.getWritable())
 
-    // var window = remote.getCurrentWindow()
-    // window.close()
+    var window = remote.getCurrentWindow()
+    window.close()
   })
 };

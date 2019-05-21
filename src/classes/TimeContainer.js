@@ -16,7 +16,7 @@ class TimeContainer {
     if (datetime === '') {
       return
     }
-    this.startTimes.push(datetime)
+    this.startTimes.push(datetime.getTime())
   }
 
   getTimes () {
@@ -32,7 +32,7 @@ class TimeContainer {
     if (datetime === '') {
       return
     }
-    this.endTimes.push(datetime)
+    this.endTimes.push(datetime.getTime())
   }
 
   getWritable () {
