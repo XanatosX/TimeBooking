@@ -8,7 +8,7 @@ class TimeDataSet {
         var date = new Date(value)
         var time = String(date.getHours()).padStart(2, '0') + ':'
         time += String(date.getMinutes()).padStart(2, '0')
-        
+
         return time
       }
 
@@ -61,7 +61,7 @@ class TimeDataSet {
         return data
     }
 
-    fillFromDataSet (data) {
+    fromJson (data) {
         if (data.startTime === undefined || data.endTime === undefined) {
             return
         }
