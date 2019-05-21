@@ -51,7 +51,24 @@ class TimeContainer {
     }.bind(this))
   }
 
-  getWorkTime () {
+  getWorkTimes () {
+    var timings = []
+    for (var i = 0; i < this.startTimes.length; i++) {
+      var startTime = this.startTimes[i]
+      var endTime = this.endTimes[i]
+      console.log(startTime)
+      if (endTime === undefined) {
+        break
+      }
+
+      var diff = endTime - startTime
+      timings.push(diff)
+    }
+
+    return timings
+  }
+
+  getCompleteWorkTime () {
     if (this.endTimes.lenght !== this.startTimes.lenght) {
       return 0
     }

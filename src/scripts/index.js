@@ -33,6 +33,7 @@ function fillTable () {
   }
 
   var times = container.getTimes()
+  var timings = container.getWorkTimes()
 
   for (var i = 0; i < times.length; i += 2) {
     var row = document.createElement('tr')
@@ -53,7 +54,7 @@ function fillTable () {
     row.appendChild(cell)
 
     cell = document.createElement('td')
-    cell.textContent = ''
+    cell.textContent = timings[i]
     row.appendChild(cell)
     tableBody.appendChild(row)
   }
