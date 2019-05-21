@@ -5,6 +5,8 @@ const Window = electron.remote.getCurrentWindow()
 const TimeFileManager = require('../classes/TimeFileManager.js')
 // const TimeContainer = require('../classes/TimeContainer.js')
 
+var time = new Date()
+
 document.addEventListener('DOMContentLoaded', function () {
   addListner()
   fillTable()
@@ -25,7 +27,7 @@ function fillTable () {
   var tableBody = document.getElementById('tableBody')
 
   var folder = remote.app.getPath('userData')
-  var manager = new TimeFileManager(folder)
+  var manager = new TimeFileManager(folder, time)
   var container = manager.loadTodayFile()
 
   if (container === null) {
