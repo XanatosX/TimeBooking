@@ -35,7 +35,7 @@ function fillTable () {
   var times = container.getTimes()
   var timings = container.getWorkTimes()
 
-  var index = 0;
+  var index = 0
   for (var i = 0; i < times.length; i += 2) {
     var row = document.createElement('tr')
     var start = times[i]
