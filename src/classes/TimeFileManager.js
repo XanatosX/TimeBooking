@@ -38,7 +38,7 @@ class TimeFileManager {
   }
 
   saveFile (json) {
-    fs.writeFile(this.path + this.todayFile + '.json', json, 'utf8', (err) => {
+    fs.writeFileSync(this.path + this.todayFile + '.json', json, 'utf8', (err) => {
       if (err) {
         return false
       }
