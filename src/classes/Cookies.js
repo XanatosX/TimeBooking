@@ -24,11 +24,16 @@ class Cookies {
       name: name
     }
     this.session.cookies.get(value, function (error, cookies) {
-      if (error || cookies[0] === undefined) {
+      if (error || cookies[0] === undefined || cookies[0].value === undefined) {
         console.log(error)
+        return
       }
       callback(null, cookies[0].value)
     })
+  }
+
+  clearCookies () {
+    this.session.clearStorageData({ storages: 'cookies' })
   }
 }
 

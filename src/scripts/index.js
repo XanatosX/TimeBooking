@@ -14,6 +14,7 @@ document.addEventListener('DOMContentLoaded', function () {
       return
     }
     time = new Date(parseInt(data))
+    cookiesManager.clearCookies()
     fillTable()
   })
   addListner()
