@@ -6,18 +6,39 @@ const TimeDataSet = require('../classes/TimeDataSet.js')
 const remote = electron.remote
 
 var today = null
+var id = null
+var edit = false
 
 ipcRenderer.on('time', (event, message) => {
   today = new Date(message)
   var timeInput = document.getElementById('start-timestamp')
-  setStartTime(timeInput, today)
+  setTime(timeInput, today)
+})
+
+ipcRenderer.on('id', (event, message) => {
+  id = message
+})
+
+ipcRenderer.on('edit', (event, message) => {
+  edit = true
+  var startInput = document.getElementById('start-timestamp')
+  var endInput = document.getElementById('end-timestamp')
+  var description = document.getElementById('description')
+
+  var startTime = new Date(message.startTime)
+  today = startTime
+  var endTime = new Date(message.endTime)
+
+  setTime(startInput, startTime)
+  setTime(endInput, endTime)
+  description.value = message.description
 })
 
 document.addEventListener('DOMContentLoaded', function () {
   addListner()
 }, false)
 
-function setStartTime (element, timeInput) {
+function setTime (element, timeInput) {
   var time = String(timeInput.getHours()).padStart(2, '0') + ':' + String(timeInput.getMinutes()).padStart(2, '0')
   element.value = time
 }
@@ -63,6 +84,14 @@ function addListner () {
     }
     newDataSet.setDescription(description.value)
 
+    if (edit) {
+      console.log(id)
+      if (id === null) {
+        console.log('Missing id')
+        return
+      }
+      container.deleteDataSet(id)
+    }
     container.addTime(newDataSet)
     manager.saveFile(container.getWritable())
 

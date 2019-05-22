@@ -57,6 +57,28 @@ function fillTable () {
     row.appendChild(cell)
 
     var actionCell = document.createElement('td')
+
+    var editButton = document.createElement('button')
+    editButton.setAttribute('class', 'btn btn-orange')
+    editButton.setAttribute('data-id', index)
+    editButton.addEventListener('click', function () {
+      var id = this.getAttribute('data-id')
+      var addModal = new Modal(Window, 400, 200, 'addTime', function () {
+        Window.reload()
+      })
+      addModal.isDebug()
+      addModal.show()
+      var win = addModal.getWindow()
+      var container = loadTimings(time)
+      var times = container.getTimes()
+      win.webContents.on('did-finish-load', () => {
+        win.webContents.send('id', id)
+        win.webContents.send('edit', times[id])
+      })
+    })
+    editButton.textContent = 'Edit'
+    actionCell.appendChild(editButton)
+
     var delButton = document.createElement('button')
     delButton.setAttribute('class', 'btn btn-red')
     delButton.setAttribute('data-id', index)
@@ -65,8 +87,8 @@ function fillTable () {
       console.log(id)
       deleteTiming(id)
     })
-    actionCell.appendChild(delButton)
     delButton.textContent = 'Delete'
+    actionCell.appendChild(delButton)
 
     row.appendChild(actionCell)
 
