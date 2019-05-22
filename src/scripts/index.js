@@ -54,7 +54,7 @@ function addListner () {
 function fillTable () {
   var tableBody = document.getElementById('tableBody')
   var date = document.getElementById('currentDate')
-  date.innerHTML = String(time.getMonth()).padStart(2, '0')
+  date.innerHTML = String(time.getMonth() + 1).padStart(2, '0')
   date.innerHTML += '/'
   date.innerHTML += String(time.getDate()).padStart(2, '0')
   date.innerHTML += '/'
@@ -95,6 +95,8 @@ function fillTable () {
     editButton.addEventListener('click', function () {
       var id = this.getAttribute('data-id')
       var addModal = new Modal(Window, 400, 200, 'addTime', function () {
+        var timeStr = String(time.getTime())
+        cookiesManager.setCookie('time', timeStr)
         Window.reload()
       })
       addModal.isDebug()
@@ -115,7 +117,6 @@ function fillTable () {
     delButton.setAttribute('data-id', index)
     delButton.addEventListener('click', function (button) {
       var id = this.getAttribute('data-id')
-      console.log(id)
       deleteTiming(id)
     })
     delButton.textContent = 'Delete'
@@ -156,6 +157,8 @@ function deleteTiming (id) {
   var writer = new TimeFileManager(remote.app.getPath('userData'), time)
   writer.saveFile(container.getWritable())
 
+  var timeStr = String(time.getTime())
+  cookiesManager.setCookie('time', timeStr)
   Window.reload()
 }
 
