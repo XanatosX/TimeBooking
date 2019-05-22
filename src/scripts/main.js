@@ -1,11 +1,16 @@
 const path = require('path')
 const url = require('url')
+const electron = require('electron')
+const app = electron.app
+const BrowserWindow = electron.BrowserWindow
+const Menu = electron.Menu
+
 require('electron-reload')(__dirname)
 
-const { app, BrowserWindow } = require('electron')
+var win
 
 function createWindow () {
-  let win = new BrowserWindow({
+  win = new BrowserWindow({
     width: 800,
     height: 600,
     webPreferences: {
@@ -23,6 +28,58 @@ function createWindow () {
 
   win.on('closed', () => {
     win = null
+  })
+
+  createApplicationMenu()
+}
+
+function createApplicationMenu () {
+  var menu = Menu.buildFromTemplate([
+    {
+      label: 'Menu',
+      submenu: [
+        { label: 'Settings',
+          click () {
+            openSettingsMenu()
+          }
+        },
+        { type: 'separator' },
+        { label: 'Exit',
+          click () {
+            app.quit()
+          }
+        }
+      ]
+    }
+  ])
+  Menu.setApplicationMenu(menu)
+}
+
+function openSettingsMenu () {
+  var modalPath = path.join('file://', __dirname, '../windows/settings.html')
+  var width = win.getSize()[0] - 50
+  var height = win.getSize()[1] - 50
+  var x = win.getPosition()[0]
+  x += win.getSize()[0] / 2 - width / 2
+  var y = win.getPosition()[1]
+  y += win.getSize()[1] / 2 - height / 2
+  var settingsWin = new BrowserWindow({
+    parent: win,
+    modal: true,
+    show: false,
+    center: false,
+    x: x,
+    y: y,
+    frame: true,
+    width: width,
+    height: height,
+    webPreferences: {
+      nodeIntegration: true
+    }
+  })
+  settingsWin.loadURL(modalPath)
+  settingsWin.once('ready-to-show', () => {
+    settingsWin.show()
   })
 }
 

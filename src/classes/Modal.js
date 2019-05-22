@@ -1,5 +1,5 @@
-const electron = require('electron')
 const path = require('path')
+const electron = require('electron')
 const BrowserWindow = electron.remote.BrowserWindow
 
 class Modal {
@@ -23,7 +23,7 @@ class Modal {
   }
 
   show () {
-    var modalPath = path.join('file://', __dirname, '../windows/addTime.html')
+    var modalPath = path.join('file://', __dirname, '../windows/' + this.window + '.html')
     this.win = new BrowserWindow({
       parent: this.parent,
       modal: true,
