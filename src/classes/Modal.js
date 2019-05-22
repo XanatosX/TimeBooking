@@ -14,6 +14,8 @@ class Modal {
     this.x += this.parent.getSize()[0] / 2 - this.width / 2
     this.y = this.parent.getPosition()[1]
     this.y += this.parent.getSize()[1] / 2 - this.height / 2
+
+    this.win = null
   }
 
   isDebug () {
@@ -22,7 +24,7 @@ class Modal {
 
   show () {
     var modalPath = path.join('file://', __dirname, '../windows/addTime.html')
-    let win = new BrowserWindow({
+    this.win = new BrowserWindow({
       parent: this.parent,
       modal: true,
       show: false,
@@ -36,20 +38,24 @@ class Modal {
         nodeIntegration: true
       }
     })
-    win.on('close', function () {
-      win = null
+    this.win.on('close', function () {
+      this.win = null
       if (this.closeCallback !== undefined) {
         this.closeCallback()
       }
     }.bind(this))
-    win.loadURL(modalPath)
+    this.win.loadURL(modalPath)
 
-    win.once('ready-to-show', () => {
+    this.win.once('ready-to-show', () => {
       if (this.debug) {
-        win.webContents.openDevTools()
+        this.win.webContents.openDevTools()
       }
-      win.show()
+      this.win.show()
     })
+  }
+
+  getWindow () {
+    return this.win
   }
 }
 

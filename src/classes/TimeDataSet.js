@@ -5,7 +5,7 @@ class TimeDataSet {
     this.description = ''
   }
 
-  addDescription (data) {
+  setDescription (data) {
     this.description = data
   }
 
@@ -14,6 +14,9 @@ class TimeDataSet {
   }
 
   convertToTime (value) {
+    if (value === null) {
+      return ''
+    }
     var date = new Date(value)
     var time = String(date.getHours()).padStart(2, '0') + ':'
     time += String(date.getMinutes()).padStart(2, '0')

@@ -1,19 +1,25 @@
 const electron = require('electron')
+const ipcRenderer = electron.ipcRenderer
 const TimeFileManager = require('../classes/TimeFileManager.js')
 const TimeContainer = require('../classes/TimeContainer.js')
+const TimeDataSet = require('../classes/TimeDataSet.js')
 const remote = electron.remote
 
+var today = null
+
+ipcRenderer.on('time', (event, message) => {
+  today = new Date(message)
+  var timeInput = document.getElementById('start-timestamp')
+  setStartTime(timeInput, today)
+})
+
 document.addEventListener('DOMContentLoaded', function () {
-  setTime()
   addListner()
 }, false)
 
-function setTime () {
-  var timeInput = document.getElementById('timestamp')
-
-  var today = new Date()
-  var time = String(today.getHours()).padStart(2, '0') + ':' + String(today.getMinutes()).padStart(2, '0')
-  timeInput.value = time
+function setStartTime (element, timeInput) {
+  var time = String(timeInput.getHours()).padStart(2, '0') + ':' + String(timeInput.getMinutes()).padStart(2, '0')
+  element.value = time
 }
 
 function addListner () {
@@ -24,22 +30,40 @@ function addListner () {
     window.close()
   })
   saveBtn.addEventListener('click', function (event) {
-    var timeInput = document.getElementById('timestamp')
+    var timeStart = document.getElementById('start-timestamp')
+    var timeEnd = document.getElementById('end-timestamp')
+    var description = document.getElementById('description')
     var folder = remote.app.getPath('userData')
-    var manager = new TimeFileManager(folder)
+    var manager = new TimeFileManager(folder, today)
     var container = manager.loadTodayFile()
     if (container === null) {
       container = new TimeContainer()
     }
 
-    var time = 'T' + timeInput.value + ':00'
-    var today = new Date()
+    var newDataSet = new TimeDataSet()
+
+    if (timeStart.value === undefined) {
+      return
+    }
+
+    var endTime = null
+    var startTime = 'T' + timeStart.value + ':00'
+    if (timeEnd.value !== undefined) {
+      endTime = 'T' + timeEnd.value + ':00'
+    }
 
     var date = String(today.getFullYear()) + '-'
     date += String(today.getMonth() + 1).padStart(2, '0') + '-'
     date += String(today.getDate()).padStart(2, '0')
-    var timeStamp = new Date(date + time)
-    container.addTime(timeStamp)
+    var startStamp = new Date(date + startTime)
+    var endStamp = new Date(date + endTime)
+    newDataSet.setStartTime(startStamp)
+    if (endStamp !== null) {
+      newDataSet.setEndTime(endStamp)
+    }
+    newDataSet.setDescription(description.value)
+
+    container.addTime(newDataSet)
     manager.saveFile(container.getWritable())
 
     var window = remote.getCurrentWindow()

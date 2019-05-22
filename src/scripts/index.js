@@ -22,6 +22,11 @@ function addListner () {
     })
     addModal.isDebug()
     addModal.show()
+    var win = addModal.getWindow()
+
+    win.webContents.on('did-finish-load', () => {
+      win.webContents.send('time', time.getTime())
+    })
   })
 };
 
