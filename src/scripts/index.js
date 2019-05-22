@@ -16,7 +16,7 @@ var container = new TimeContainer()
 container.addTime(dataSet)
 
 var writer = new TimeFileManager(remote.app.getPath('userData'), new Date())
-writer.saveFile(container.getWritable())
+// writer.saveFile(container.getWritable())
 
 document.addEventListener('DOMContentLoaded', function () {
   addListner()
@@ -44,43 +44,28 @@ function fillTable () {
   if (container === null) {
     return
   }
-  return
   var times = container.getTimes()
-  var timings = container.getWorkTimes()
 
-  var index = 0
-  for (var i = 0; i < times.length; i += 2) {
+  times.forEach(function (item) {
     var row = document.createElement('tr')
-    var start = times[i]
-
     var cell = document.createElement('td')
-    cell.textContent = convertToTime(start)
+    cell.textContent = item.getStartTime()
     row.appendChild(cell)
 
-    var end = times[i + 1]
-    var endVal = ''
-    if (end !== undefined) {
-      endVal = convertToTime(end)
-    }
-
     cell = document.createElement('td')
-    cell.textContent = endVal
+    cell.textContent = item.getEndTime()
     row.appendChild(cell)
 
     cell = document.createElement('td')
     cell.textContent = ''
     row.appendChild(cell)
 
-    var timingVal = ''
-    if (timings[index] !== undefined) {
-      timingVal = getDifference(timings[index])
-    }
     cell = document.createElement('td')
-    cell.textContent = timingVal
+    cell.textContent = item.getFormatedTime()
     row.appendChild(cell)
+
     tableBody.appendChild(row)
-    index++
-  }
+  })
 
   var endRow = document.createElement('tr')
   var endCell = document.createElement('td')
@@ -93,7 +78,7 @@ function fillTable () {
   var workTimeTodayString = ''
   console.log(workTimeToday)
   if (workTimeToday !== undefined) {
-      workTimeTodayString = getDifference(workTimeToday)
+    workTimeTodayString = getDifference(workTimeToday)
   }
   timeComplete.textContent = workTimeTodayString
   endRow.appendChild(timeComplete)

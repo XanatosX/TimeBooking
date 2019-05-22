@@ -26,12 +26,15 @@ class TimeFileManager {
     if (!fs.existsSync(path)) {
       return null
     }
-    var content = fs.readFileSync(path)
+    var content = fs.readFileSync(path, 'utf8')
+    if (content === '') {
+      console.log('Seems like the file is empty!')
+    }
     var json = JSON.parse(content)
 
-    //var container = new TimeContainer()
-    //container.fromJson(json)
-    // return container
+    var container = new TimeContainer()
+    container.fromJson(json)
+    return container
   }
 
   saveFile (json) {

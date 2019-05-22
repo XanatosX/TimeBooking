@@ -2,17 +2,7 @@ const TimeDataSet = require('./TimeDataSet.js')
 
 class TimeContainer {
   constructor () {
-    this.startTimes = []
-    this.endTimes = []
     this.times = []
-  }
-
-  addTime (datetime) {
-    if (this.startTimes.length > this.endTimes.length) {
-      this.addEndTime(datetime)
-      return
-    }
-    this.addStartTime(datetime)
   }
 
   addTime (data) {
@@ -25,13 +15,12 @@ class TimeContainer {
 
   getWritable () {
     var json = {}
+    var timingArray = []
     this.times.forEach(function (item) {
-      json['timings'] = item.getSaveableDataSet()
+      timingArray.push(item.getSaveableDataSet())
     })
+    json['timings'] = timingArray
     return JSON.stringify(json)
-  }
-
-  fromJson (json) {
   }
 
   getCompleteWorkTime () {
@@ -53,9 +42,10 @@ class TimeContainer {
     }
 
     data.timings.forEach(function (item) {
-      var timestamp = new TimeDataSet();
+      var timestamp = new TimeDataSet()
       timestamp.fromJson(item)
-    })
+      this.times.push(timestamp)
+    }.bind(this))
   }
 }
 
