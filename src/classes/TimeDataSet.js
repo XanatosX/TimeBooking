@@ -79,7 +79,7 @@ class TimeDataSet {
     this.startTime = data.startTime
     this.endTime = data.endTime
     if (data.description !== undefined) {
-      this.description = ''
+      this.description = data.description
     }
   }
 }

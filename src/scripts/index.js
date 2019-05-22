@@ -8,15 +8,6 @@ const TimeContainer = require('../classes/TimeContainer.js')
 
 var time = new Date()
 
-var dataSet = new TimeDataSet()
-var time = new Date()
-dataSet.setStartTime(time)
-dataSet.setEndTime(time)
-var container = new TimeContainer()
-container.addTime(dataSet)
-
-var writer = new TimeFileManager(remote.app.getPath('userData'), new Date())
-// writer.saveFile(container.getWritable())
 
 document.addEventListener('DOMContentLoaded', function () {
   addListner()
@@ -37,15 +28,14 @@ function addListner () {
 function fillTable () {
   var tableBody = document.getElementById('tableBody')
 
-  var folder = remote.app.getPath('userData')
-  var manager = new TimeFileManager(folder, time)
-  var container = manager.loadTodayFile()
+  var container = loadTimings(time)
 
   if (container === null) {
     return
   }
   var times = container.getTimes()
 
+  var index = 0
   times.forEach(function (item) {
     var row = document.createElement('tr')
     var cell = document.createElement('td')
@@ -64,7 +54,22 @@ function fillTable () {
     cell.textContent = item.getFormatedTime()
     row.appendChild(cell)
 
+    var actionCell = document.createElement('td')
+    var delButton = document.createElement('button')
+    delButton.setAttribute('class', 'btn btn-red')
+    delButton.setAttribute('data-id', index)
+    delButton.addEventListener('click', function (button) {
+      var id = this.getAttribute('data-id')
+      console.log(id)
+      deleteTiming(id)
+    })
+    actionCell.appendChild(delButton)
+    delButton.textContent = 'Delete'
+
+    row.appendChild(actionCell)
+
     tableBody.appendChild(row)
+    index++
   })
 
   var endRow = document.createElement('tr')
@@ -83,6 +88,26 @@ function fillTable () {
   endRow.appendChild(timeComplete)
 
   tableBody.appendChild(endRow)
+}
+
+function deleteTiming (id) {
+  var container = loadTimings(time)
+  if (container === undefined) {
+    return
+  }
+
+  container.deleteDataSet(id)
+
+  var writer = new TimeFileManager(remote.app.getPath('userData'), time)
+  writer.saveFile(container.getWritable())
+
+  Window.reload()
+}
+
+function loadTimings (datetime) {
+  var folder = remote.app.getPath('userData')
+  var manager = new TimeFileManager(folder, datetime)
+  return manager.loadTodayFile()
 }
 
 function getDifference (value) {

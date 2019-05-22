@@ -13,6 +13,10 @@ class TimeContainer {
     return this.times
   }
 
+  deleteDataSet (id) {
+    this.times.splice(id, 1)
+  }
+
   getWritable () {
     var json = {}
     var timingArray = []
