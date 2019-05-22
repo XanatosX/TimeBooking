@@ -3,10 +3,19 @@ const remote = electron.remote
 const Modal = require('../classes/Modal.js')
 const Window = electron.remote.getCurrentWindow()
 const TimeFileManager = require('../classes/TimeFileManager.js')
+const CookieManager = require('../classes/Cookies.js')
 
 var time = new Date()
+var cookiesManager = new CookieManager(electron)
 
 document.addEventListener('DOMContentLoaded', function () {
+  cookiesManager.getCookie('time', function (test, data) {
+    if (isNaN(data)) {
+      return
+    }
+    time = new Date(parseInt(data))
+    fillTable()
+  })
   addListner()
   fillTable()
 }, false)
@@ -15,6 +24,8 @@ function addListner () {
   var addTimeButton = document.getElementById('addStartTime')
   addTimeButton.addEventListener('click', function (event) {
     var addModal = new Modal(Window, 400, 200, 'addTime', function () {
+      var timeStr = String(time.getTime())
+      cookiesManager.setCookie('time', timeStr)
       Window.reload()
     })
     addModal.isDebug()
@@ -25,10 +36,29 @@ function addListner () {
       win.webContents.send('time', time.getTime())
     })
   })
+
+  var leftTimeButton = document.getElementById('goLeft')
+  leftTimeButton.addEventListener('click', function (event) {
+    time.setDate(time.getDate() - 1)
+    fillTable()
+  })
+
+  var rightTimeButton = document.getElementById('goRight')
+  rightTimeButton.addEventListener('click', function (event) {
+    time.setDate(time.getDate() + 1)
+    fillTable()
+  })
 };
 
 function fillTable () {
   var tableBody = document.getElementById('tableBody')
+  var date = document.getElementById('currentDate')
+  date.innerHTML = String(time.getMonth()).padStart(2, '0')
+  date.innerHTML += '/'
+  date.innerHTML += String(time.getDate()).padStart(2, '0')
+  date.innerHTML += '/'
+  date.innerHTML += String(time.getFullYear())
+  tableBody.innerHTML = ''
 
   var container = loadTimings(time)
 
