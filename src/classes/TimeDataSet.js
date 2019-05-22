@@ -2,6 +2,15 @@ class TimeDataSet {
   constructor () {
     this.startTime = null
     this.endTime = null
+    this.description = ''
+  }
+
+  addDescription (data) {
+    this.description = data
+  }
+
+  getDescription () {
+    return this.description
   }
 
   convertToTime (value) {
@@ -57,6 +66,7 @@ class TimeDataSet {
     var data = {}
     data['startTime'] = this.startTime
     data['endTime'] = this.endTime
+    data['description'] = this.description
 
     return data
   }
@@ -68,6 +78,9 @@ class TimeDataSet {
 
     this.startTime = data.startTime
     this.endTime = data.endTime
+    if (data.description !== undefined) {
+      this.description = ''
+    }
   }
 }
 

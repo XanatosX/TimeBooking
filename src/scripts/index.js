@@ -57,7 +57,7 @@ function fillTable () {
     row.appendChild(cell)
 
     cell = document.createElement('td')
-    cell.textContent = ''
+    cell.textContent = item.getDescription()
     row.appendChild(cell)
 
     cell = document.createElement('td')
@@ -76,7 +76,6 @@ function fillTable () {
   var timeComplete = document.createElement('td')
   var workTimeToday = container.getCompleteWorkTime()
   var workTimeTodayString = ''
-  console.log(workTimeToday)
   if (workTimeToday !== undefined) {
     workTimeTodayString = getDifference(workTimeToday)
   }
@@ -84,13 +83,6 @@ function fillTable () {
   endRow.appendChild(timeComplete)
 
   tableBody.appendChild(endRow)
-}
-
-function convertToTime (value) {
-  var date = new Date(value)
-  var time = String(date.getHours()).padStart(2, '0') + ':'
-  time += String(date.getMinutes()).padStart(2, '0')
-  return time
 }
 
 function getDifference (value) {
