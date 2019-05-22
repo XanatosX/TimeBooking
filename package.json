@@ -8,6 +8,9 @@
   },
   "author": "Simon Aberle",
   "license": "MIT",
+  "dependencies": {
+    "electron": "~5.0.0"
+  },
   "devDependencies": {
     "electron-reload": "^1.4.0"
   }
