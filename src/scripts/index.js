@@ -3,11 +3,8 @@ const remote = electron.remote
 const Modal = require('../classes/Modal.js')
 const Window = electron.remote.getCurrentWindow()
 const TimeFileManager = require('../classes/TimeFileManager.js')
-const TimeDataSet = require('../classes/TimeDataSet.js')
-const TimeContainer = require('../classes/TimeContainer.js')
 
 var time = new Date()
-
 
 document.addEventListener('DOMContentLoaded', function () {
   addListner()
