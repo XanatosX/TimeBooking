@@ -50,6 +50,8 @@ class TimeContainer {
       timestamp.fromJson(item)
       this.times.push(timestamp)
     }.bind(this))
+
+    this.times.sort((a, b) => parseInt(a.startTime) - parseInt(b.startTime))
   }
 }
 
