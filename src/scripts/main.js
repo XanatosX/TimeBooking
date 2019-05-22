@@ -4,6 +4,7 @@ const electron = require('electron')
 const app = electron.app
 const BrowserWindow = electron.BrowserWindow
 const Menu = electron.Menu
+const globalShortcut = electron.globalShortcut
 
 require('electron-reload')(__dirname)
 
@@ -27,10 +28,12 @@ function createWindow () {
   }))
 
   win.on('closed', () => {
+    globalShortcut.unregisterAll()
     win = null
   })
 
   createApplicationMenu()
+  createShortcuts()
 }
 
 function createApplicationMenu () {
@@ -81,6 +84,12 @@ function openSettingsMenu () {
   settingsWin.once('ready-to-show', () => {
     settingsWin.show()
   })
+}
+
+function createShortcuts () {
+  globalShortcut.register('f5', function() {
+		win.reload()
+	})
 }
 
 app.on('ready', createWindow)
