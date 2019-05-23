@@ -15,7 +15,9 @@ class Cookies {
       expirationDate: expiration.getTime()
     }
     this.session.cookies.set(cookieData, function (error) {
-      console.log(error)
+      if (error) {
+        console.log(error)
+      }
     })
   }
 
@@ -25,7 +27,9 @@ class Cookies {
     }
     this.session.cookies.get(value, function (error, cookies) {
       if (error || cookies[0] === undefined || cookies[0].value === undefined) {
-        console.log(error)
+        if (error) {
+          console.log(error)
+        }
         return
       }
       callback(null, cookies[0].value)

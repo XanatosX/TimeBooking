@@ -18,6 +18,7 @@ document.addEventListener('DOMContentLoaded', function () {
 function addListner () {
   let workdaysDiv = document.getElementById('workdays')
   let saveButton = document.getElementById('saveButton')
+  let closeButton = document.getElementById('closeButton')
   workdaysDiv.childNodes.forEach(function (element) {
     if (element.tagName === 'DIV') {
       element.childNodes.forEach(function (inputElement) {
@@ -37,4 +38,13 @@ function addListner () {
   saveButton.addEventListener('click', function () {
     manager.save(filename, settings.getWritable())
   })
+
+  closeButton.addEventListener('click', function () {
+    close()
+  })
+}
+
+function close () {
+  let window = remote.getCurrentWindow()
+  window.close()
 }
