@@ -22,22 +22,28 @@ document.addEventListener('DOMContentLoaded', function () {
 })
 
 function addListner () {
+  let elements = crawlElements(document.getElementById('settingsContent'), 'input')
   let workdaysDiv = document.getElementById('workdays')
   let saveButton = document.getElementById('saveButton')
   let closeButton = document.getElementById('closeButton')
-  workdaysDiv.childNodes.forEach(function (element) {
-    if (element.tagName === 'DIV') {
-      element.childNodes.forEach(function (inputElement) {
-        if (inputElement.tagName === 'INPUT') {
-          inputElement.addEventListener('click', function () {
-            let name = inputElement.getAttribute('id')
-            let checked = inputElement.checked
+  elements.forEach(function (element) {
+    let type = element.getAttribute('type')
+    let name = element.getAttribute('id')
+    if (name !== null) {
+      if (type === 'checkbox') {
+        element.addEventListener('click', function () {
+          let checked = element.checked
 
-            settings.addSetting(name, checked)
-            manager.save(filename, settings.getWritable())
-          })
-        }
-      })
+          settings.addSetting(name, checked)
+          manager.save(filename, settings.getWritable())
+        })
+      } else {
+        element.addEventListener('change', function () {
+          let value = element.value
+          settings.addSetting(name, value)
+          manager.save(filename, settings.getWritable)
+        })
+      }
     }
   })
 
@@ -52,7 +58,7 @@ function addListner () {
 }
 
 function fillSettingsWindow () {
-  let fields = crawlElements(document.getElementById('workdays'), 'input')
+  let fields = crawlElements(document.getElementById('settingsContent'), 'input')
   let settingsObject = settings.getObject()
   for (let key in settingsObject) {
     fields.forEach( function (element) {
@@ -70,15 +76,20 @@ function fillSettingsWindow () {
 }
 
 function fillSettingsContainer () {
-  let data = crawlElements(document.getElementById('workdays'), 'input')
+  let data = crawlElements(document.getElementById('settingsContent'), 'input')
   data.forEach( function (element) {
     let type = element.getAttribute('type')
     let name = element.getAttribute('id')
-    if (type === 'checkbox'){
-      settings.addSetting(name, element.checked)
+    if (name !== null) {
+      if (type === 'checkbox'){
+        settings.addSetting(name, element.checked)
+      } else {
+        settings.addSetting(name, String(element.value))
+      }
     } else {
-      settings.addSettings(name, element.value)
+      console.log("Missing id for element "+element)
     }
+    
   })
 }
 
