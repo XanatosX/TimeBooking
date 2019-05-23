@@ -36,6 +36,7 @@ ipcRenderer.on('edit', (event, message) => {
 
 document.addEventListener('DOMContentLoaded', function () {
   addListner()
+  addKeyPress()
 }, false)
 
 function setTime (element, timeInput) {
@@ -43,59 +44,78 @@ function setTime (element, timeInput) {
   element.value = time
 }
 
+function addKeyPress () {
+  window.addEventListener('keyup', KeyUp, true)
+}
+
+function KeyUp (event) {
+  if (event.keyCode === 27) {
+    close()
+  }
+  if (event.keyCode === 13) {
+    save()
+  }
+}
+
 function addListner () {
   var closeBtn = document.getElementById('closeButton')
   var saveBtn = document.getElementById('saveButton')
   closeBtn.addEventListener('click', function (event) {
-    var window = remote.getCurrentWindow()
-    window.close()
+    close()
   })
   saveBtn.addEventListener('click', function (event) {
-    var timeStart = document.getElementById('start-timestamp')
-    var timeEnd = document.getElementById('end-timestamp')
-    var description = document.getElementById('description')
-    var folder = remote.app.getPath('userData')
-    var manager = new TimeFileManager(folder, today)
-    var container = manager.loadTodayFile()
-    if (container === null) {
-      container = new TimeContainer()
-    }
-
-    var newDataSet = new TimeDataSet()
-
-    if (timeStart.value === undefined) {
-      return
-    }
-
-    var endTime = null
-    var startTime = 'T' + timeStart.value + ':00'
-    if (timeEnd.value !== undefined) {
-      endTime = 'T' + timeEnd.value + ':00'
-    }
-
-    var date = String(today.getFullYear()) + '-'
-    date += String(today.getMonth() + 1).padStart(2, '0') + '-'
-    date += String(today.getDate()).padStart(2, '0')
-    var startStamp = new Date(date + startTime)
-    var endStamp = new Date(date + endTime)
-    newDataSet.setStartTime(startStamp)
-    if (endStamp !== null) {
-      newDataSet.setEndTime(endStamp)
-    }
-    newDataSet.setDescription(description.value)
-
-    if (edit) {
-      console.log(id)
-      if (id === null) {
-        console.log('Missing id')
-        return
-      }
-      container.deleteDataSet(id)
-    }
-    container.addTime(newDataSet)
-    manager.saveFile(container.getWritable())
-
-    var window = remote.getCurrentWindow()
-    window.close()
+    save()
   })
 };
+
+function close () {
+  var window = remote.getCurrentWindow()
+  window.close()
+}
+
+function save () {
+  var timeStart = document.getElementById('start-timestamp')
+  var timeEnd = document.getElementById('end-timestamp')
+  var description = document.getElementById('description')
+  var folder = remote.app.getPath('userData')
+  var manager = new TimeFileManager(folder, today)
+  var container = manager.loadTodayFile()
+  if (container === null) {
+    container = new TimeContainer()
+  }
+
+  var newDataSet = new TimeDataSet()
+
+  if (timeStart.value === undefined) {
+    return
+  }
+
+  var endTime = null
+  var startTime = 'T' + timeStart.value + ':00'
+  if (timeEnd.value !== undefined) {
+    endTime = 'T' + timeEnd.value + ':00'
+  }
+
+  var date = String(today.getFullYear()) + '-'
+  date += String(today.getMonth() + 1).padStart(2, '0') + '-'
+  date += String(today.getDate()).padStart(2, '0')
+  var startStamp = new Date(date + startTime)
+  var endStamp = new Date(date + endTime)
+  newDataSet.setStartTime(startStamp)
+  if (endStamp !== null) {
+    newDataSet.setEndTime(endStamp)
+  }
+  newDataSet.setDescription(description.value)
+
+  if (edit) {
+    if (id === null) {
+      console.log('Missing id')
+      return
+    }
+    container.deleteDataSet(id)
+  }
+  container.addTime(newDataSet)
+  manager.saveFile(container.getWritable())
+
+  close()
+}

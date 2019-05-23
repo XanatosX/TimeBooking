@@ -33,13 +33,13 @@ function createWindow () {
   })
 
   createApplicationMenu()
-  createShortcuts()
+  createGlobalShortcuts()
 }
 
 function createApplicationMenu () {
   var menu = Menu.buildFromTemplate([
     {
-      label: 'Menu',
+      label: 'File',
       submenu: [
         { label: 'Settings',
           click () {
@@ -50,6 +50,17 @@ function createApplicationMenu () {
         { label: 'Exit',
           click () {
             app.quit()
+          }
+        }
+      ]
+    }, {
+      label: 'Test',
+      submenu: [
+        {
+          label: 'Reload (f5)',
+          accelorator: 'f5',
+          click () {
+            win.reload()
           }
         }
       ]
@@ -87,10 +98,7 @@ function openSettingsMenu () {
   })
 }
 
-function createShortcuts () {
-  globalShortcut.register('f5', function () {
-    win.reload()
-  })
+function createGlobalShortcuts () {
 }
 
 app.on('ready', createWindow)
