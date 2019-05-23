@@ -83,13 +83,14 @@ function openSettingsMenu () {
   settingsWin.loadURL(modalPath)
   settingsWin.once('ready-to-show', () => {
     settingsWin.show()
+    settingsWin.openDevTools()
   })
 }
 
 function createShortcuts () {
-  globalShortcut.register('f5', function() {
-		win.reload()
-	})
+  globalShortcut.register('f5', function () {
+    win.reload()
+  })
 }
 
 app.on('ready', createWindow)

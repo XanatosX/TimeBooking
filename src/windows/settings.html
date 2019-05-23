@@ -3,9 +3,46 @@
   <head>
     <meta charset="UTF-8">
     <title>Settings</title>
+    <script>
+      require("../scripts/settings.js")
+    </script>
     <link rel="stylesheet" href="../../assets/css/buttons.css">
   </head>
   <body>
+    <div>
+      <h1>Settings</h1>
+    </div>
+    <div id="workdays">
+      <h2>Workdays</h2>
+        <div style="display:block">
+          <input id="monday" type="checkbox"/>
+          <label for="monday">Monday</label>
+        </div>
+        <div style="display:block">
+          <input id="tuesday" type="checkbox"/>
+          <label for="tuesday">Tuesday</label>
+        </div>
+        <div style="display:block">
+          <input id="wednesday" type="checkbox"/>
+          <label for="wednesday">Wednesday</label>
+        </div>
+        <div style="display:block">
+          <input id="thursday" type="checkbox"/>
+          <label for="thursday">Thursday</label>
+        </div>
+        <div style="display:block">
+          <input id="friday" type="checkbox"/>
+          <label for="friday">Friday</label>
+        </div>
+        <div style="display:block">
+          <input id="saturday" type="checkbox"/>
+          <label for="saturday">Saturday</label>
+        </div>
+        <div style="display:block">
+          <input id="sunday" type="checkbox"/>
+          <label for="sunday">Sunday</label>
+        </div>
+    </div>
     <div class='pageEnd'>
       <button class='btn btn-green btn-left' id='saveButton'>Save</button>
       <button class='btn btn-red btn-right' id='closeButton'>Close</button>
