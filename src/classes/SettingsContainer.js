@@ -14,6 +14,10 @@ class SettingsContainer {
     return this.settings.name
   }
 
+  getObject () {
+    return this.settings
+  }
+
   getWritable () {
     return JSON.stringify(this.settings)
   }
