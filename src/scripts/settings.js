@@ -8,10 +8,13 @@ var filename
 var manager
 
 document.addEventListener('DOMContentLoaded', function () {
-  settings = new SettingsContainer()
   filename = 'mainSettings'
   let folder = remote.app.getPath('userData')
   manager = new Manager(folder)
+  settings = manager.load(filename)
+  if (settings !== null) {
+    fillSettingsWindow()
+  }
   addListner()
   fillSettingsContainer()
 
@@ -40,6 +43,7 @@ function addListner () {
 
   saveButton.addEventListener('click', function () {
     manager.save(filename, settings.getWritable())
+    close()
   })
 
   closeButton.addEventListener('click', function () {
@@ -47,6 +51,23 @@ function addListner () {
   })
 }
 
+function fillSettingsWindow () {
+  let fields = crawlElements(document.getElementById('workdays'), 'input')
+  let settingsObject = settings.getObject()
+  for (let key in settingsObject) {
+    fields.forEach( function (element) {
+      let type = element.getAttribute('type')
+      let name = element.getAttribute('id')
+      if (name == key) {
+        if (type === 'checkbox') {
+          element.checked = settingsObject[key]
+        } else {
+          element.value = settingsObject[key]
+        }
+      }
+    })
+  }
+}
 
 function fillSettingsContainer () {
   let data = crawlElements(document.getElementById('workdays'), 'input')
