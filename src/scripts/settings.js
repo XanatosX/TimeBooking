@@ -14,6 +14,8 @@ document.addEventListener('DOMContentLoaded', function () {
   settings = manager.load(filename)
   if (settings !== null) {
     fillSettingsWindow()
+  } else {
+    settings = new SettingsContainer()
   }
   addListner()
   fillSettingsContainer()
