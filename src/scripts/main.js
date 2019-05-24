@@ -6,7 +6,7 @@ const BrowserWindow = electron.BrowserWindow
 const Menu = electron.Menu
 const globalShortcut = electron.globalShortcut
 
-require('electron-reload')(__dirname)
+// require('electron-reload')(__dirname)
 
 var win
 
@@ -102,3 +102,15 @@ function createGlobalShortcuts () {
 }
 
 app.on('ready', createWindow)
+
+app.on('windwos-all-closed', () =>  {
+  if (process.platform !== 'darwin') {
+    app.quit()
+  }
+})
+
+app.on('activate', () => {
+  if (win === null) {
+    createWindow()
+  }
+})
