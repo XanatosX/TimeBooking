@@ -1,3 +1,7 @@
+  
+  /**
+   * This class will allow you to save and load cookies 
+   */
   class Cookies {
   /**
    * The constructor of the cookies class
@@ -28,9 +32,9 @@
       }
     })
   }
-  
+
   /**
-   * This function will get you a cookie.
+   * This method will get you a cookie.
    * @param  {String} name
    * @param  {Function} callback
    */
