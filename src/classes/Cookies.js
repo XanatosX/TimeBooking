@@ -16,11 +16,11 @@
    * @param  {String} data
    */
   setCookie (name, data) {
-    var expiration = new Date()
-    var hour = expiration.getHours()
+    let expiration = new Date()
+    let hour = expiration.getHours()
     hour += 1
     expiration.setHours(hour)
-    var cookieData = {
+    let cookieData = {
       url: '/',
       name: name,
       value: data,
@@ -39,7 +39,7 @@
    * @param  {Function} callback
    */
   getCookie (name, callback) {
-    var value = {
+    let value = {
       name: name
     }
     this.session.cookies.get(value, function (error, cookies) {
