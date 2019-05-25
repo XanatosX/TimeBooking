@@ -40,7 +40,7 @@ class Modal {
    * This method will show the modal and register the custom callback to the close event
    */
   show () {
-    var modalPath = path.join('file://', __dirname, '../windows/' + this.window + '.html')
+    let modalPath = path.join('file://', __dirname, '../windows/' + this.window + '.html')
     this.win = new BrowserWindow({
       parent: this.parent,
       modal: true,
