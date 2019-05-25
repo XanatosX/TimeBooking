@@ -1,8 +1,16 @@
-class Cookies {
+  class Cookies {
+  /**
+   * The constructor of the cookies class
+   * @param  {electron} electron
+   */
   constructor (electron) {
     this.session = electron.remote.session.fromPartition('persist:name')
   }
-
+  /**
+   * This mehtod will create a new cookie
+   * @param  {String} name
+   * @param  {String} data
+   */
   setCookie (name, data) {
     var expiration = new Date()
     var hour = expiration.getHours()
@@ -20,7 +28,12 @@ class Cookies {
       }
     })
   }
-
+  
+  /**
+   * This function will get you a cookie.
+   * @param  {String} name
+   * @param  {Function} callback
+   */
   getCookie (name, callback) {
     var value = {
       name: name
@@ -36,6 +49,9 @@ class Cookies {
     })
   }
 
+  /**
+   * This method will delete all the already saved cookies
+   */
   clearCookies () {
     this.session.clearStorageData({ storages: 'cookies' })
   }
