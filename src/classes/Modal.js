@@ -2,7 +2,19 @@ const path = require('path')
 const electron = require('electron')
 const BrowserWindow = electron.remote.BrowserWindow
 
+/**
+ * This class will allow you to create an modal
+ */
 class Modal {
+  
+  /**
+   * This method will construct a new modal class
+   * @param  {Window} parent
+   * @param  {Int32Array} width
+   * @param  {Int32Array} height
+   * @param  {String} window
+   * @param  {Function} closeFunction
+   */
   constructor (parent, width, height, window, closeFunction) {
     this.closeCallback = closeFunction
     this.parent = parent
@@ -17,11 +29,16 @@ class Modal {
 
     this.win = null
   }
-
+  /**
+   * This method will set the modal to debug
+   */
   isDebug () {
     this.debug = true
   }
 
+  /**
+   * This method will show the modal and register the custom callback to the close event
+   */
   show () {
     var modalPath = path.join('file://', __dirname, '../windows/' + this.window + '.html')
     this.win = new BrowserWindow({
@@ -54,6 +71,9 @@ class Modal {
     })
   }
 
+  /**
+   * The method will return you the window
+   */
   getWindow () {
     return this.win
   }
