@@ -25,10 +25,10 @@ class SettingsContainer {
    * @param  {String} name
    */
   getSetting (name) {
-    if (this.settings.name === undefined) {
+    if (this.settings[name] === undefined) {
       return null
     }
-    return this.settings.name
+    return this.settings[name]
   }
 
   /**
