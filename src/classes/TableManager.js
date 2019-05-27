@@ -30,7 +30,7 @@ class TableManager {
         for (let key in json) {
             let element = json[key]
             let headline = document.createElement('th')
-            let name = key
+            let name = element.name
             headline.innerHTML = name
 
             let id = element.id
@@ -59,7 +59,7 @@ class TableManager {
         for (let key in json) {
             let element = json[key]
             let content = document.createElement('td')
-            let name = key
+            let name = element.name
 
             content.innerHTML = name
             let colspan = element.colspan
