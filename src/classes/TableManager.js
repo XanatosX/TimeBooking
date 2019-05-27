@@ -1,3 +1,6 @@
+/**
+ * This class will allow you to fill a table tag with content
+ */
 class TableManager {
     
     /**
@@ -16,6 +19,10 @@ class TableManager {
         this._headerBody = this.table.appendChild(body)
     }
 
+    /**
+     * This method will set the headline for this table
+     * @param  {Object} json
+     */
     setHeadline (json) {
         this._headerContainer.innerHTML = ''
         this.columns = 0
@@ -40,6 +47,10 @@ class TableManager {
         this._headerContainer.appendChild(row)
     }
 
+    /**
+     * This method will add a new row to the table
+     * @param {Object} json 
+     */
     addRow (json) {
         let row = document.createElement('tr')
         let rowColumns = 0
@@ -72,6 +83,9 @@ class TableManager {
         return returnValue
     }
 
+    /**
+     * This method will delete all rows
+     */
     clearRows () {
         this._headerBody.innerHTML = ''
     }
