@@ -52,13 +52,13 @@ class TableManager {
      * @param {Object} json 
      */
     addRow (json) {
-        console.log(json)
         let row = document.createElement('tr')
         let rowColumns = 0
         let returnValue = false
 
         for (let key in json) {
             let element = json[key]
+            
             let content = document.createElement('td')
             let name = element.name
 
