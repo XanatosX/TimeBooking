@@ -14,7 +14,7 @@ class TableManager {
         let header = document.createElement('thead')
         header.setAttribute('id', tableId + '_header')
         this._headerContainer = this.table.appendChild(header)
-        let body = document.createElement('thead')
+        let body = document.createElement('tbody')
         body.setAttribute('id', tableId + '_body')
         this._headerBody = this.table.appendChild(body)
     }
@@ -52,6 +52,7 @@ class TableManager {
      * @param {Object} json 
      */
     addRow (json) {
+        console.log(json)
         let row = document.createElement('tr')
         let rowColumns = 0
         let returnValue = false
