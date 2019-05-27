@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <!--<script src="../../node_modules/tiny-date-picker/dist/tiny-date-picker.min.js"></script>-->
+    <meta charset="UTF-8">
+    <title>Time overview</title>
+    <link rel="stylesheet" href="../../assets/css/buttons.css">
+    <!--  <link rel="stylesheet" href="../../assets/css/index.css"> -->
+    
+    <script>
+        require('../scripts/timeOverview.js')
+    </script>
+  </head>
+  <body>
+      <div>
+          <button class="btn btn-blue" id="showWeekTime">Week</button>  
+          <button class="btn btn-blue" id="showMonthTime">Month</button>
+          <button class="btn btn-blue" id="showYearTime">Year</button>
+          <button class="btn btn-blue" id="showAllTime">All time</button>
+      </div>
+      <div>
+        <table id="tableContainer"></table>
+      </div>
+  </body>
+</html>

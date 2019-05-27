@@ -22,7 +22,9 @@ document.addEventListener('DOMContentLoaded', function () {
 }, false)
 
 function addListner () {
-  var addTimeButton = document.getElementById('addStartTime')
+  let addTimeButton = document.getElementById('addStartTime')
+  let timeOverviewButton = document.getElementById('timeOverview')
+
   addTimeButton.addEventListener('click', function (event) {
     var addModal = new Modal(Window, 400, 200, 'addTime', function () {
       var timeStr = String(time.getTime())
@@ -36,6 +38,14 @@ function addListner () {
     win.webContents.on('did-finish-load', () => {
       win.webContents.send('time', time.getTime())
     })
+  })
+
+  timeOverviewButton.addEventListener('click', function (event) {
+    let timeOverviewModal = new Modal(Window, 800, 600, 'timeOverview', function () {
+
+    })
+    timeOverviewModal.isDebug()
+    timeOverviewModal.show()
   })
 
   var leftTimeButton = document.getElementById('goLeft')
