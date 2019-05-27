@@ -70,15 +70,12 @@ class TableManager {
                 rowColumns++
             }
 
-            if (rowColumns === this.columns) {
-                row.appendChild(content)
-                returnValue = true
-            }
-            
+            row.appendChild(content)
         }
 
-        if (returnValue) {
+        if (rowColumns === this.columns) {
             this._headerBody.appendChild(row)
+            returnValue = true
         }
         return returnValue
     }
