@@ -6,6 +6,7 @@ class TableManager {
      */
     constructor (tableId) {
         this.table = document.getElementById(tableId)
+        this.columns = 0
 
         let header = document.createElement('thead')
         header.setAttribute('id', tableId + '_header')
@@ -17,6 +18,7 @@ class TableManager {
 
     setHeadline (json) {
         this._headerContainer.innerHTML = ''
+        this.columns = 0
         let row = document.createElement('tr')
         for (let key in json) {
             let element = json[key]
@@ -32,9 +34,46 @@ class TableManager {
             if (classes !== undefined) {
                 headline.setAttribute('class', classes)
             }
+            this.columns++
             row.appendChild(headline)
         }
         this._headerContainer.appendChild(row)
+    }
+
+    addRow (json) {
+        let row = document.createElement('tr')
+        let rowColumns = 0
+        let returnValue = false
+
+        for (let key in json) {
+            let element = json[key]
+            let content = document.createElement('td')
+            let name = key
+
+            content.innerHTML = name
+            let colspan = element.colspan
+            if (colspan !== undefined) {
+                content.setAttribute('colspan', colspan)
+                rowColumns += colspan
+            } else {
+                rowColumns++
+            }
+
+            if (rowColumns === this.columns) {
+                row.appendChild(content)
+                returnValue = true
+            }
+            
+        }
+
+        if (returnValue) {
+            this._headerBody.appendChild(row)
+        }
+        return returnValue
+    }
+
+    clearRows () {
+        this._headerBody.innerHTML = ''
     }
 }
 
