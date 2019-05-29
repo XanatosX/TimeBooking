@@ -182,15 +182,15 @@ document.addEventListener('DOMContentLoaded', function () {
   }
 
   function toHumanReadable (workTime) {
-    let seconds = Math.floor((workTime / 1000) % 60)
-    let minutes = Math.floor((workTime / (1000 * 60)) % 60)
-    let hours = Math.floor((workTime / (1000 * 60 * 60)) % 24)
+    workTime = workTime / 1000
+    workTime = workTime / 60
+    
+    let hours = (workTime / 60)
+    let rhours = Math.floor(hours)
+    let minutes = (hours - rhours) * 60
+    let rminutes = Math.round(minutes)
 
-    hours = (hours < 10) ? "0" + hours : hours;
-    minutes = (minutes < 10) ? "0" + minutes : minutes;
-    seconds = (seconds < 10) ? "0" + seconds : seconds;
-
-  return hours + " h " + minutes + " m";
+  return rhours + " h " + rminutes + " m";
   }
 
   function getFileNameFromDate (date) {
