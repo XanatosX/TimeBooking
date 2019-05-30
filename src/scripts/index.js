@@ -9,7 +9,7 @@ var time = new Date()
 var cookiesManager = new CookieManager(electron)
 
 document.addEventListener('DOMContentLoaded', function () {
-  cookiesManager.getCookie('time', function (test, data) {
+  cookiesManager.getCookie('time', function (index, data) {
     if (isNaN(data)) {
       return
     }
