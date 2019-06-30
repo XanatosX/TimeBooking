@@ -1,6 +1,6 @@
-const path = require('path')
-const electron = require('electron')
-const BrowserWindow = electron.remote.BrowserWindow
+const path = require('path');
+const electron = require('electron');
+const BrowserWindow = electron.remote.BrowserWindow;
 
 /**
  * This class will allow you to create an modal
