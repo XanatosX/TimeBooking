@@ -8,15 +8,15 @@ class TableManager {
      * @param  {String} tableId The id of the table to search
      */
     constructor (tableId) {
-        this.table = document.getElementById(tableId)
-        this.columns = 0
+        this.table = document.getElementById(tableId);
+        this.columns = 0;
 
-        let header = document.createElement('thead')
-        header.setAttribute('id', tableId + '_header')
-        this._headerContainer = this.table.appendChild(header)
-        let body = document.createElement('tbody')
-        body.setAttribute('id', tableId + '_body')
-        this._headerBody = this.table.appendChild(body)
+        let header = document.createElement('thead');
+        header.setAttribute('id', tableId + '_header');
+        this._headerContainer = this.table.appendChild(header);
+        let body = document.createElement('tbody');
+        body.setAttribute('id', tableId + '_body');
+        this._headerBody = this.table.appendChild(body);
     }
 
     /**
@@ -24,27 +24,27 @@ class TableManager {
      * @param  {Object} json
      */
     setHeadline (json) {
-        this._headerContainer.innerHTML = ''
-        this.columns = 0
-        let row = document.createElement('tr')
+        this._headerContainer.innerHTML = '';
+        this.columns = 0;
+        let row = document.createElement('tr');
         for (let key in json) {
-            let element = json[key]
-            let headline = document.createElement('th')
-            let name = element.name
-            headline.innerHTML = name
+            let element = json[key];
+            let headline = document.createElement('th');
+            let name = element.name;
+            headline.innerHTML = name;
 
-            let id = element.id
+            let id = element.id;
             if (id !== undefined) {
-                headline.setAttribute('id', id)
+                headline.setAttribute('id', id);
             }
-            let classes = element.class
+            let classes = element.class;
             if (classes !== undefined) {
-                headline.setAttribute('class', classes)
+                headline.setAttribute('class', classes);
             }
-            this.columns++
-            row.appendChild(headline)
+            this.columns++;
+            row.appendChild(headline);
         }
-        this._headerContainer.appendChild(row)
+        this._headerContainer.appendChild(row);
     }
 
     /**
@@ -52,41 +52,41 @@ class TableManager {
      * @param {Object} json 
      */
     addRow (json) {
-        let row = document.createElement('tr')
-        let rowColumns = 0
-        let returnValue = false
+        let row = document.createElement('tr');
+        let rowColumns = 0;
+        let returnValue = false;
 
         for (let key in json) {
-            let element = json[key]
+            let element = json[key];
             
-            let content = document.createElement('td')
-            let name = element.name
+            let content = document.createElement('td');
+            let name = element.name;
 
-            content.innerHTML = name
-            let colspan = element.colspan
+            content.innerHTML = name;
+            let colspan = element.colspan;
             if (colspan !== undefined) {
-                content.setAttribute('colspan', colspan)
-                rowColumns += colspan
+                content.setAttribute('colspan', colspan);
+                rowColumns += colspan;
             } else {
-                rowColumns++
+                rowColumns++;
             }
 
-            row.appendChild(content)
+            row.appendChild(content);
         }
 
         if (rowColumns === this.columns) {
-            this._headerBody.appendChild(row)
-            returnValue = true
+            this._headerBody.appendChild(row);
+            returnValue = true;
         }
-        return returnValue
+        return returnValue;
     }
 
     /**
      * This method will delete all rows
      */
     clearRows () {
-        this._headerBody.innerHTML = ''
+        this._headerBody.innerHTML = '';
     }
 }
 
-module.exports = TableManager
+module.exports = TableManager;

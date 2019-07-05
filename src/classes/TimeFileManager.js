@@ -1,5 +1,5 @@
-var fs = require('fs')
-const TimeContainer = require('./TimeContainer.js')
+var fs = require('fs');
+const TimeContainer = require('./TimeContainer.js');
 
 /**
  * This class will allow you to save and load a time container
@@ -9,31 +9,32 @@ class TimeFileManager {
   /**
    * This constructor will create you an new instance of the time manager
    * @param  {String} path
-   * @param  {Date} datetime
+   * @param  {Date} dateTime
    */
-  constructor (path, datetime) {
-    this.path = path + '/bookings/'
+  constructor (path, dateTime) {
+    this.path = path + '/bookings/';
     if (!fs.existsSync(this.path)) {
-      fs.mkdirSync(this.path)
+      fs.mkdirSync(this.path);
     }
-    let dd = String(datetime.getDate()).padStart(2, '0')
-    let mm = String(datetime.getMonth() + 1).padStart(2, '0')
-    this.todayFile = datetime.getFullYear() + mm + dd
+    let day = String(dateTime.getDate()).padStart(2, '0');
+    let month = String(dateTime.getMonth() + 1).padStart(2, '0');
+    this.todayFile = dateTime.getFullYear() + month + day;
   }
 
   /**
    * This method will return you all the files in the directory
    */
   getFiles () {
-    let returnFiles = fs.readdirSync(this.path)
-    return returnFiles
+    let returnFiles = fs.readdirSync(this.path);
+    
+    return returnFiles;
   }
 
   /**
    * This method will load the file from today
    */
   loadTodayFile () {
-    return this.loadFile(this.todayFile)
+    return this.loadFile(this.todayFile);
   }
 
   
@@ -42,19 +43,20 @@ class TimeFileManager {
    * @param  {String} name
    */
   loadFile (name) {
-    let path = this.path + name + '.json'
+    let path = this.path + name + '.json';
     if (!fs.existsSync(path)) {
-      return null
+      return null;
     }
-    let content = fs.readFileSync(path, 'utf8')
+    let content = fs.readFileSync(path, 'utf8');
     if (content === '') {
-      console.log('Seems like the file is empty!')
+      console.log('Seems like the file is empty!');
     }
-    let json = JSON.parse(content)
+    let json = JSON.parse(content);
 
-    let container = new TimeContainer()
-    container.fromJson(json)
-    return container
+    let container = new TimeContainer();
+    container.fromJson(json);
+
+    return container;
   }
 
   /**
@@ -64,12 +66,13 @@ class TimeFileManager {
   saveFile (json) {
     fs.writeFileSync(this.path + this.todayFile + '.json', json, 'utf8', (err) => {
       if (err) {
-        return false
+        return false;
       }
-      return true
-    })
-    return true
+      return true;
+    });
+
+    return true;
   }
 }
 
-module.exports = TimeFileManager
+module.exports = TimeFileManager;

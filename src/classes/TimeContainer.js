@@ -1,4 +1,4 @@
-const TimeDataSet = require('./TimeDataSet.js')
+const TimeDataSet = require('./TimeDataSet.js');
 
 /**
  * This class contains different time data sets
@@ -9,7 +9,7 @@ class TimeContainer {
    * This is the constructor of the class and will create an empty instance
    */
   constructor () {
-    this.times = []
+    this.times = [];
   }
 
   /**
@@ -17,14 +17,14 @@ class TimeContainer {
    * @param  {TimeDataSet} data
    */
   addTime (data) {
-    this.times.push(data)
+    this.times.push(data);
   }
 
   /**
-   * This method will return you all the times in thecontainer
+   * This method will return you all the times in the container
    */
   getTimes () {
-    return this.times
+    return this.times;
   }
 
   /**
@@ -32,36 +32,36 @@ class TimeContainer {
    * @param  {Int32Array id
    */
   deleteDataSet (id) {
-    this.times.splice(id, 1)
+    this.times.splice(id, 1);
   }
 
   /**
    * This method will return you the current container as saveable String
    */
   getWritable () {
-    let json = {}
-    let timingArray = []
+    let json = {};
+    let timingArray = [];
     this.times.forEach(function (item) {
-      timingArray.push(item.getSaveableDataSet())
-    })
-    json['timings'] = timingArray
-    return JSON.stringify(json)
+      timingArray.push(item.getSaveableDataSet());
+    });
+    json['timings'] = timingArray;
+    return JSON.stringify(json);
   }
 
   /**
    * This method will return you the whole working time for this container
    */
   getCompleteWorkTime () {
-    if (this.times.lenght === 0) {
-      return 0
+    if (this.times.length === 0) {
+      return 0;
     }
 
-    let passed = 0
+    let passed = 0;
     this.times.forEach(function (item) {
-      passed += item.getWorkTime()
-    })
+      passed += item.getWorkTime();
+    });
 
-    return passed
+    return passed;
   }
 
   /**
@@ -70,17 +70,17 @@ class TimeContainer {
    */
   fromJson (data) {
     if (data.timings === undefined) {
-      return
+      return;
     }
 
     data.timings.forEach(function (item) {
-      var timestamp = new TimeDataSet()
-      timestamp.fromJson(item)
-      this.times.push(timestamp)
-    }.bind(this))
+      var timestamp = new TimeDataSet();
+      timestamp.fromJson(item);
+      this.times.push(timestamp);
+    }.bind(this));
 
-    this.times.sort((a, b) => parseInt(a.startTime) - parseInt(b.startTime))
+    this.times.sort((a, b) => parseInt(a.startTime) - parseInt(b.startTime));
   }
 }
 
-module.exports = TimeContainer
+module.exports = TimeContainer;

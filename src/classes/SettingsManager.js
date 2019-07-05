@@ -1,5 +1,5 @@
-var fs = require('fs')
-var SettingsContainer = require('./SettingsContainer.js')
+var fs = require('fs');
+var SettingsContainer = require('./SettingsContainer.js');
 
 /**
  * This class will save and load settings container from the hdd
@@ -11,10 +11,10 @@ class SettingsManager {
    * @param  {String} path
    */
   constructor (path) {
-    this.path = path
-    this.path = path + '/settings/'
+    this.path = path;
+    this.path = path + '/settings/';
     if (!fs.existsSync(this.path)) {
-      fs.mkdirSync(this.path)
+      fs.mkdirSync(this.path);
     }
   }
 
@@ -26,11 +26,11 @@ class SettingsManager {
   save (name, data) {
     fs.writeFileSync(this.path + name + '.json', data, 'utf8', (err) => {
       if (err) {
-        return false
+        return false;
       }
-      return true
-    })
-    return true
+      return true;
+    });
+    return true;
   }
   
   /**
@@ -38,21 +38,21 @@ class SettingsManager {
    * @param  {String} name
    */
   load (name) {
-    let path = this.path + name + '.json'
+    let path = this.path + name + '.json';
     if (!fs.existsSync(path)) {
-      return null
+      return null;
     }
-    let content = fs.readFileSync(path, 'utf8')
+    let content = fs.readFileSync(path, 'utf8');
     if (content === '') {
-      return null
+      return null;
     }
-    let container = new SettingsContainer()
-    let json = JSON.parse(content)
+    let container = new SettingsContainer();
+    let json = JSON.parse(content);
     for(let key in json) {
-      container.addSetting(key, json[key])
+      container.addSetting(key, json[key]);
     }
-    return container
+    return container;
   }
 }
 
-module.exports = SettingsManager
+module.exports = SettingsManager;
