@@ -9,6 +9,7 @@ class Modal {
   
   /**
    * This method will construct a new modal class
+   * 
    * @param  {Window} parent
    * @param  {Int32Array} width
    * @param  {Int32Array} height

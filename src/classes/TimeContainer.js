@@ -14,6 +14,7 @@ class TimeContainer {
 
   /**
    * This function will add a new time to the collection
+   * 
    * @param  {TimeDataSet} data
    */
   addTime (data) {
@@ -29,6 +30,7 @@ class TimeContainer {
 
   /**
    * This method will delete a dataset at position x
+   * 
    * @param  {Int32Array id
    */
   deleteDataSet (id) {
@@ -66,6 +68,7 @@ class TimeContainer {
 
   /**
    * This method will fill the content of this instance with the data of the object
+   * 
    * @param {Object} data
    */
   fromJson (data) {

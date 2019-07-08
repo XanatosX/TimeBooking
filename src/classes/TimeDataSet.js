@@ -14,6 +14,7 @@ class TimeDataSet {
 
   /**
    * This method will set the description of this instance
+   * 
    * @param  {String} data
    */
   setDescription (data) {
@@ -29,6 +30,7 @@ class TimeDataSet {
 
   /**
    * This method will return you a human readable version of you date
+   * 
    * @param  {Int32Array} value
    */
   convertToTime (value) {
@@ -44,6 +46,7 @@ class TimeDataSet {
 
   /**
    * This method will set the start date for this container
+   * 
    * @param  {Date} dateTime;
    */
   setStartTime (dateTime) {
@@ -72,6 +75,9 @@ class TimeDataSet {
     return this.convertToTime(this.endTime);
   }
 
+  /**
+   * This method will return you the work time for this data set
+   */
   getWorkTime () {
     var returnInt = 0;
 
@@ -113,6 +119,7 @@ class TimeDataSet {
   }
   /**
    * This method will fill this container with the data of an object
+   * 
    * @param  {Object} data
    */
   fromJson (data) {

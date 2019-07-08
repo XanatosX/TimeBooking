@@ -5,6 +5,7 @@
   class Cookies {
   /**
    * The constructor of the cookies class
+   * 
    * @param  {electron} electron
    */
   constructor (electron) {
@@ -12,6 +13,7 @@
   }
   /**
    * This method will create a new cookie
+   * 
    * @param  {String} name
    * @param  {String} data
    */
@@ -35,6 +37,7 @@
 
   /**
    * This method will get you a cookie.
+   * 
    * @param  {String} name
    * @param  {Function} callback
    */

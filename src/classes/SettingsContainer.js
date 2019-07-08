@@ -12,6 +12,7 @@ class SettingsContainer {
 
   /**
    * This method will add a new setting to the container
+   * 
    * @param  {String} name
    * @param  {String} data
    */

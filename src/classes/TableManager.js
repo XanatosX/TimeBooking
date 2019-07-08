@@ -5,6 +5,7 @@ class TableManager {
     
     /**
      * This constructor will build a new TableManager
+     * 
      * @param  {String} tableId The id of the table to search
      */
     constructor (tableId) {
@@ -21,6 +22,7 @@ class TableManager {
 
     /**
      * This method will set the headline for this table
+     * 
      * @param  {Object} json
      */
     setHeadline (json) {
@@ -49,6 +51,7 @@ class TableManager {
 
     /**
      * This method will add a new row to the table
+     * 
      * @param {Object} json 
      */
     addRow (json) {

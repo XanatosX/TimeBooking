@@ -8,6 +8,7 @@ class TimeFileManager {
   
   /**
    * This constructor will create you an new instance of the time manager
+   * 
    * @param  {String} path
    * @param  {Date} dateTime
    */
@@ -40,6 +41,7 @@ class TimeFileManager {
   
   /**
    * This method will load you an file from the disk
+   * 
    * @param  {String} name
    */
   loadFile (name) {
@@ -61,6 +63,7 @@ class TimeFileManager {
 
   /**
    * This method will save the file to the disk
+   * 
    * @param  {Object} json
    */
   saveFile (json) {
