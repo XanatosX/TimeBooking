@@ -22,3 +22,4 @@
 ## Style
 
 * Design all the pages with proper and good looking html ...
+* Add missing DocBlocks for all the functions!
