@@ -24,43 +24,45 @@ document.addEventListener('DOMContentLoaded', function () {
 
   function addEvents() {
     let weekButton = document.getElementById('showWeekTime');
-    weekButton.addEventListener('click', function () {
-        manager.setHeadline({
-            0: {
-                name: 'Date'
-            },
-            1: {
-                name: "Worked time"
-            }
-        });
+    weekButton.addEventListener('click', createWeeklyDataTable);
+  }
 
-        let timings = getTimings(getPreviousMonday(new Date(Date.now())), getNextSunday(new Date(Date.now())));
-
-        manager.clearRows();
-        let totalTiming = 0;
-        for (let key in timings) {
-            let currentTimings = timings[key];
-            let date = currentTimings['date'];
-            let timingVal = currentTimings['timings'].getCompleteWorkTime();
-            totalTiming += timingVal;
-            manager.addRow({
-                0: {
-                    name: date
-                },
-                1: {
-                    name: toHumanReadable(timingVal)
-                }
-            });
+  function createWeeklyDataTable() {
+    manager.setHeadline({
+        0: {
+            name: 'Date'
+        },
+        1: {
+            name: "Worked time"
         }
+    });
 
+    let timings = getTimings(getPreviousMonday(new Date(Date.now())), getNextSunday(new Date(Date.now())));
+
+    manager.clearRows();
+    let totalTiming = 0;
+    for (let key in timings) {
+        let currentTimings = timings[key];
+        let date = currentTimings['date'];
+        let timingVal = currentTimings['timings'].getCompleteWorkTime();
+        totalTiming += timingVal;
         manager.addRow({
             0: {
-                name: 'In Total: '
+                name: date
             },
             1: {
-                name: toHumanReadable(totalTiming) + " / " + getWorkingHours(getPreviousMonday(new Date(Date.now())), getNextSunday(new Date(Date.now()))) + " h"
+                name: toHumanReadable(timingVal)
             }
         });
+    }
+
+    manager.addRow({
+        0: {
+            name: 'In Total: '
+        },
+        1: {
+            name: toHumanReadable(totalTiming) + " / " + getWorkingHours(getPreviousMonday(new Date(Date.now())), getNextSunday(new Date(Date.now()))) + " h"
+        }
     });
   }
 
