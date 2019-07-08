@@ -24,7 +24,11 @@ document.addEventListener('DOMContentLoaded', function () {
 
   function addEvents() {
     let weekButton = document.getElementById('showWeekTime');
+    let closeButton = document.getElementById('closeWindow');
     weekButton.addEventListener('click', createWeeklyDataTable);
+    closeButton.addEventListener('click', function () {
+        window.close();
+    });
   }
 
   function createWeeklyDataTable() {
