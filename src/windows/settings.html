@@ -2,54 +2,69 @@
 <html>
   <head>
     <meta charset="UTF-8">
-    <title>Settings</title>
-    <script>
-      require("../scripts/settings.js")
-    </script>
-    <link rel="stylesheet" href="../../assets/css/buttons.css">
+    <title data-langkey="settings"></title>
+    <link rel="stylesheet" href="../../node_modules/bootstrap/dist/css/bootstrap.min.css" />
   </head>
-  <body id="settingsContent">
-    <div>
-      <h1>Settings</h1>
-    </div>
-    <div id="workdays">
-      <h2>Workdays</h2>
-        <div style="display:block">
-          <input id="monday" type="checkbox"/>
-          <label for="monday">Monday</label>
-        </div>
-        <div style="display:block">
-          <input id="tuesday" type="checkbox"/>
-          <label for="tuesday">Tuesday</label>
-        </div>
-        <div style="display:block">
-          <input id="wednesday" type="checkbox"/>
-          <label for="wednesday">Wednesday</label>
-        </div>
-        <div style="display:block">
-          <input id="thursday" type="checkbox"/>
-          <label for="thursday">Thursday</label>
-        </div>
-        <div style="display:block">
-          <input id="friday" type="checkbox"/>
-          <label for="friday">Friday</label>
-        </div>
-        <div style="display:block">
-          <input id="saturday" type="checkbox"/>
-          <label for="saturday">Saturday</label>
-        </div>
-        <div style="display:block">
-          <input id="sunday" type="checkbox"/>
-          <label for="sunday">Sunday</label>
-        </div>
-    </div>
-    <div>
-      <h2>Worktimes</h2>
-      <input id ='dailyWork' type="text" placeholder="Input your daily work hours here!"/>
-    </div>
-    <div class='pageEnd'>
-      <button class='btn btn-green btn-left' id='saveButton'>Save</button>
-      <button class='btn btn-red btn-right' id='closeButton'>Close</button>
+  <script>
+    require('../js/scripts/settings.js')
+  </script>
+  <body>
+    <div id="settingsContent" class="container">
+      <div>
+        <h1 data-langkey="settings">Settings</h1>
+      </div>
+      <div id="debug">
+        <h1>Debug</h1>
+        <input data-setting="debug" id="debug" type="checkbox" class="form-check-input"></input>
+        <label data-langkey="debug" for="debug">Debug console on</label>
+      </div>
+      <div id="workdays">
+        <h2 data-langkey="workdays"></h2>
+          <div style="display:block">
+            <input data-setting="monday" id="monday" type="checkbox" class="form-check-input"/>
+            <label for="monday" data-langkey="monday"></label>
+          </div>
+          <div style="display:block">
+            <input data-setting="tuesday" id="tuesday" type="checkbox" class="form-check-input"/>
+            <label for="tuesday" data-langkey="tuesday"></label>
+          </div>
+          <div style="display:block">
+            <input data-setting="wednesday" id="wednesday" type="checkbox" class="form-check-input"/>
+            <label for="wednesday" data-langkey="wednesday"></label>
+          </div>
+          <div style="display:block">
+            <input data-setting="thursday"  id="thursday" type="checkbox" class="form-check-input"/>
+            <label for="thursday" data-langkey="thursday"></label>
+          </div>
+          <div style="display:block">
+            <input data-setting="friday" id="friday" type="checkbox" class="form-check-input"/>
+            <label for="friday" data-langkey="friday"></label>
+          </div>
+          <div style="display:block">
+            <input data-setting="saturday" id="saturday" type="checkbox" class="form-check-input"/>
+            <label for="saturday" data-langkey="saturday"></label>
+          </div>
+          <div style="display:block">
+            <input data-setting="sunday" id="sunday" type="checkbox" class="form-check-input"/>
+            <label for="sunday" data-langkey="sunday"></label>
+          </div>
+      </div>
+      <div>
+        <h2 data-langkey="worktimes">Worktimes</h2>
+        <label for="dailyWork" data-langkey="dailyWork"></label>
+        <input id ='dailyWork' data-setting="dailyWork" type="form-control" placeholder="Input your daily work hours here!"/>
+      </div>
+      <div>
+        <h2 data-langkey="translation">Translation</h2>
+        <select data-setting="language" id="languageSelect">
+
+        </select>
+      </div>
+      <div class='pageEnd'>
+        <button class='btn btn-success' data-langkey="save" id='saveButton'>Save</button>
+        <button class='btn btn-success' data-langkey="saveAndClose" id='saveAndCloseButton'>Save and close</button>
+        <button class='btn btn-warning' data-langkey="close" id='closeButton'>Close</button>
+      </div>
     </div>
   </body>
 </html>

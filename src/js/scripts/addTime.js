@@ -1,13 +1,18 @@
 const electron = require('electron');
 const ipcRenderer = electron.ipcRenderer;
-const TimeFileManager = require('../classes/TimeFileManager.js');
-const TimeContainer = require('../classes/TimeContainer.js');
-const TimeDataSet = require('../classes/TimeDataSet.js');
+const TimeFileManager = require('./../js/classes/TimeFileManager.js');
+const TimeContainer = require('./../js/classes/TimeContainer.js');
+const TimeDataSet = require('./../js/classes/TimeDataSet.js');
+const LanguageManager = require('./../js/classes/translation/LanguageManager.js');
+const SettingsManager = require('./../js/classes/SettingsManager.js')
 const remote = electron.remote;
 
 var today = null;
 var id = null;
 var edit = false;
+var settingsFolder = remote.app.getPath('userData')
+var settingsManager = new SettingsManager(settingsFolder);
+var languageManager = new LanguageManager("./language");
 
 ipcRenderer.on('time', (event, message) => {
   today = new Date(message);
@@ -35,6 +40,13 @@ ipcRenderer.on('edit', (event, message) => {
 });
 
 document.addEventListener('DOMContentLoaded', function () {
+  
+  let settings = settingsManager.load("mainSettings");
+  let language = settings.getSetting("language");
+  if (language !== null) {
+    languageManager.setLanguage(language);
+  }
+  languageManager.applyTranslation(document);
   addListener();
   addKeyPress();
 }, false);

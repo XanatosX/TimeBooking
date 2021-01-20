@@ -5,7 +5,7 @@ var SettingsContainer = require('./SettingsContainer.js');
  * This class will save and load settings container from the hdd
  */
 class SettingsManager {
-  
+
   /**
    * This method if the constructor of the settings manager
    * @param  {String} path
@@ -38,15 +38,16 @@ class SettingsManager {
    * @param  {String} name
    */
   load (name) {
+    let container = new SettingsContainer();
     let path = this.path + name + '.json';
     if (!fs.existsSync(path)) {
-      return null;
+      return container;
     }
     let content = fs.readFileSync(path, 'utf8');
     if (content === '') {
-      return null;
+      return container;
     }
-    let container = new SettingsContainer();
+    
     let json = JSON.parse(content);
     for(let key in json) {
       container.addSetting(key, json[key]);

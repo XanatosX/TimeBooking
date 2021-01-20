@@ -54,10 +54,24 @@ class TimeDataSet {
   }
 
   /**
+  * This method will get you the raw start date of this container
+  */
+  getRawStartTime () {
+    return this.startTime;
+  }
+
+  /**
    * This method will get you the start date of this container
    */
   getStartTime () {
     return this.convertToTime(this.startTime);
+  }
+
+  /**
+  * This method will get you the raw end date of this container
+  */
+  getRawEndTime () {
+  return this.endTime;
   }
 
   /**

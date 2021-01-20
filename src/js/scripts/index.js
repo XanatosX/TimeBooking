@@ -1,19 +1,43 @@
 const electron = require('electron');
 const remote = electron.remote;
-const Modal = require('../classes/Modal.js');
+const Modal = require('./../classes/Modal.js');
 const Window = electron.remote.getCurrentWindow();
-const TimeFileManager = require('../classes/TimeFileManager.js');
-const CookieManager = require('../classes/Cookies.js');
+const TimeFileManager = require('./../classes/TimeFileManager.js');
+const TimeDataSet  = require('./../classes/TimeDataSet.js');
+const CookieManager = require('./../classes/Cookies.js');
+const SettingsManager = require('./../classes/SettingsManager.js')
+const LanguageManager = require('./../classes/translation/LanguageManager.js');
 
 var time = new Date();
+
 var cookiesManager = new CookieManager(electron);
+var settingsFolder = remote.app.getPath('userData')
+var settingsManager = new SettingsManager(settingsFolder);
+var languageManager = new LanguageManager("./language");
+var isDebug = false;
+var addTimeModalWidth = 600;
+var addTimeModalHeight = 250;
 
 document.addEventListener('DOMContentLoaded', function () {
+  Window.closeDevTools();
+  let settings = settingsManager.load("mainSettings");
+  let language = settings.getSetting("language");
+  if (language !== null) {
+    languageManager.setLanguage(language);
+  }
+  languageManager.applyTranslation(document);
+  isDebug = settings.getSetting("debug");
+
+  isDebug = isDebug == null ? false : isDebug;
+  if (isDebug) {
+    Window.openDevTools();
+  }
   cookiesManager.getCookie('time', function (index, data) {
     if (isNaN(data)) {
       return;
     }
     time = new Date(parseInt(data));
+    console.log(time);
     cookiesManager.clearCookies();
     fillTable();
   });
@@ -21,19 +45,29 @@ document.addEventListener('DOMContentLoaded', function () {
   fillTable();
 }, false);
 
+
+
 function addListener () {
+
+  let todayButton = document.getElementById('today');
+  let leftTimeButton = document.getElementById('goLeft');
+  let rightTimeButton = document.getElementById('goRight');
+
   let addTimeButton = document.getElementById('addStartTime');
   let timeOverviewButton = document.getElementById('timeOverview');
 
   addTimeButton.addEventListener('click', function (event) {
-    var addModal = new Modal(Window, 400, 200, 'addTime', function () {
+    var addTime = new Modal(Window, addTimeModalWidth, addTimeModalHeight, 'addTime', function () {
       var timeStr = String(time.getTime());
       cookiesManager.setCookie('time', timeStr);
       Window.reload();
     });
-    addModal.isDebug();
-    addModal.show();
-    var win = addModal.getWindow();
+    if (isDebug) {
+      addTime.isDebug();
+    }
+    
+    addTime.show();
+    var win = addTime.getWindow();
 
     win.webContents.on('did-finish-load', () => {
       win.webContents.send('time', time.getTime());
@@ -41,20 +75,26 @@ function addListener () {
   });
 
   timeOverviewButton.addEventListener('click', function (event) {
-    let timeOverviewModal = new Modal(Window, 800, 600, 'timeOverview', function () {
+    let timeOverviewModal = new Modal(Window, 800, 650, 'timeOverview', function () {
 
     });
-    timeOverviewModal.isDebug();
+    if (isDebug) {
+      timeOverviewModal.isDebug();
+    }
     timeOverviewModal.show();
   });
 
-  var leftTimeButton = document.getElementById('goLeft');
+  todayButton.addEventListener('click', function (event) {
+    time = new Date();
+    fillTable();
+  });
+
   leftTimeButton.addEventListener('click', function (event) {
     time.setDate(time.getDate() - 1);
     fillTable();
   });
 
-  var rightTimeButton = document.getElementById('goRight');
+  
   rightTimeButton.addEventListener('click', function (event) {
     time.setDate(time.getDate() + 1);
     fillTable();
@@ -62,6 +102,7 @@ function addListener () {
 }
 
 function fillTable () {
+  showTodayButton();
   var tableBody = document.getElementById('tableBody');
   var date = document.getElementById('currentDate');
   date.innerHTML = String(time.getMonth() + 1).padStart(2, '0');
@@ -100,18 +141,20 @@ function fillTable () {
     var actionCell = document.createElement('td');
 
     var editButton = document.createElement('button');
-    editButton.setAttribute('class', 'btn btn-orange');
+    editButton.setAttribute('class', 'btn btn-warning');
     editButton.setAttribute('data-id', index);
     editButton.addEventListener('click', function () {
       var id = this.getAttribute('data-id');
-      var addModal = new Modal(Window, 400, 200, 'addTime', function () {
+      var addTime = new Modal(Window, addTimeModalWidth, addTimeModalHeight, 'addTime', function () {
         var timeStr = String(time.getTime());
         cookiesManager.setCookie('time', timeStr);
         Window.reload();
       });
-      addModal.isDebug();
-      addModal.show();
-      var win = addModal.getWindow();
+      if (isDebug) {
+        addTime.isDebug();
+      }
+      addTime.show();
+      var win = addTime.getWindow();
       var container = loadTimings(time);
       var times = container.getTimes();
       win.webContents.on('did-finish-load', () => {
@@ -119,17 +162,30 @@ function fillTable () {
         win.webContents.send('edit', times[id]);
       });
     });
-    editButton.textContent = 'Edit';
+    editButton.textContent = languageManager.getTranslation("edit");
     actionCell.appendChild(editButton);
 
+    if (item.getEndTime() == "")
+    {
+      var setEndTimeButton = document.createElement('button');
+      setEndTimeButton.setAttribute('class', 'btn btn-success');
+      setEndTimeButton.setAttribute('data-id', index);
+      setEndTimeButton.textContent = languageManager.getTranslation("endNow");
+      setEndTimeButton.addEventListener('click', function (button) {
+        var id = this.getAttribute('data-id');
+        endTiming(id);
+      });
+      actionCell.appendChild(setEndTimeButton);
+    }
+
     var delButton = document.createElement('button');
-    delButton.setAttribute('class', 'btn btn-red');
+    delButton.setAttribute('class', 'btn btn-danger');
     delButton.setAttribute('data-id', index);
     delButton.addEventListener('click', function (button) {
       var id = this.getAttribute('data-id');
       deleteTiming(id);
     });
-    delButton.textContent = 'Delete';
+    delButton.textContent = languageManager.getTranslation("delete");
     actionCell.appendChild(delButton);
 
     row.appendChild(actionCell);
@@ -141,7 +197,7 @@ function fillTable () {
   var endRow = document.createElement('tr');
   var endCell = document.createElement('td');
   endCell.setAttribute('colspan', '3');
-  endCell.textContent = 'Total worktime:';
+  endCell.textContent = languageManager.getTranslation("totalWorktime");
   endRow.appendChild(endCell);
 
   var timeComplete = document.createElement('td');
@@ -153,7 +209,26 @@ function fillTable () {
   timeComplete.textContent = workTimeTodayString;
   endRow.appendChild(timeComplete);
 
+  var emptyCell = document.createElement('td');
+  endRow.appendChild(emptyCell);
+
   tableBody.appendChild(endRow);
+}
+
+function showTodayButton()
+{
+  let todayButton = document.getElementById('today');
+
+  let currentDate = new Date();
+  
+  if (time.getDate() === currentDate.getDate()
+      && time.getMonth() === currentDate.getMonth()
+      && time.getFullYear() === currentDate.getFullYear())
+  {
+    todayButton.style.display = "none";
+    return;
+  }
+  todayButton.removeAttribute("style");
 }
 
 function deleteTiming (id) {
@@ -170,6 +245,27 @@ function deleteTiming (id) {
   var timeStr = String(time.getTime());
   cookiesManager.setCookie('time', timeStr);
   Window.reload();
+}
+
+function endTiming (id) {
+  console.log(time);
+  let container = loadTimings(time);
+  let writer = new TimeFileManager(remote.app.getPath('userData'), time);
+  let dataSet = writer.loadFileByTime(time).getTimeById(id);
+
+  
+  let newDataSet = new TimeDataSet();
+  let startTime = new Date(dataSet.getRawStartTime());
+  newDataSet.setStartTime(startTime)
+  newDataSet.setDescription(dataSet.getDescription());
+  newDataSet.setEndTime(new Date());
+
+  container.deleteDataSet(id);
+  container.addTime(newDataSet);
+  console.log(container.getWritable());
+  console.log(time);
+  writer.saveFile(container.getWritable());
+  fillTable();
 }
 
 function loadTimings (dateTime) {

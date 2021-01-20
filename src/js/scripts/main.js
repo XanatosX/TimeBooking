@@ -1,16 +1,22 @@
 const path = require('path')
 const url = require('url')
 const electron = require('electron')
+const { setegid } = require('process')
 const app = electron.app
 const BrowserWindow = electron.BrowserWindow
 const Menu = electron.Menu
 const globalShortcut = electron.globalShortcut
+const LanguageManager = require('./../classes/translation/LanguageManager.js');
+const SettingsManager = require('./../classes/SettingsManager.js')
 
-// require('electron-reload')(__dirname)
+require('electron-reload')(__dirname)
 
 var win
+var settingsFolder = app.getPath('userData')
+var settingsManager = new SettingsManager(settingsFolder);
+var languageManager = new LanguageManager("./language");
 
-function createWindow () {
+function createWindow() {
   win = new BrowserWindow({
     width: 800,
     height: 600,
@@ -19,10 +25,10 @@ function createWindow () {
     }
   })
 
-  win.webContents.openDevTools()
+  //win.openDevTools();
 
   win.loadURL(url.format({
-    pathname: path.join(__dirname, '../windows/index.html'),
+    pathname: path.join(__dirname, '../../windows/index.html'),
     protocol: 'file:',
     slashes: true
   }))
@@ -36,30 +42,32 @@ function createWindow () {
   createGlobalShortcuts()
 }
 
-function createApplicationMenu () {
+function createApplicationMenu() {
   var menu = Menu.buildFromTemplate([
     {
-      label: 'File',
+      label: languageManager.getTranslation("file"),
       submenu: [
-        { label: 'Settings',
-          click () {
+        {
+          label: languageManager.getTranslation("settings"),
+          click() {
             openSettingsMenu()
           }
         },
         { type: 'separator' },
-        { label: 'Exit',
-          click () {
+        {
+          label: languageManager.getTranslation("exit"),
+          click() {
             app.quit()
           }
         }
       ]
     }, {
-      label: 'Test',
+      label: languageManager.getTranslation("menuDebug"),
       submenu: [
         {
-          label: 'Reload (f5)',
+          label: languageManager.getTranslation("reload"),
           accelorator: 'f5',
-          click () {
+          click() {
             win.reload()
           }
         }
@@ -69,8 +77,8 @@ function createApplicationMenu () {
   Menu.setApplicationMenu(menu)
 }
 
-function openSettingsMenu () {
-  var modalPath = path.join('file://', __dirname, '../windows/settings.html')
+function openSettingsMenu() {
+  var modalPath = path.join('file://', __dirname, '../../windows/settings.html')
   var width = win.getSize()[0] - 50
   var height = win.getSize()[1] - 50
   var x = win.getPosition()[0]
@@ -94,16 +102,25 @@ function openSettingsMenu () {
   settingsWin.loadURL(modalPath)
   settingsWin.once('ready-to-show', () => {
     settingsWin.show()
-    settingsWin.openDevTools()
+  })
+  settingsWin.on("close", () => {
+    win.reload();
   })
 }
 
-function createGlobalShortcuts () {
+function createGlobalShortcuts() {
 }
 
-app.on('ready', createWindow)
+app.on('ready', () => {
+  let settings = settingsManager.load("mainSettings");
+  let language = settings.getSetting("language");
+  if (language !== null) {
+    languageManager.setLanguage(language);
+  }
+  createWindow()
+});
 
-app.on('windwos-all-closed', () =>  {
+app.on('windwos-all-closed', () => {
   if (process.platform !== 'darwin') {
     app.quit()
   }

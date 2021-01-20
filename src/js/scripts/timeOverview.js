@@ -1,43 +1,67 @@
-const TableManager = require('../classes/TableManager.js');
-const TimeFileManager = require('../classes/TimeFileManager.js');
-const TimeContainer = require('../classes/TimeContainer.js');
-const SettingsManager = require('../classes/SettingsManager.js');
+const TableManager = require('./../classes/TableManager.js');
+const TimeFileManager = require('./../classes/TimeFileManager.js');
+const TimeContainer = require('./../classes/TimeContainer.js');
+const SettingsManager = require('./../classes/SettingsManager.js');
 const { remote } = require('electron');
+const LanguageManager = require('./../classes/translation/LanguageManager.js');
 
 var timeManager;
 var settingsManager;
 var settings;
 var manager;
+var settingsFolder = remote.app.getPath('userData')
+var languageManager = new LanguageManager("./language");
 
 document.addEventListener('DOMContentLoaded', function () {
-    let folder = remote.app.getPath('userData');
+    
+    settingsManager = new SettingsManager(settingsFolder);
+    settings = settingsManager.load("mainSettings");
+    let language = settings.getSetting("language");
+    if (language !== null) {
+      languageManager.setLanguage(language);
+    }
+    languageManager.applyTranslation(document);
+
     let current = new Date(Date.now());
     manager = new TableManager('tableContainer');
 
-    settingsManager = new SettingsManager(folder);
-    settings = settingsManager.load("mainSettings");
-    timeManager = new TimeFileManager(folder, current);
+    timeManager = new TimeFileManager(settingsFolder, current);
     let files = timeManager.getFiles();
     
     addEvents();
+    createWeeklyDataTable();
   }, false);
 
   function addEvents() {
     let weekButton = document.getElementById('showWeekTime');
     let closeButton = document.getElementById('closeWindow');
+    let showAllCheckbox = document.getElementById('showAll');
+    let showWorkdaysCheckbox = document.getElementById('showWorkdays');
+
+
     weekButton.addEventListener('click', createWeeklyDataTable);
     closeButton.addEventListener('click', function () {
         window.close();
+    });
+
+    showAllCheckbox.addEventListener('click', function () {
+        //@TODO: Add other methods for month and year
+        createWeeklyDataTable();
+    });
+
+    showWorkdaysCheckbox.addEventListener('click', function () {
+        //@TODO: Add other methods for month and year
+        createWeeklyDataTable();
     });
   }
 
   function createWeeklyDataTable() {
     manager.setHeadline({
         0: {
-            name: 'Date'
+            name: languageManager.getTranslation("date")
         },
         1: {
-            name: "Worked time"
+            name: languageManager.getTranslation("workedTime")
         }
     });
 
@@ -62,7 +86,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     manager.addRow({
         0: {
-            name: 'In Total: '
+            name: languageManager.getTranslation("totalWorktime")
         },
         1: {
             name: toHumanReadable(totalTiming) + " / " + getWorkingHours(getPreviousMonday(new Date(Date.now())), getNextSunday(new Date(Date.now()))) + " h"
@@ -94,26 +118,27 @@ document.addEventListener('DOMContentLoaded', function () {
   }
 
   function getAllowedDays () {
+        let showAll = getOverrideValue();
         let returnDays = [];
-        if (settings.getSetting('sunday')) {
+        if (showAll || settings.getSetting('sunday')) {
             returnDays.push(0);
         }
-        if (settings.getSetting('monday')) {
+        if (showAll || settings.getSetting('monday')) {
             returnDays.push(1);
         }
-        if (settings.getSetting('tuesday')) {
+        if (showAll || settings.getSetting('tuesday')) {
             returnDays.push(2);
         }
-        if (settings.getSetting('wednesday')) {
+        if (showAll || settings.getSetting('wednesday')) {
             returnDays.push(3);
         }
-        if (settings.getSetting('thursday')) {
+        if (showAll || settings.getSetting('thursday')) {
             returnDays.push(4);
         }
-        if (settings.getSetting('friday')) {
+        if (showAll || settings.getSetting('friday')) {
             returnDays.push(5);
         }
-        if (settings.getSetting('saturday')) {
+        if (showAll || settings.getSetting('saturday')) {
             returnDays.push(6);
         }
 
@@ -125,6 +150,15 @@ document.addEventListener('DOMContentLoaded', function () {
     let diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)); 
 
     return diffDays;
+  }
+
+  /**
+   * Check of we override the days
+   */
+  function getOverrideValue()
+  {
+    let showAllCheckbox = document.getElementById('showAll');
+    return showAllCheckbox.checked;
   }
 
   /**
@@ -175,7 +209,10 @@ document.addEventListener('DOMContentLoaded', function () {
         let currentDate = new Date(currentDay);
 
         if (allowedDays.includes(currentDate.getDay())) {
-            workingHours += parseFloat(settings.getSetting('dailyWork'));
+            if (settings.getSetting('dailyWork') !== null)
+            {
+                workingHours += parseFloat(settings.getSetting('dailyWork'));
+            }
         }
       }
 

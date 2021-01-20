@@ -29,9 +29,18 @@ class TimeContainer {
   }
 
   /**
+   * The dataset to get
+   * @param {Int32Array} id 
+   */
+  getTimeById(id)
+  {
+    return this.times.length < id || id < 0 ? null : this.times[id];
+  }
+
+  /**
    * This method will delete a dataset at position x
    * 
-   * @param  {Int32Array id
+   * @param  {Int32Array} id
    */
   deleteDataSet (id) {
     this.times.splice(id, 1);

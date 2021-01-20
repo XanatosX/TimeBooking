@@ -1,40 +1,48 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <script src="../../node_modules/tiny-date-picker/dist/tiny-date-picker.min.js"></script>
-    <meta charset="UTF-8">
-    <title>Time booking</title>
-    <link rel="stylesheet" href="../../assets/css/buttons.css">
-    <link rel="stylesheet" href="../../assets/css/index.css">
-    
-    <script>
-        require('../scripts/index.js')
-    </script>
-  </head>
-  <body>
-    <div>
-      <button class='btn btn-blue' id='goLeft'>Yesterday</button>
-      <i>Date: </i><i id='currentDate'></i>
-      <button class='btn btn-blue' id='goRight'>Tomorrow</button>
+
+<head>
+  <link rel="stylesheet" href="../../node_modules/bootstrap/dist/css/bootstrap.min.css" />
+  <script src="../../node_modules/tiny-date-picker/dist/tiny-date-picker.min.js"></script>
+  <meta charset="UTF-8">
+  <title data-langKey="timeBooking"></title>
+
+  <script>
+    require('../js/scripts/index.js')
+  </script>
+</head>
+
+<body>
+  <div class="container" style="margin-top: 1em;">
+    <div class="row">
+      <div class="col-sm-12 col-md-12">
+        <button class='btn btn-primary' id='goLeft' data-langKey="yesterday">Yesterday</button>
+        <button class='btn btn-success' id='today' data-langKey="today">Today</button>
+        <i>Date: </i><i id='currentDate'></i>
+        <button class='btn btn-primary' id='goRight' data-langKey="tomorrow">Tomorrow</button>
+      </div>
     </div>
-    <br/>
     <div>
-      <table id='TimeBooking'>
+
+    </div>
+    <br />
+    <div>
+      <table class="table table-striped" id='TimeBooking'>
         <thead>
           <tr>
-            <th class='th-blue'>
+            <th data-langKey="startTime">
               Start time
             </th>
-            <th>
+            <th data-langKey="endTime">
               End time
             </th>
-            <th>
+            <th data-langKey="description">
               Description
             </th>
-            <th>
+            <th data-langKey="timePassed">
               Time passed
             </th>
-            <th>
+            <th data-langKey="actions">
               Actions
             </th>
           </tr>
@@ -44,8 +52,10 @@
       </table>
     </div>
     <div class='pageEnd'>
-      <button class="btn btn-blue btn-left" id="addStartTime">Add time</button>
-      <button class="btn btn-orange btn-left" id="timeOverview">Show time overview</button>
+      <button class="btn btn-primary" id="addStartTime" data-langKey="addTime">Add time</button>
+      <button class="btn btn-warning" id="timeOverview" data-langKey="timeOverview">Show time overview</button>
     </div>
-  </body>
+  </div>
+</body>
+
 </html>
