@@ -2,6 +2,9 @@ const { fstat } = require('fs');
 const Language = require('./Language.js');
 var fs = require('fs');
 
+/**
+ * This class will read a language file
+ */
 class LanguageFileReader {
     getFileEnding() {
         return ".json";
@@ -32,6 +35,10 @@ class LanguageFileReader {
     }
 
     
+    /**
+     * Load the name of the language
+     * @param {string} name 
+     */
     loadLanguageNames(name) {
         if (!fs.existsSync(name)) {
             return null;
