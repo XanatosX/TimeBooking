@@ -11,10 +11,10 @@
   <body>
     <div id="settingsContent" class="container">
       <div>
-        <h1 data-langkey="settings">Settings</h1>
+        <h1 data-langkey="settings"></h1>
       </div>
       <div id="debug">
-        <h1>Debug</h1>
+        <h1 data-langkey="menuDebug"></h1>
         <input data-setting="debug" id="debug" type="checkbox" class="form-check-input"></input>
         <label data-langkey="debug" for="debug">Debug console on</label>
       </div>
@@ -50,20 +50,24 @@
           </div>
       </div>
       <div>
-        <h2 data-langkey="worktimes">Worktimes</h2>
+        <h2 data-langkey="worktimes"></h2>
         <label for="dailyWork" data-langkey="dailyWork"></label>
-        <input id ='dailyWork' data-setting="dailyWork" type="form-control" placeholder="Input your daily work hours here!"/>
+        <input id ='dailyWork' data-setting="dailyWork" type="number" min="0" placeholder="Input your daily work hours here!"/>
       </div>
       <div>
-        <h2 data-langkey="translation">Translation</h2>
+        <h2 data-langkey="translation"></h2>
         <select data-setting="language" id="languageSelect">
 
         </select>
       </div>
       <div class='pageEnd'>
-        <button class='btn btn-success' data-langkey="save" id='saveButton'>Save</button>
-        <button class='btn btn-success' data-langkey="saveAndClose" id='saveAndCloseButton'>Save and close</button>
-        <button class='btn btn-warning' data-langkey="close" id='closeButton'>Close</button>
+        <div class="btn-group mr-2" role="group">
+          <button class='btn btn-primary' data-langkey="save" id='saveButton'>Save</button>
+          <button class='btn btn-success' data-langkey="saveAndClose" id='saveAndCloseButton'>Save and close</button>
+        </div>
+        <div class="btn-group mr-2" role="group">
+          <button class='btn btn-warning' data-langkey="close" id='closeButton'>Close</button>
+        </div>
       </div>
     </div>
   </body>
