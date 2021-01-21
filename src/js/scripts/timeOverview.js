@@ -10,7 +10,7 @@ var settingsManager;
 var settings;
 var manager;
 var settingsFolder = remote.app.getPath('userData')
-var languageManager = new LanguageManager("./language");
+var languageManager = new LanguageManager(remote.app.getAppPath() + "/language");
 
 document.addEventListener('DOMContentLoaded', function () {
     
