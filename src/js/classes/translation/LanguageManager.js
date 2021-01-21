@@ -1,7 +1,6 @@
 const FileReader = require('./LanguageFileReader.js');
 const LanguageName = require('./LanguageName.js');
 var fs = require('fs');
-const { Console, log } = require('console');
 
 class LanguageManager {
 
