@@ -12,8 +12,16 @@ cd %myDirectory%
 call npm install
 mkdir %buildDirectory%
 echo using %buildDirectory% to save the builds
+
 call electron-packager . TimeBooking --out=%buildDirectory% --platform=win32  --arch=x64  --ignore="/build" --ignore=%buildDirectory%
+echo tar -cvzf %buildDirectory%TimeBooking-win32-x64.zip %buildDirectory%TimeBooking-win32-x64/*
+
 call electron-packager . TimeBooking --out=%buildDirectory% --platform=win32  --arch=ia32 --ignore="/build" --ignore=%buildDirectory%
+tar -cvzf %buildDirectory%TimeBooking-win32-ia32.zip %buildDirectory%TimeBooking-win32-ia32/*
+
 call electron-packager . TimeBooking --out=%buildDirectory% --platform=linux  --arch=x64  --ignore="/build" --ignore=%buildDirectory%
+tar -cvzf %buildDirectory%TimeBooking-linux-x64.zip %buildDirectory%TimeBooking-linux-x64/*
+
 call electron-packager . TimeBooking --out=%buildDirectory% --platform=darwin --arch=x64  --ignore="/build" --ignore=%buildDirectory%
+tar -cvzf %buildDirectory%TimeBooking-darwin-x64.zip %buildDirectory%TimeBooking-win32-x64/*
 
