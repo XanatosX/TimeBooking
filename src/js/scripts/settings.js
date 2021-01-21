@@ -8,7 +8,7 @@ const LanguageManager = require('./../classes/translation/LanguageManager.js');
 var settings
 var filename
 var manager
-var languageManager = new LanguageManager("./language");
+var languageManager = new LanguageManager(remote.app.getAppPath() + "/language");
 
 document.addEventListener('DOMContentLoaded', function () {
   Window.closeDevTools();

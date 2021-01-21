@@ -1,7 +1,6 @@
 const path = require('path')
 const url = require('url')
 const electron = require('electron')
-const { setegid } = require('process')
 const app = electron.app
 const BrowserWindow = electron.BrowserWindow
 const Menu = electron.Menu
@@ -9,14 +8,18 @@ const globalShortcut = electron.globalShortcut
 const LanguageManager = require('./../classes/translation/LanguageManager.js');
 const SettingsManager = require('./../classes/SettingsManager.js')
 
-require('electron-reload')(__dirname)
+//require('electron-reload')(__dirname)
 
 var win
+var settingOpen;
+//var remote;
 var settingsFolder = app.getPath('userData')
 var settingsManager = new SettingsManager(settingsFolder);
-var languageManager = new LanguageManager("./language");
+var languageManager;
+
 
 function createWindow() {
+  settingOpen = false;
   win = new BrowserWindow({
     width: 800,
     height: 600,
@@ -24,6 +27,13 @@ function createWindow() {
       nodeIntegration: true
     }
   })
+  languageManager = new LanguageManager(app.getAppPath() + "/language");
+
+  let settings = settingsManager.load("mainSettings");
+  let language = settings.getSetting("language");
+  if (language !== null) {
+    languageManager.setLanguage(language);
+  }
 
   //win.openDevTools();
 
@@ -78,6 +88,9 @@ function createApplicationMenu() {
 }
 
 function openSettingsMenu() {
+  if (settingOpen === true) {
+    return;
+  }
   var modalPath = path.join('file://', __dirname, '../../windows/settings.html')
   var width = win.getSize()[0] - 50
   var height = win.getSize()[1] - 50
@@ -93,6 +106,9 @@ function openSettingsMenu() {
     x: x,
     y: y,
     frame: true,
+    minimizable: false,
+    movable: false,
+    maximizable: false,
     width: width,
     height: height,
     webPreferences: {
@@ -100,11 +116,14 @@ function openSettingsMenu() {
     }
   })
   settingsWin.loadURL(modalPath)
+  settingsWin.setMenu(null);
   settingsWin.once('ready-to-show', () => {
     settingsWin.show()
+    settingOpen = true;
   })
   settingsWin.on("close", () => {
     win.reload();
+    settingOpen = false;
   })
 }
 
@@ -112,11 +131,6 @@ function createGlobalShortcuts() {
 }
 
 app.on('ready', () => {
-  let settings = settingsManager.load("mainSettings");
-  let language = settings.getSetting("language");
-  if (language !== null) {
-    languageManager.setLanguage(language);
-  }
   createWindow()
 });
 

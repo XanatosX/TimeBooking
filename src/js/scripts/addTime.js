@@ -12,7 +12,7 @@ var id = null;
 var edit = false;
 var settingsFolder = remote.app.getPath('userData')
 var settingsManager = new SettingsManager(settingsFolder);
-var languageManager = new LanguageManager("./language");
+var languageManager = new LanguageManager(remote.app.getAppPath() + "/language");
 
 ipcRenderer.on('time', (event, message) => {
   today = new Date(message);

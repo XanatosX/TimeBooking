@@ -13,7 +13,7 @@ var time = new Date();
 var cookiesManager = new CookieManager(electron);
 var settingsFolder = remote.app.getPath('userData')
 var settingsManager = new SettingsManager(settingsFolder);
-var languageManager = new LanguageManager("./language");
+var languageManager = new LanguageManager(remote.app.getAppPath() + "/language");
 var isDebug = false;
 var addTimeModalWidth = 600;
 var addTimeModalHeight = 250;
@@ -105,7 +105,9 @@ function fillTable () {
   showTodayButton();
   var tableBody = document.getElementById('tableBody');
   var date = document.getElementById('currentDate');
-  date.innerHTML = String(time.getMonth() + 1).padStart(2, '0');
+
+  date.innerHTML = ": ";
+  date.innerHTML += String(time.getMonth() + 1).padStart(2, '0');
   date.innerHTML += '/';
   date.innerHTML += String(time.getDate()).padStart(2, '0');
   date.innerHTML += '/';
@@ -139,6 +141,12 @@ function fillTable () {
     row.appendChild(cell);
 
     var actionCell = document.createElement('td');
+    let actionButtonGroup = document.createElement('div');
+    let secondButtonGroup = document.createElement('div');
+    actionButtonGroup.setAttribute('class', "btn-group mr-2");
+    secondButtonGroup.setAttribute('class', "btn-group mr-2");
+    actionButtonGroup.setAttribute('role', "group");
+    secondButtonGroup.setAttribute('role', "group");
 
     var editButton = document.createElement('button');
     editButton.setAttribute('class', 'btn btn-warning');
@@ -163,7 +171,7 @@ function fillTable () {
       });
     });
     editButton.textContent = languageManager.getTranslation("edit");
-    actionCell.appendChild(editButton);
+    
 
     if (item.getEndTime() == "")
     {
@@ -175,8 +183,9 @@ function fillTable () {
         var id = this.getAttribute('data-id');
         endTiming(id);
       });
-      actionCell.appendChild(setEndTimeButton);
+      actionButtonGroup.appendChild(setEndTimeButton);
     }
+    actionButtonGroup.appendChild(editButton);
 
     var delButton = document.createElement('button');
     delButton.setAttribute('class', 'btn btn-danger');
@@ -186,8 +195,10 @@ function fillTable () {
       deleteTiming(id);
     });
     delButton.textContent = languageManager.getTranslation("delete");
-    actionCell.appendChild(delButton);
+    secondButtonGroup.appendChild(delButton);
 
+    actionCell.appendChild(actionButtonGroup);
+    actionCell.appendChild(secondButtonGroup);
     row.appendChild(actionCell);
 
     tableBody.appendChild(row);
