@@ -1,17 +1,26 @@
 const { remote } = require('electron');
 const Window = remote.getCurrentWindow();
 
-const SettingsContainer = require('./../classes/SettingsContainer.js')
-const Manager = require('./../classes/SettingsManager.js')
+const SettingsContainer = require('./../classes/settings/SettingsContainer.js')
+const Manager = require('./../classes/settings/SettingsManager.js')
 const LanguageManager = require('./../classes/translation/LanguageManager.js');
+const DateFormatter = require("./../classes/util/DateFormatter.js");
+const ContentSwitcher = require('./../classes/util/ContentSwitcher');
+const Modal = require('./../classes/electron_extension/Modal');
+const TableManager = require('./../classes/electron_extension/TableManager');
+const ProjectManager = require('./../classes/data_management/ProjectManagment/ProjectManager');
 
 var settings
 var filename
 var manager
 var languageManager = new LanguageManager(remote.app.getAppPath() + "/language");
+var dateFormatter = new DateFormatter();
+var contentSwitcher = new ContentSwitcher();
+var projectManager = new ProjectManager(remote.app.getPath('userData'));
 
 document.addEventListener('DOMContentLoaded', function () {
-  Window.closeDevTools();
+  Window.openDevTools();
+  //Window.closeDevTools();
   filename = 'mainSettings'
   let folder = remote.app.getPath('userData')
   manager = new Manager(folder)
@@ -22,6 +31,7 @@ document.addEventListener('DOMContentLoaded', function () {
     languageManager.setLanguage(language);
   }
   languageManager.applyTranslation(document);
+  buildProjectTable()
 
   if (settings !== null) {
     fillSettingsWindow()
@@ -42,8 +52,11 @@ document.addEventListener('DOMContentLoaded', function () {
 
 function addListner () {
   let elements = crawlElements(document.getElementById('settingsContent'), 'input')
-  let workdaysDiv = document.getElementById('workdays')
+  //let workdaysDiv = document.getElementById('workdays')
   let saveButton = document.getElementById('saveButton')
+  let addNewProjectButton = document.getElementById('addProject')
+  let dateFormat = document.getElementById('dateFormat')
+  let exampleDate = document.getElementById('exampleDate')
   let saveAndCloseButton = document.getElementById('saveAndCloseButton')
   let closeButton = document.getElementById('closeButton')
   elements.forEach(function (element) {
@@ -66,10 +79,35 @@ function addListner () {
     }
   })
 
+  dateFormat.addEventListener('change', () => {
+    dateFormatter.setFormat(dateFormat.value);
+    exampleDate.innerHTML = ": " + dateFormatter.getHumanReadable(new Date());
+  });
+
+  console.log(dateFormat.value);
+  if (dateFormat.value == "") {
+    dateFormat.value = dateFormatter.getDefaultFormat();
+  }
+  dateFormatter.setFormat(dateFormat.value);
+  exampleDate.innerHTML = ": " + dateFormatter.getHumanReadable(new Date());
+
+
   saveButton.addEventListener('click', function () {
     console.log(settings);
-    Window.reload();
-    manager.save(filename, settings.getWritable())
+    manager.save(filename, settings.getWritable());
+    let debugCheckbox = document.getElementById('debug');
+    let debugSet = debugCheckbox.checked;
+    console.log(debugCheckbox);
+    console.log(debugSet);
+    console.log(isDebug);
+    if (debugSet && debugSet != isDebug) {
+      isDebug = debugSet;
+      Window.openDevTools();
+      return;
+    }
+    
+    isDebug = debugSet;
+    Window.closeDevTools();
   })
 
   saveAndCloseButton.addEventListener('click', function () {
@@ -81,6 +119,8 @@ function addListner () {
   closeButton.addEventListener('click', function () {
     close()
   })
+
+  addNewProjectButton.addEventListener('click', () => addNewProject());
 }
 
 function fillSettingsWindow () {
@@ -164,6 +204,49 @@ function crawlElements (root, name) {
 }
 
 function close () {
-  let window = remote.getCurrentWindow()
-  window.close()
+  let window = remote.getCurrentWindow();
+  contentSwitcher.switchToWindow('index', window);
 }
+
+function addNewProject() {
+  let addProjectModal = new Modal(remote.getCurrentWindow(), 800,800, 'addProject', () => buildProjectTable());
+  if (isDebug) {
+    addProjectModal.isDebug();
+  }
+  
+  addProjectModal.show();
+}
+
+function buildProjectTable() {
+  console.log("build project table!");
+  let projects = projectManager.getProjects();
+  console.log(projects);
+
+  let tableManager = new TableManager("projectTable");
+  tableManager.clearTable();
+  tableManager.setHeadline({
+    0: {
+      name: languageManager.getTranslation('projectName')
+    },
+    1: {
+      name: languageManager.getTranslation('actions')
+    }
+  })  
+
+
+  projects.forEach(project => {
+    tableManager.addRow({
+      0: {
+          name: project.name,
+      },
+      1: {
+        name: "<button class='btn btn-primary'></button>",
+        data: [{
+          name: "folder",
+          value: project.folder
+        }]
+    }
+    });
+  });
+}
+

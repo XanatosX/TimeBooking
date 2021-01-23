@@ -16,10 +16,12 @@
   <div class="container" style="margin-top: 1em;">
     <div class="row">
       <div class="col-sm-12 col-md-12">
-        <button class='btn btn-primary' id='goLeft' data-langKey="yesterday">Yesterday</button>
-        <button class='btn btn-success' id='today' data-langKey="today">Today</button>
+        <div class="btn-group mr-2" role="group">
+          <button class='btn btn-primary' id='goLeft' data-langKey="yesterday">Yesterday</button>
+          <button class='btn btn-success' id='today' data-langKey="today">Today</button>
+        </div>
         <i data-langKey="date"></i><i id='currentDate'></i>
-        <button class='btn btn-primary' id='goRight' data-langKey="tomorrow">Tomorrow</button>
+        <button class='btn btn-warning' id='goRight' data-langKey="tomorrow">Tomorrow</button>
       </div>
     </div>
     <div>
@@ -30,21 +32,12 @@
       <table class="table table-striped" id='TimeBooking'>
         <thead>
           <tr>
-            <th data-langKey="startTime">
-              Start time
-            </th>
-            <th data-langKey="endTime">
-              End time
-            </th>
-            <th data-langKey="description">
-              Description
-            </th>
-            <th data-langKey="timePassed">
-              Time passed
-            </th>
-            <th data-langKey="actions">
-              Actions
-            </th>
+            <th data-langKey="timeIgnored"></th>
+            <th data-langKey="startTime"></th>
+            <th data-langKey="endTime"></th>
+            <th data-langKey="description"></th>
+            <th data-langKey="timePassed"></th>
+            <th data-langKey="actions"></th>
           </tr>
         </thead>
         <tbody id='tableBody'>

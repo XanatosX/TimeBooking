@@ -1,18 +1,17 @@
 const path = require('path')
 const url = require('url')
-const electron = require('electron')
-const app = electron.app
-const BrowserWindow = electron.BrowserWindow
-const Menu = electron.Menu
-const globalShortcut = electron.globalShortcut
+const { electron, app, Menu, BrowserWindow, globalShortcut } = require('electron')
 const LanguageManager = require('./../classes/translation/LanguageManager.js');
-const SettingsManager = require('./../classes/SettingsManager.js')
+const SettingsManager = require('./../classes/settings/SettingsManager.js')
 
-//require('electron-reload')(__dirname)
+try {
+  require('electron-reload')(__dirname)
+} catch (ex) {
+  console.log('We are not debugging this, right? RIGHT?');
+}
 
 var win
 var settingOpen;
-//var remote;
 var settingsFolder = app.getPath('userData')
 var settingsManager = new SettingsManager(settingsFolder);
 var languageManager;
@@ -34,8 +33,6 @@ function createWindow() {
   if (language !== null) {
     languageManager.setLanguage(language);
   }
-
-  //win.openDevTools();
 
   win.loadURL(url.format({
     pathname: path.join(__dirname, '../../windows/index.html'),
@@ -78,7 +75,7 @@ function createApplicationMenu() {
           label: languageManager.getTranslation("reload"),
           accelorator: 'f5',
           click() {
-            win.reload()
+            reloadAllWindows();
           }
         }
       ]
@@ -87,47 +84,24 @@ function createApplicationMenu() {
   Menu.setApplicationMenu(menu)
 }
 
+/**
+ * Reload all the windows
+ */
+function reloadAllWindows() {
+  let windows = BrowserWindow.getAllWindows();
+  windows.forEach( item => item.reload());
+}
+
 function openSettingsMenu() {
-  if (settingOpen === true) {
-    return;
-  }
-  var modalPath = path.join('file://', __dirname, '../../windows/settings.html')
-  var width = win.getSize()[0] - 50
-  var height = win.getSize()[1] - 50
-  var x = win.getPosition()[0]
-  x += win.getSize()[0] / 2 - width / 2
-  var y = win.getPosition()[1]
-  y += win.getSize()[1] / 2 - height / 2
-  var settingsWin = new BrowserWindow({
-    parent: win,
-    modal: true,
-    show: false,
-    center: false,
-    x: x,
-    y: y,
-    frame: true,
-    minimizable: false,
-    movable: false,
-    maximizable: false,
-    width: width,
-    height: height,
-    webPreferences: {
-      nodeIntegration: true
-    }
-  })
-  settingsWin.loadURL(modalPath)
-  settingsWin.setMenu(null);
-  settingsWin.once('ready-to-show', () => {
-    settingsWin.show()
-    settingOpen = true;
-  })
-  settingsWin.on("close", () => {
-    win.reload();
-    settingOpen = false;
-  })
+  win.loadURL(url.format({
+    pathname: path.join(__dirname, '../../windows/settings.html'),
+    protocol: 'file:',
+    slashes: true
+  }));
 }
 
 function createGlobalShortcuts() {
+  globalShortcut.register('f5', () => reloadAllWindows());
 }
 
 app.on('ready', () => {

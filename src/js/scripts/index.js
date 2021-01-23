@@ -1,12 +1,13 @@
 const electron = require('electron');
 const remote = electron.remote;
-const Modal = require('./../classes/Modal.js');
+const Modal = require('../classes/electron_extension/Modal.js');
 const Window = electron.remote.getCurrentWindow();
-const TimeFileManager = require('./../classes/TimeFileManager.js');
-const TimeDataSet  = require('./../classes/TimeDataSet.js');
-const CookieManager = require('./../classes/Cookies.js');
-const SettingsManager = require('./../classes/SettingsManager.js')
+const TimeFileManager = require('../classes/data_management/TimeFileManager.js');
+const TimeDataSet  = require('../classes/data_management/TimeDataSet.js');
+const CookieManager = require('../classes/data_management/Cookies.js');
+const SettingsManager = require('./../classes/settings/SettingsManager.js')
 const LanguageManager = require('./../classes/translation/LanguageManager.js');
+const DateFormatter = require("./../classes/util/DateFormatter.js");
 
 var time = new Date();
 
@@ -14,18 +15,23 @@ var cookiesManager = new CookieManager(electron);
 var settingsFolder = remote.app.getPath('userData')
 var settingsManager = new SettingsManager(settingsFolder);
 var languageManager = new LanguageManager(remote.app.getAppPath() + "/language");
+var dateFormatter = new DateFormatter();
 var isDebug = false;
 var addTimeModalWidth = 600;
 var addTimeModalHeight = 250;
+var selectedProject;
 
 document.addEventListener('DOMContentLoaded', function () {
   Window.closeDevTools();
   let settings = settingsManager.load("mainSettings");
+  selectedProject = settings.getSetting("project");
+  selectedProject = selectedProject === null ? 'default' : selectedProject;
   let language = settings.getSetting("language");
   if (language !== null) {
     languageManager.setLanguage(language);
   }
   languageManager.applyTranslation(document);
+  dateFormatter.setFormat(settings.getSetting("dateFormat"))
   isDebug = settings.getSetting("debug");
 
   isDebug = isDebug == null ? false : isDebug;
@@ -105,13 +111,7 @@ function fillTable () {
   showTodayButton();
   var tableBody = document.getElementById('tableBody');
   var date = document.getElementById('currentDate');
-
-  date.innerHTML = ": ";
-  date.innerHTML += String(time.getMonth() + 1).padStart(2, '0');
-  date.innerHTML += '/';
-  date.innerHTML += String(time.getDate()).padStart(2, '0');
-  date.innerHTML += '/';
-  date.innerHTML += String(time.getFullYear());
+  date.innerHTML = ": " + dateFormatter.getHumanReadable(time);
   tableBody.innerHTML = '';
 
   var container = loadTimings(time);
@@ -124,6 +124,16 @@ function fillTable () {
   var index = 0;
   times.forEach(function (item) {
     var row = document.createElement('tr');
+    var cell = document.createElement('td');
+    let checkbox = document.createElement('input');
+    checkbox.setAttribute('type', 'checkbox');
+    if (!item.isGettingCounted()) {
+      checkbox.setAttribute('checked', true);
+    }
+    checkbox.setAttribute('type', 'checkbox');
+    checkbox.setAttribute('disabled', 'true');
+    cell.appendChild(checkbox);
+    row.appendChild(cell);
     var cell = document.createElement('td');
     cell.textContent = item.getStartTime();
     row.appendChild(cell);
@@ -207,7 +217,7 @@ function fillTable () {
 
   var endRow = document.createElement('tr');
   var endCell = document.createElement('td');
-  endCell.setAttribute('colspan', '3');
+  endCell.setAttribute('colspan', '4');
   endCell.textContent = languageManager.getTranslation("totalWorktime");
   endRow.appendChild(endCell);
 
@@ -250,7 +260,7 @@ function deleteTiming (id) {
 
   container.deleteDataSet(id);
 
-  var writer = new TimeFileManager(remote.app.getPath('userData'), time);
+  var writer = new TimeFileManager(remote.app.getPath('userData'), selectedProject, time);
   writer.saveFile(container.getWritable());
 
   var timeStr = String(time.getTime());
@@ -261,7 +271,7 @@ function deleteTiming (id) {
 function endTiming (id) {
   console.log(time);
   let container = loadTimings(time);
-  let writer = new TimeFileManager(remote.app.getPath('userData'), time);
+  let writer = new TimeFileManager(remote.app.getPath('userData'), selectedProject, time);
   let dataSet = writer.loadFileByTime(time).getTimeById(id);
 
   
@@ -281,7 +291,7 @@ function endTiming (id) {
 
 function loadTimings (dateTime) {
   var folder = remote.app.getPath('userData');
-  var manager = new TimeFileManager(folder, dateTime);
+  var manager = new TimeFileManager(folder, selectedProject, dateTime);
   return manager.loadTodayFile();
 }
 

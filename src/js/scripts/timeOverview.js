@@ -1,9 +1,10 @@
-const TableManager = require('./../classes/TableManager.js');
-const TimeFileManager = require('./../classes/TimeFileManager.js');
-const TimeContainer = require('./../classes/TimeContainer.js');
-const SettingsManager = require('./../classes/SettingsManager.js');
-const { remote } = require('electron');
+const TableManager = require('../classes/electron_extension/TableManager.js');
+const TimeFileManager = require('../classes/data_management/TimeFileManager.js');
+const TimeContainer = require('../classes/data_management/TimeContainer.js');
+const SettingsManager = require('./../classes/settings/SettingsManager.js');
 const LanguageManager = require('./../classes/translation/LanguageManager.js');
+const DateFormatter = require("./../classes/util/DateFormatter.js");
+const { remote } = require('electron');
 
 var timeManager;
 var settingsManager;
@@ -11,9 +12,9 @@ var settings;
 var manager;
 var settingsFolder = remote.app.getPath('userData')
 var languageManager = new LanguageManager(remote.app.getAppPath() + "/language");
+var dateFormatter = new DateFormatter();
 
 document.addEventListener('DOMContentLoaded', function () {
-    
     settingsManager = new SettingsManager(settingsFolder);
     settings = settingsManager.load("mainSettings");
     let language = settings.getSetting("language");
@@ -21,12 +22,14 @@ document.addEventListener('DOMContentLoaded', function () {
       languageManager.setLanguage(language);
     }
     languageManager.applyTranslation(document);
+    dateFormatter.setFormat(settings.getSetting("dateFormat"))
 
     let current = new Date(Date.now());
     manager = new TableManager('tableContainer');
+    let selectedProject = settings.getSetting("project");
+    selectedProject = selectedProject === null ? 'default' : selectedProject;
 
-    timeManager = new TimeFileManager(settingsFolder, current);
-    let files = timeManager.getFiles();
+    timeManager = new TimeFileManager(settingsFolder, selectedProject, current);
     
     addEvents();
     createWeeklyDataTable();
@@ -34,10 +37,16 @@ document.addEventListener('DOMContentLoaded', function () {
 
   function addEvents() {
     let weekButton = document.getElementById('showWeekTime');
+    let monthButton = document.getElementById('showMonthTime');
+    let yearButton = document.getElementById('showYearTime');
+    let allTimeButton = document.getElementById('showAllTime');
     let closeButton = document.getElementById('closeWindow');
     let showAllCheckbox = document.getElementById('showAll');
     let showWorkdaysCheckbox = document.getElementById('showWorkdays');
 
+    monthButton.setAttribute('disabled', true);
+    yearButton.setAttribute('disabled', true);
+    allTimeButton.setAttribute('disabled', true);
 
     weekButton.addEventListener('click', createWeeklyDataTable);
     closeButton.addEventListener('click', function () {
@@ -95,7 +104,7 @@ document.addEventListener('DOMContentLoaded', function () {
   }
 
   function getPreviousMonday(date) {
-    let day = date.getDay();
+    let day = date.getDay() - 1;
     let returnValue = date;
     if (day !== 1) {
         returnValue = new Date().setDate(date.getDate() - day);
@@ -113,7 +122,6 @@ document.addEventListener('DOMContentLoaded', function () {
         returnValue = new Date().setDate(date.getDate() + (7 - day));
         returnValue = new Date(returnValue);
     }
-
     return returnValue;
   }
 
@@ -146,6 +154,7 @@ document.addEventListener('DOMContentLoaded', function () {
   }
 
   function getDaysToCount (firstDate, lastDate) {
+    lastDate.setDate(lastDate.getDate() + 1);
     let diffTime = Math.abs(lastDate.getTime() - firstDate.getTime());
     let diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)); 
 
@@ -190,7 +199,7 @@ document.addEventListener('DOMContentLoaded', function () {
             content = new TimeContainer();
         }
         let object = {
-            'date': getReadableDate(fileDate),
+            'date': dateFormatter.getHumanReadable(fileDate),
             'timings': content
         };
         TimesToReturn[key] = object;
@@ -203,7 +212,8 @@ document.addEventListener('DOMContentLoaded', function () {
       let daysToCount = getDaysToCount(firstDate, lastDate);
 
       let workingHours = 0;
-
+      console.log(allowedDays);
+      console.log(daysToCount);
       for (let i = 0; i < daysToCount; i++) {
         let currentDay = new Date().setDate(firstDate.getDate() + i);
         let currentDate = new Date(currentDay);
@@ -234,12 +244,5 @@ document.addEventListener('DOMContentLoaded', function () {
 
   function getFileNameFromDate (date) {
       return date.getFullYear() + String(date.getMonth() + 1).padStart(2, '0') + String(date.getDate()).padStart(2, '0');
-  }
-
-  function getReadableDate (date) {
-      let year = date.getFullYear();
-      let month = String(date.getMonth() + 1).padStart(2, '0');
-      let day = String(date.getDate() + 1).padStart(2, '0');
-      return month + ' / ' + day + ' / ' + year;
   }
   

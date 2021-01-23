@@ -10,14 +10,12 @@ class TableManager {
      */
     constructor (tableId) {
         this.table = document.getElementById(tableId);
+        this.tableId = tableId;
         this.columns = 0;
+        this.headerContainer = null;
+        this.headerBody = null;
 
-        let header = document.createElement('thead');
-        header.setAttribute('id', tableId + '_header');
-        this._headerContainer = this.table.appendChild(header);
-        let body = document.createElement('tbody');
-        body.setAttribute('id', tableId + '_body');
-        this._headerBody = this.table.appendChild(body);
+        this.createTableParts();
     }
 
     /**
@@ -26,7 +24,7 @@ class TableManager {
      * @param  {Object} json
      */
     setHeadline (json) {
-        this._headerContainer.innerHTML = '';
+        this.headerContainer.innerHTML = '';
         this.columns = 0;
         let row = document.createElement('tr');
         for (let key in json) {
@@ -46,7 +44,7 @@ class TableManager {
             this.columns++;
             row.appendChild(headline);
         }
-        this._headerContainer.appendChild(row);
+        this.headerContainer.appendChild(row);
     }
 
     /**
@@ -64,6 +62,13 @@ class TableManager {
             
             let content = document.createElement('td');
             let name = element.name;
+            if (element.data !== null && element.data !== undefined) {
+                element.data.forEach(element => {
+                    let name = "data-" + element.name;
+                    let data = element.value;
+                    row.setAttribute(name, data);
+                });
+            }
 
             content.innerHTML = name;
             let colspan = element.colspan;
@@ -78,17 +83,31 @@ class TableManager {
         }
 
         if (rowColumns === this.columns) {
-            this._headerBody.appendChild(row);
+            this.headerBody.appendChild(row);
             returnValue = true;
         }
         return returnValue;
+    }
+
+    createTableParts() {
+        let header = document.createElement('thead');
+        header.setAttribute('id', this.tableId + '_header');
+        this.headerContainer = this.table.appendChild(header);
+        let body = document.createElement('tbody');
+        body.setAttribute('id', this.tableId + '_body');
+        this.headerBody = this.table.appendChild(body);
     }
 
     /**
      * This method will delete all rows
      */
     clearRows () {
-        this._headerBody.innerHTML = '';
+        this.headerBody.innerHTML = '';
+    }
+
+    clearTable() {
+        this.table.innerHTML = '';
+        this.createTableParts();
     }
 }
 

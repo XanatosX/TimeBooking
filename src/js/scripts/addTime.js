@@ -1,10 +1,10 @@
 const electron = require('electron');
 const ipcRenderer = electron.ipcRenderer;
-const TimeFileManager = require('./../js/classes/TimeFileManager.js');
-const TimeContainer = require('./../js/classes/TimeContainer.js');
-const TimeDataSet = require('./../js/classes/TimeDataSet.js');
+const TimeFileManager = require('./../js/classes/data_management/TimeFileManager.js');
+const TimeContainer = require('./../js/classes/data_management/TimeContainer.js');
+const TimeDataSet = require('./../js/classes/data_management/TimeDataSet.js');
 const LanguageManager = require('./../js/classes/translation/LanguageManager.js');
-const SettingsManager = require('./../js/classes/SettingsManager.js')
+const SettingsManager = require('./../js/classes/settings/SettingsManager.js')
 const remote = electron.remote;
 
 var today = null;
@@ -13,6 +13,7 @@ var edit = false;
 var settingsFolder = remote.app.getPath('userData')
 var settingsManager = new SettingsManager(settingsFolder);
 var languageManager = new LanguageManager(remote.app.getAppPath() + "/language");
+var selectedProject;
 
 ipcRenderer.on('time', (event, message) => {
   today = new Date(message);
@@ -25,14 +26,20 @@ ipcRenderer.on('id', (event, message) => {
 });
 
 ipcRenderer.on('edit', (event, message) => {
+  console.log(message);
   edit = true;
   var startInput = document.getElementById('start-timestamp');
   var endInput = document.getElementById('end-timestamp');
+  var ignoreTime = document.getElementById('ignoreTime');
   var description = document.getElementById('description');
 
   var startTime = new Date(message.startTime);
   today = startTime;
   var endTime = new Date(message.endTime);
+  if (message.timeIngored) {
+    ignoreTime.setAttribute('checked', true);
+  }
+  
 
   setTime(startInput, startTime);
   setTime(endInput, endTime);
@@ -40,13 +47,17 @@ ipcRenderer.on('edit', (event, message) => {
 });
 
 document.addEventListener('DOMContentLoaded', function () {
+  let description = document.getElementById('description');
   
   let settings = settingsManager.load("mainSettings");
+  selectedProject = settings.getSetting("project");
+  selectedProject = selectedProject === null ? 'default' : selectedProject;
   let language = settings.getSetting("language");
   if (language !== null) {
     languageManager.setLanguage(language);
   }
   languageManager.applyTranslation(document);
+  description.setAttribute('placeholder', languageManager.getTranslation('descriptionPlaceholder'));
   addListener();
   addKeyPress();
 }, false);
@@ -89,14 +100,16 @@ function save () {
   var timeStart = document.getElementById('start-timestamp');
   var timeEnd = document.getElementById('end-timestamp');
   var description = document.getElementById('description');
+  let ignoreTime = document.getElementById('ignoreTime');
   var folder = remote.app.getPath('userData');
-  var manager = new TimeFileManager(folder, today);
+  var manager = new TimeFileManager(folder, selectedProject, today);
   var container = manager.loadTodayFile();
   if (container === null) {
     container = new TimeContainer();
   }
 
   var newDataSet = new TimeDataSet();
+  let timeIngored = ignoreTime.checked;
 
   if (timeStart.value === undefined) {
     return;
@@ -118,6 +131,7 @@ function save () {
     newDataSet.setEndTime(endStamp);
   }
   newDataSet.setDescription(description.value);
+  newDataSet.setTimeIngnored(timeIngored);
 
   if (edit) {
     if (id === null) {

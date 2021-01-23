@@ -12,8 +12,8 @@ class TimeFileManager {
    * @param  {String} path
    * @param  {Date} dateTime
    */
-  constructor (path, dateTime) {
-    this.path = path + '/bookings/';
+  constructor (path, project, dateTime) {
+    this.path = path + '/bookings/' + project + '/';
     this.today = dateTime;
     if (!fs.existsSync(this.path)) {
       fs.mkdirSync(this.path);

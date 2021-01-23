@@ -69,7 +69,9 @@ class TimeContainer {
 
     let passed = 0;
     this.times.forEach(function (item) {
-      passed += item.getWorkTime();
+      if (item.isGettingCounted()) {
+        passed += item.getWorkTime();
+      }
     });
 
     return passed;

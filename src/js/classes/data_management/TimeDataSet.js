@@ -9,6 +9,8 @@ class TimeDataSet {
   constructor () {
     this.startTime = null;
     this.endTime = null;
+    this.timeIngored = null;
+    this.setTimeIngnored(false);
     this.description = '';
   }
 
@@ -26,6 +28,21 @@ class TimeDataSet {
    */
   getDescription () {
     return this.description;
+  }
+
+  /**
+   * Should we ignore the entry?
+   * @param {boolean} isIgnored 
+   */
+  setTimeIngnored(isIgnored) {
+    this.timeIngored = isIgnored;
+  }
+
+  /**
+   * Should the dataset be counted
+   */
+  isGettingCounted() {
+    return (!this.timeIngored);
   }
 
   /**
@@ -127,6 +144,7 @@ class TimeDataSet {
     var data = {};
     data['startTime'] = this.startTime;
     data['endTime'] = this.endTime;
+    data['counted'] = this.isGettingCounted();
     data['description'] = this.description;
 
     return data;
@@ -143,6 +161,9 @@ class TimeDataSet {
 
     this.startTime = data.startTime;
     this.endTime = data.endTime;
+    if (data.counted !== undefined) {
+      this.setTimeIngnored(!data.counted);
+    }
     if (data.description !== undefined) {
       this.description = data.description;
     }
