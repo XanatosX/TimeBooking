@@ -11,9 +11,12 @@
         "yesterday": "Yesterday",
         "today": "Today",
         "tomorrow": "Tomorrow",
+        "timeIgnored": "Time ignored",
+        "ignoreTime": "Ignore Time",
         "startTime": "Start time",
         "endTime": "End time",
         "description": "Description",
+        "descriptionPlaceholder": "Enter your description here ...",
         "timePassed": "Time passed",
         "actions": "Actions",
         "addTime": "Add time",
@@ -22,6 +25,8 @@
         "edit": "Edit",
         "delete": "Delete",
         "save": "Save",
+        "dateFormat": "Date format",
+        "exampleDate": "Example date",
         "saveAndClose": "{save} and {close}",
         "close": "close",
         "endNow": "End now",
@@ -46,6 +51,9 @@
         "all": "All",
         "onlyWorkdays": "Only workdays",
         "date": "Date",
-        "workedTime": "WorkedTime"
+        "workedTime": "WorkedTime",
+        "projects": "Projects",
+        "projectName": "Project name",
+        "addProject" : "Add new project"
     }
 }

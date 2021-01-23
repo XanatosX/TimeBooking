@@ -10,9 +10,11 @@
         "yesterday": "Gestern",
         "today": "Heute",
         "tomorrow": "Morgen",
+        "timeIgnored": "Zeit ignoriert",
         "startTime": "Start Zeit",
         "endTime": "End Zeit",
         "description": "Beschreibung",
+        "descriptionPlaceholder": "Eigene {description} hier eingeben ...",
         "timePassed": "Vergangene Zeit",
         "actions": "Aktionen",
         "addTime": "Zeit hinzufügen",
@@ -45,6 +47,7 @@
         "all": "Alle",
         "onlyWorkdays": "Nur Arbeitstage",
         "date": "Datum",
-        "workedTime": "Gearbeitete Zeit"
+        "workedTime": "Gearbeitete Zeit",
+        "projects": "Projekte"
     }
 }
