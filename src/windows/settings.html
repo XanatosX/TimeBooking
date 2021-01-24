@@ -24,7 +24,14 @@
     </div>
     <div>
       <h2 data-langkey="projects" class="mt-2"></h2>
-      <table class="table table-striped" id='projectTable'>
+      <table class="table table-striped">
+        <thead>
+          <tr>
+            <th data-langkey="projectName"></th>
+            <th data-langkey="actions"></th>
+          </tr>
+        </thead>
+        <tbody id="projectTableBody"></tbody>
       </table>
       <button class="btn btn-primary" id="addProject" data-langkey="addProject"></button>
     </div>

@@ -17,6 +17,8 @@ var languageManager = new LanguageManager(remote.app.getAppPath() + "/language")
 var dateFormatter = new DateFormatter();
 var contentSwitcher = new ContentSwitcher();
 var projectManager = new ProjectManager(remote.app.getPath('userData'));
+var addProjectWidth = 800;
+var addProjectHeight = 800;
 
 document.addEventListener('DOMContentLoaded', function () {
   Window.openDevTools();
@@ -94,7 +96,9 @@ function addListner () {
 
   saveButton.addEventListener('click', function () {
     console.log(settings);
-    manager.save(filename, settings.getWritable());
+    save();
+    projectManager.clearTempProjectFile();
+    buildProjectTable();
     let debugCheckbox = document.getElementById('debug');
     let debugSet = debugCheckbox.checked;
     console.log(debugCheckbox);
@@ -112,7 +116,7 @@ function addListner () {
 
   saveAndCloseButton.addEventListener('click', function () {
     console.log(settings);
-    manager.save(filename, settings.getWritable())
+    save()
     close()
   })
 
@@ -203,13 +207,19 @@ function crawlElements (root, name) {
   return returnValue
 }
 
+function save() {
+  manager.save(filename, settings.getWritable());
+  projectManager.writeProjectFile();
+}
+
 function close () {
+  projectManager.clearTempProjectFile();
   let window = remote.getCurrentWindow();
   contentSwitcher.switchToWindow('index', window);
 }
 
 function addNewProject() {
-  let addProjectModal = new Modal(remote.getCurrentWindow(), 800,800, 'addProject', () => buildProjectTable());
+  let addProjectModal = new Modal(remote.getCurrentWindow(), addProjectWidth, addProjectHeight, 'addProject', () => buildProjectTable());
   if (isDebug) {
     addProjectModal.isDebug();
   }
@@ -218,35 +228,47 @@ function addNewProject() {
 }
 
 function buildProjectTable() {
+  let tableBody = document.getElementById('projectTableBody');
+  tableBody.innerHTML = '';
   console.log("build project table!");
   let projects = projectManager.getProjects();
-  console.log(projects);
-
-  let tableManager = new TableManager("projectTable");
-  tableManager.clearTable();
-  tableManager.setHeadline({
-    0: {
-      name: languageManager.getTranslation('projectName')
-    },
-    1: {
-      name: languageManager.getTranslation('actions')
-    }
-  })  
+  console.log(projects); 
 
 
   projects.forEach(project => {
-    tableManager.addRow({
-      0: {
-          name: project.name,
-      },
-      1: {
-        name: "<button class='btn btn-primary'></button>",
-        data: [{
-          name: "folder",
-          value: project.folder
-        }]
-    }
-    });
+    let tableRow = document.createElement('tr');
+
+    let projectNameCell = document.createElement('td');
+    console.log(project);
+    projectNameCell.append(project.getName());
+    tableRow.append(projectNameCell);
+
+    let projectActionCell = document.createElement('td');
+    let editAction = document.createElement('button');
+    editAction.setAttribute('class', 'btn btn-warning');
+    editAction.setAttribute('data-id', project.getId());
+    editAction.innerHTML = languageManager.getTranslation('edit');
+    editAction.addEventListener('click', (event) => {
+      let button = event.target;
+      let id = button.dataset.id;
+      let project = projectManager.getProjectById(id);
+      let editProject = new Modal(remote.getCurrentWindow(), addProjectWidth, addProjectHeight, 'addProject', function () {
+        //var timeStr = String(time.getTime());
+        //cookiesManager.setCookie('time', timeStr);
+        Window.reload();
+      });
+      editProject.show();
+      let win = editProject.getWindow();
+      win.webContents.on('did-finish-load', () => {
+        win.webContents.send('id', id);
+      });
+      console.log(project);
+    })
+
+    projectActionCell.appendChild(editAction);
+    tableRow.append(projectActionCell);
+
+    tableBody.append(tableRow);
   });
 }
 
