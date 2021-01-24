@@ -44,7 +44,6 @@ class ProjectManager {
                 let folder = scannedProjects[index];
                 let projectData = new ProjectData(folder, folder);
                 returnProjects.push(projectData);
-                currentIndex++;
             }
             this.writeData(returnProjects, this.getProjectFile());
             return this.loadProjectFiles();
@@ -141,7 +140,7 @@ class ProjectManager {
         }
 
         this.projects.forEach(project => {
-            let projectFolder = this.getProjectFolder(project.getName());
+            let projectFolder = this.getProjectFolder(project.getFolder());
             if (!fs.existsSync(projectFolder)) {
                 console.log("Create project folder " + projectFolder);
                 fs.mkdirSync(projectFolder);
@@ -149,8 +148,10 @@ class ProjectManager {
             }
         });
 
+
         let foldersFound = this.scanForProjects();
         console.log(foldersFound);
+        console.log(this.projects);
         foldersFound.forEach(folderName => {
             console.log("check if config exists: " + folderName);
             let project = this.getProjectByFolder(folderName);

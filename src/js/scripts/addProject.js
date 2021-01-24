@@ -15,7 +15,6 @@ var project = null;
 document.addEventListener('DOMContentLoaded', function () {
     
     Window.openDevTools();
-    //Window.closeDevTools();
     settingsManager = new SettingsManager(settingsFolder);
     settings = settingsManager.load("mainSettings");
     let language = settings.getSetting("language");
@@ -67,7 +66,9 @@ function save() {
         let newProject = new ProjectData(name, project.getFolder());
         projectManager.replaceProject(project, newProject);
     } else {
-        let newProject = new ProjectData(name, name);
+        console.log(typeof(name));
+        let folder = name.replace(/[ \\\/:<>|*\?]+/g, '');
+        let newProject = new ProjectData(name, folder);
         projectManager.addProject(newProject);
     }
 
