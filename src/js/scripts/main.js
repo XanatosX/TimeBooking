@@ -79,6 +79,10 @@ function createApplicationMenu() {
           }
         }
       ]
+    }, {
+      label: languageManager.getTranslation("projects"),
+      enabled: false,
+      id: "projectMenu"
     }
   ])
   Menu.setApplicationMenu(menu)
