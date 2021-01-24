@@ -37,7 +37,9 @@ document.addEventListener('DOMContentLoaded', function () {
 });
 
 ipcRenderer.on('id', (event, message) => {
+    console.log(projectManager);
     project = projectManager.getProjectById(message);
+    console.log(project);
     let nameBox = document.getElementById('projectName');
     nameBox.value = project.getName();
     console.log("Got id: " + message);
@@ -68,11 +70,12 @@ function save() {
         let newProject = new ProjectData(name, name);
         projectManager.addProject(newProject);
     }
-    
+
     projectManager.writeTempProjectFile();
     console.log('save');
 }
 
 function close() {
-    remote.getCurrentWindow().close()
+    var window = remote.getCurrentWindow();
+    window.close();
 }

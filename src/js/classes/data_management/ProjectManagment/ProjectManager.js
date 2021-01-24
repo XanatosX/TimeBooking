@@ -1,4 +1,6 @@
+const { log } = require('console');
 var fs = require('fs');
+const { type } = require('os');
 const { join } = require('path')
 const ProjectData = require('./ProjectData');
 
@@ -8,7 +10,10 @@ class ProjectManager {
         this.projectFolder = rootFolder + "/bookings/";
         this.projectFileFolder = rootFolder + "/projects/";
         this.projects = this.loadProjectFiles();
-        console.log(this.projects);
+    }
+
+    reloadProjects() {
+        this.projects = this.loadProjectFiles();
     }
 
     scanForProjects() {
@@ -32,6 +37,7 @@ class ProjectManager {
         }
 
         let projects = this.readProjectFile(scannedProjects);
+        console.log(projects);
         if (projects === null || projects.length === 0) {
             console.log("No project file found! Creating first one!");
             for(let index in scannedProjects) {
@@ -59,6 +65,9 @@ class ProjectManager {
         for(let index in returnProjects) {
             returnProjects[index].setId(index);
         }
+        if (!fs.existsSync(this.getTempProjectFile())) {
+
+        }
         console.log(returnProjects);
 
         return returnProjects;
@@ -72,10 +81,16 @@ class ProjectManager {
         return this.projectFileFolder + 'projects.json';
     }
 
+    getProjectFolder(projectName) {
+        return this.projectFolder + projectName;
+    }
+
     readProjectFile(folderData) {
         let newPath = this.getTempProjectFile();
         let path = this.getProjectFile();
-        path = fs.existsSync(newPath) ? newPath : path;
+        let tempMode = fs.existsSync(newPath);
+        path = tempMode ? newPath : path;
+
         let returnData = [];
         if (!fs.existsSync(path)) {
           return returnData;
@@ -96,7 +111,7 @@ class ProjectManager {
         let updateRequired = false;
         projectsJson.forEach(projectData => {
             let foundData = folderData.find(folder => projectData.folder === folder);
-            if (foundData === undefined) {
+            if (!tempMode && foundData === undefined) {
                 console.log('Folder ' + projectData.folder + ' with name ' + projectData.name + ' seems to be deleted!');
                 updateRequired = true;
                 return;
@@ -118,11 +133,45 @@ class ProjectManager {
     }
 
     writeProjectFile() {
-        return (this.writeData(this.projects, this.getProjectFile()));
+        console.log("write Project file!");
+        let writeComplete = this.writeData(this.projects, this.getProjectFile());
+        console.log(writeComplete);
+        if (!writeComplete) {
+            return writeComplete;
+        }
+
+        this.projects.forEach(project => {
+            let projectFolder = this.getProjectFolder(project.getName());
+            if (!fs.existsSync(projectFolder)) {
+                console.log("Create project folder " + projectFolder);
+                fs.mkdirSync(projectFolder);
+                return;
+            }
+        });
+
+        let foldersFound = this.scanForProjects();
+        console.log(foldersFound);
+        foldersFound.forEach(folderName => {
+            console.log("check if config exists: " + folderName);
+            let project = this.getProjectByFolder(folderName);
+            if (project === undefined) {
+                console.log("Project is missing folder getting deleted!");
+                let folder = this.getProjectFolder(folderName);
+                let files = fs.readdirSync(folder);
+                files.forEach(file => {
+                    let fullPath = folder + '/' + file;
+                    fs.unlinkSync(fullPath);
+                });
+                fs.rmdirSync(this.getProjectFolder(folderName));
+            }
+
+        })
+
+        return writeComplete;
     }
 
     writeTempProjectFile() {
-        return (this.writeData(this.projects, this.getTempProjectFile()));
+        return this.writeData(this.projects, this.getTempProjectFile());
     }
 
     clearTempProjectFile() {
@@ -170,6 +219,8 @@ class ProjectManager {
             }
             return true;
         });
+
+        return true;
     }
 
     getHighestId() {
@@ -187,8 +238,10 @@ class ProjectManager {
             console.log("Already exisiting!");
             return false;
         }
-        if (projectData.getId === -1) {
-            projectData.setId(this.getHighestId() + 1);
+        if (projectData.getId() === -1) {
+            let newNumber = this.getHighestId();
+            newNumber += 1;
+            projectData.setId(newNumber);
         }
         console.log("add project!")
         console.log(projectData)
@@ -213,6 +266,7 @@ class ProjectManager {
 
     deleteProjectById(id) {
         let index = this.projects.findIndex(project => project.getId() == id);
+        console.log(id);
         if (index === undefined) {
             return false;
         }
@@ -233,7 +287,8 @@ class ProjectManager {
     }
 
     getProjectById (id) {
-        return this.projects.find(project => project.getId() === id);
+        let realId = parseInt(id);
+        return this.projects.find(project => project.getId() === realId);
     }
 
     getProjects() {

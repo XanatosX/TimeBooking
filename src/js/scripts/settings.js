@@ -21,8 +21,7 @@ var addProjectWidth = 800;
 var addProjectHeight = 800;
 
 document.addEventListener('DOMContentLoaded', function () {
-  Window.openDevTools();
-  //Window.closeDevTools();
+  Window.closeDevTools();
   filename = 'mainSettings'
   let folder = remote.app.getPath('userData')
   manager = new Manager(folder)
@@ -101,16 +100,12 @@ function addListner () {
     buildProjectTable();
     let debugCheckbox = document.getElementById('debug');
     let debugSet = debugCheckbox.checked;
-    console.log(debugCheckbox);
-    console.log(debugSet);
-    console.log(isDebug);
-    if (debugSet && debugSet != isDebug) {
-      isDebug = debugSet;
+    isDebug = debugSet;
+    if (debugSet) {
       Window.openDevTools();
       return;
     }
     
-    isDebug = debugSet;
     Window.closeDevTools();
   })
 
@@ -209,6 +204,7 @@ function crawlElements (root, name) {
 
 function save() {
   manager.save(filename, settings.getWritable());
+  console.log("delete!");
   projectManager.writeProjectFile();
 }
 
@@ -219,12 +215,17 @@ function close () {
 }
 
 function addNewProject() {
-  let addProjectModal = new Modal(remote.getCurrentWindow(), addProjectWidth, addProjectHeight, 'addProject', () => buildProjectTable());
+  let addProjectModal = new Modal(remote.getCurrentWindow(), addProjectWidth, addProjectHeight, 'addProject', () => buildReloadProjectTable());
   if (isDebug) {
     addProjectModal.isDebug();
   }
   
   addProjectModal.show();
+}
+
+function buildReloadProjectTable() {
+  projectManager.reloadProjects();
+  buildProjectTable();
 }
 
 function buildProjectTable() {
@@ -252,11 +253,7 @@ function buildProjectTable() {
       let button = event.target;
       let id = button.dataset.id;
       let project = projectManager.getProjectById(id);
-      let editProject = new Modal(remote.getCurrentWindow(), addProjectWidth, addProjectHeight, 'addProject', function () {
-        //var timeStr = String(time.getTime());
-        //cookiesManager.setCookie('time', timeStr);
-        Window.reload();
-      });
+      let editProject = new Modal(remote.getCurrentWindow(), addProjectWidth, addProjectHeight, 'addProject', () => buildReloadProjectTable());
       editProject.show();
       let win = editProject.getWindow();
       win.webContents.on('did-finish-load', () => {
@@ -266,6 +263,25 @@ function buildProjectTable() {
     })
 
     projectActionCell.appendChild(editAction);
+
+    let deleteButton = document.createElement('button');
+    deleteButton.setAttribute('class', 'btn btn-danger');
+    deleteButton.setAttribute('data-id', project.getId());
+    deleteButton.innerHTML = languageManager.getTranslation('delete');
+    if (project.getFolder() === 'default') {
+      deleteButton.setAttribute('disabled', true);
+
+    }
+    deleteButton.addEventListener('click', (event) => { 
+      let button = event.target;
+      let id = button.dataset.id;
+      projectManager.deleteProjectById(id);
+      projectManager.writeTempProjectFile();
+      buildProjectTable();
+    });
+
+    projectActionCell.appendChild(deleteButton);
+
     tableRow.append(projectActionCell);
 
     tableBody.append(tableRow);

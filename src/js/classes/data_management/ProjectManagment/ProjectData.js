@@ -14,8 +14,9 @@ class ProjectData {
         if (this.locked) {
             return;
         }
+        let realId = parseInt(newId);
 
-        this.id = newId;
+        this.id = realId;
         this.locked = true;
     }
 
