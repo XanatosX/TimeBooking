@@ -22,4 +22,13 @@ jobs:
          run: |
            cd dist/
            ls -la
+        - name: Create zips
+         run: |
+          npm run zip
+       - name: Archive production artifacts
+         uses: actions/upload-artifact@v2
+         with:
+          name: Create build artifacts
+          path: |
+            dist/zips
            
