@@ -86,3 +86,43 @@ jobs:
           name: buildArtifacts
           path: |
            upload-artifacts
+     createLatestBuild:
+      name: Latest unstable build
+      needs: ["createUploadArtifact"]
+      runs-on: ubuntu-latest
+      steps:
+        - name: Download artifacts
+          uses: actions/download-artifact@v2
+          with:
+            path: artifact-upload/
+        - name: Create Release
+          id: create_release
+          uses: actions/create-release@v1
+          env:
+            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          with:
+            tag_name: ${{ github.ref }}-${{ GITHUB.RUN_NUMBER }}
+            release_name: Latest unstable
+            body: This is the latest build version
+            draft: true
+            prerelease: true
+        - name: Upload linux zip
+          id: upload-linux-zip
+          uses: actions/upload-release-asset@v1
+          env:
+            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          with:
+            upload_url: ${{ steps.create_release.outputs.upload_url }}
+            asset_path: artifact-upload\TimeBooking-linux-x64.zip
+            asset_name: Latest_TimeBooking-linux-x64.zip
+            asset_content_type: application/zip
+        - name: Upload linux deb
+          id: upload-linux-deb
+          uses: actions/upload-release-asset@v1
+          env:
+            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          with:
+            upload_url: ${{ steps.create_release.outputs.upload_url }}
+            asset_path: artifact-upload\timebooking_0.0.1_amd64.deb
+            asset_name: timebooking_0.0.1_amd64.deb
+            asset_content_type: application/vnd.debian.binary-package
