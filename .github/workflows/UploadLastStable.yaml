@@ -86,7 +86,7 @@ jobs:
           name: buildArtifacts
           path: |
            upload-artifacts
-     createLatestBuild:
+   createLatestBuild:
       name: Latest unstable build
       needs: ["createUploadArtifact"]
       runs-on: ubuntu-latest
