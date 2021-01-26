@@ -5,6 +5,10 @@
   "homepage": "https://github.com/XanatosX/TimeBooking",
   "bugs": "https://github.com/XanatosX/TimeBooking/issues",
   "main": "src/js/scripts/main.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/XanatosX/TimeBooking"
+  },
   "scripts": {
     "start": "electron .",
     "release": "npm run build && npm run setup",
