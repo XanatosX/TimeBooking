@@ -187,7 +187,7 @@ jobs:
             asset_name: Latest_TimeBooking_win64-0.0.1-setup.exe
             asset_content_type: application/octet-stream
         - name: Upload darwin zip
-          id: upload-darwin-installer
+          id: upload-darwin-zip
           uses: actions/upload-release-asset@v1
           env:
             GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
