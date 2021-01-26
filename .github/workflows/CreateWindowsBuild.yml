@@ -32,6 +32,6 @@ jobs:
           name: WindowsArtifacts
           path: |
             dist/zips
-            dist/installers/win64
-            dist/installers/win32
+            dist/installers/win64/*.exe
+            dist/installers/win32/*.exe
            
