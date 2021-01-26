@@ -1,6 +1,6 @@
 name: Check pull request
 
-on: push
+on: [pull_request]
 
 jobs:
    build:
@@ -10,6 +10,5 @@ jobs:
        - name: Clone repository
          uses: actions/checkout@v2
        - name: Install npm dependencies
-         run: |
-           ls -la
-           npm install
+         run: npm install
+           
