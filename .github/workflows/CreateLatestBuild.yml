@@ -1,4 +1,4 @@
-name: Check pull request
+name: Create build artifacts
 
 on: push
 
@@ -10,7 +10,10 @@ jobs:
        - name: Clone repository
          uses: actions/checkout@v2
        - name: Create builds
-         run: sudo bash ./build/linuxBuild.sh
+         run: |
+          npm install -g electron-installer-debian
+          npm install
+          npm run build
        - name: List content
          run: |
            cd dist/
