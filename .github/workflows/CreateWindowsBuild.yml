@@ -1,10 +1,14 @@
 name: Create Windows build artifacts
 
-on: push
+on:
+  workflow_run:
+    workflows: ["Create Linux build artifacts (amd64)"]
+    types: 
+      - completed
 
 jobs:
    build:
-     #if: github.event.pull_request.merged == true
+     if: github.event.pull_request.merged == true
      name: Create Windows artifact
      runs-on: windows-latest
      steps:
