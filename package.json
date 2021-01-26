@@ -5,6 +5,10 @@
   "homepage": "https://github.com/XanatosX/TimeBooking",
   "bugs": "https://github.com/XanatosX/TimeBooking/issues",
   "main": "src/js/scripts/main.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/XanatosX/TimeBooking"
+  },
   "scripts": {
     "start": "electron .",
     "release": "npm run build && npm run setup",
@@ -14,8 +18,8 @@
     "build:linux": "electron-packager . timebooking --out=dist/ --platform=linux  --arch=x64 --ignore=build/ --ignore=builds/ --overwrite",
     "build:darwin": "electron-packager . timebooking --out=dist/ --platform=darwin  --arch=x64 --ignore=build/ --ignore=builds/ --overwrite",
     "setup": "npm run setup:win32 && npm run setup:win64",
-    "setup:win32": "electron-installer-windows --src dist/timebooking-win32-ia32/ --dest dist/installers/win64/",
-    "setup:win64": "electron-installer-windows --src dist/timebooking-win32-x64/ --dest dist/installers/win32/",
+    "setup:win32": "electron-installer-windows --src dist/timebooking-win32-ia32/ --dest dist/installers/win32/",
+    "setup:win64": "electron-installer-windows --src dist/timebooking-win32-x64/ --dest dist/installers/win64/",
     "setup:darwin": "electron-installer-dmg dist/timebooking-darwin-x64/timebooking.app TimeBooking --out=dist/installers/darwin",
     "setup:deb": "electron-installer-debian --src dist/timebooking-linux-x64/ --dest dist/installers/linux --arch amd64",
     "zip": "npm run zip:win64 && npm run zip:win32 && npm run zip:linux && npm run zip:darwin",
@@ -32,7 +36,7 @@
     "tiny-date-picker": "^3.0.0"
   },
   "devDependencies": {
-    "electron": "^5.0.0",
+    "electron": "^7.0.0",
     "electron-installer-dmg": "^3.0.0",
     "electron-installer-windows": "^3.0.0",
     "electron-installer-zip": "^0.1.2",

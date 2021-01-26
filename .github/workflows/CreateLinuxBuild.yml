@@ -1,0 +1,33 @@
+name: Create Linux build artifacts (amd64)
+
+on:
+  pull_request:
+    types: [closed] 
+
+jobs:
+   build:
+     if: github.event.pull_request.merged == true
+     name: Create linux artifact
+     runs-on: ubuntu-latest
+     steps:
+       - name: Clone repository
+         uses: actions/checkout@v2
+       - name: Create build
+         run: |
+          sudo npm install -g electron-installer-debian
+          npm install
+          npm run build:linux
+       - name: Create installers
+         run: |
+           npm run setup:deb
+       - name: Create zips
+         run: |
+          npm run zip:linux
+       - name: Archive production artifacts
+         uses: actions/upload-artifact@v2
+         with:
+          name: LinuxArtifacts
+          path: |
+            dist/zips
+            dist/installers/linux
+           

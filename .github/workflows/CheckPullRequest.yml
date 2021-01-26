@@ -1,0 +1,14 @@
+name: Check pull request
+
+on: [pull_request]
+
+jobs:
+   build:
+     name: Check pull request
+     runs-on: ubuntu-latest
+     steps:
+       - name: Clone repository
+         uses: actions/checkout@v2
+       - name: Install npm dependencies
+         run: npm install
+           

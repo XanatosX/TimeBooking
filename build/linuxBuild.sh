@@ -5,8 +5,6 @@
 # mono-complete
 # nuget
 
-cd ..
-
 # Install dependencies
 npm install -g electron-installer-debian
 npm install
