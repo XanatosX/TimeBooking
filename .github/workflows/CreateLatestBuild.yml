@@ -10,7 +10,7 @@ jobs:
        - name: Clone repository
          uses: actions/checkout@v2
        - name: Create builds
-         run: bash ./build/linuxBuild.sh
+         run: sudo bash ./build/linuxBuild.sh
        - name: List content
          run: |
            cd dist/
