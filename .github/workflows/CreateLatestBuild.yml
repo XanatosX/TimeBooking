@@ -18,11 +18,7 @@ jobs:
           sudo npm install -g electron-installer-debian
           npm install
           npm run build
-       - name: List content
-         run: |
-           cd dist/
-           ls -la
-        - name: Create zips
+       - name: Create zips
          run: |
           npm run zip
        - name: Archive production artifacts
