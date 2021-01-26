@@ -19,7 +19,7 @@ jobs:
           npm install
           npm run build
        - name: Create installers
-          run: |
+         run: |
            npm run setup:deb
            npm run setup
        - name: Create zips
@@ -31,5 +31,7 @@ jobs:
           name: LinuxWindowsArtifacts
           path: |
             dist/zips
-            dist/installers
+            dist/installers/win64*.exe
+            dist/installers/win32*.exe
+            dist/installers/linux
            
