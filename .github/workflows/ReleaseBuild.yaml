@@ -1,0 +1,224 @@
+name: Upload last stable
+
+on: push
+  #push:
+    #tags:
+     #- '*'
+jobs:
+   buildLinux:
+     name: Create Linux artifact
+     runs-on: ubuntu-latest
+     steps:
+       - name: Clone repository
+         uses: actions/checkout@v2
+         #with: 
+           #ref: master
+       - name: Create build
+         run: |
+          sudo npm install -g electron-installer-debian
+          npm install
+          npm run build:linux
+       - name: Create installers
+         run: |
+           npm run setup:deb
+       - name: Create zips
+         run: |
+          npm run zip:linux
+       - name: Cleanup artifact
+         run: | 
+          mkdir upload-artifacts/
+          mv dist/zips/* upload-artifacts
+          mv dist/installers/linux/* upload-artifacts
+       - name: Archive production artifacts
+         uses: actions/upload-artifact@v2
+         with:
+          name: LinuxArtifacts
+          path: |
+            upload-artifacts/
+   buildWindows:
+     name: Create Windows artifact
+     runs-on: windows-latest
+     steps:
+       - name: Clone repository
+         uses: actions/checkout@v2
+       - name: Create build
+         run: |
+          npm install
+          npm run build:win32
+          npm run build:win64
+       - name: Create installers
+         run: |
+           npm run setup:win32
+           npm run setup:win64
+       - name: Create zips
+         run: |
+          npm run zip:win32
+          npm run zip:win64
+       - name: Cleanup artifact
+         run: |
+          mkdir upload-artifacts/
+          move dist/zips/* upload-artifacts
+          move dist/installers/win32/*.exe upload-artifacts
+          move dist/installers/win64/*.exe upload-artifacts
+       - name: Archive production artifacts
+         uses: actions/upload-artifact@v2
+         with:
+          name: WindowsArtifacts
+          path: |
+           upload-artifacts
+   buildDarwin:
+     name: Create Darwin artifact
+     runs-on: macos-latest
+     steps:
+       - name: Clone repository
+         uses: actions/checkout@v2
+       - name: Create build
+         run: |
+          npm install macos-alias --save-dev
+          npm install
+          npm run build:darwin
+       - name: Create installers
+         run: |
+           npm run setup:darwin
+       - name: Create zips
+         run: |
+          npm run zip:darwin
+       - name: Cleanup artifact
+         run: | 
+          mkdir upload-artifacts/
+          mv dist/zips/* upload-artifacts
+          mv dist/installers/darwin/* upload-artifacts
+       - name: Archive production artifacts
+         uses: actions/upload-artifact@v2
+         with:
+          name: DarwinArtifacts
+          path: |
+           upload-artifacts
+   createUploadArtifact:
+     name: Upload releases
+     needs: ["buildLinux", "buildWindows", "buildDarwin"]
+     runs-on: ubuntu-latest
+     steps:
+       - name: Download artifacts
+         uses: actions/download-artifact@v2
+         with:
+           path: dist
+       - name: Prepare upload folder
+         run: |
+          mkdir artifact-upload/
+          mv dist/LinuxArtifacts/* artifact-upload/
+          mv dist/WindowsArtifacts/* artifact-upload/
+          mv dist/DarwinArtifacts/* artifact-upload/
+       - name: List upload data
+         run: ls -la artifact-upload
+       - name: Archive production artifacts
+         uses: actions/upload-artifact@v2
+         with:
+          name: BuildArtifacts
+          path: |
+           artifact-upload
+   createReleaseBuild:
+      name: Release build
+      needs: ["createUploadArtifact"]
+      runs-on: ubuntu-latest
+      steps:
+        - name: Download artifacts
+          uses: actions/download-artifact@v2
+          with:
+            name: BuildArtifacts
+            path: dist
+        - name: Get Current Tag
+          run: echo "::set-env name=tag::$(($env:GITHUB_REF -split '/')[-1] -replace ' ','')"
+        - name: Read folder content
+          run: ls -la dist
+        - name: Create Release
+          id: create_release
+          uses: actions/create-release@v1
+          env:
+            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          with:
+            tag_name: ${{ github.ref }}-${{ GITHUB.RUN_NUMBER }}
+            release_name: Release - ${{ env.tag }}
+            body: Body goes here!
+            draft: true
+            prerelease: false
+        - name: Upload linux zip
+          id: upload-linux-zip
+          uses: actions/upload-release-asset@v1
+          env:
+            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          with:
+            upload_url: ${{ steps.create_release.outputs.upload_url }}
+            asset_path: dist/*-linux-x64.zip
+            asset_name: TimeBooking-linux-x64.zip
+            asset_content_type: application/zip
+        - name: Upload windows 32 zip
+          id: upload-win32-zip
+          uses: actions/upload-release-asset@v1
+          env:
+            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          with:
+            upload_url: ${{ steps.create_release.outputs.upload_url }}
+            asset_path: dist/*-win32-ia32.zip
+            asset_name: TimeBooking-win32.zip
+            asset_content_type: application/zip
+        - name: Upload windows 64 zip
+          id: upload-win64-zip
+          uses: actions/upload-release-asset@v1
+          env:
+            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          with:
+            upload_url: ${{ steps.create_release.outputs.upload_url }}
+            asset_path: dist/*-win32-x64.zip
+            asset_name: TimeBooking-win64.zip
+            asset_content_type: application/zip
+        - name: Upload windows 32 installer
+          id: upload-win32-installer
+          uses: actions/upload-release-asset@v1
+          env:
+            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          with:
+            upload_url: ${{ steps.create_release.outputs.upload_url }}
+            asset_path: dist/*_win32-*-setup.exe
+            asset_name: TimeBooking_win32-setup.exe
+            asset_content_type: application/octet-stream
+        - name: Upload windows 64 installer
+          id: upload-win64-installer
+          uses: actions/upload-release-asset@v1
+          env:
+            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          with:
+            upload_url: ${{ steps.create_release.outputs.upload_url }}
+            asset_path: dist/*_win64*-setup.exe
+            asset_name: TimeBooking_win64-setup.exe
+            asset_content_type: application/octet-stream
+        - name: Upload darwin zip
+          id: upload-darwin-zip
+          uses: actions/upload-release-asset@v1
+          env:
+            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          with:
+            upload_url: ${{ steps.create_release.outputs.upload_url }}
+            asset_path: dist/*-darwin-x64.zip
+            asset_name: TimeBooking-darwin-x64.zip
+            asset_content_type: application/zip
+        - name: Upload darwin installer
+          id: upload-darwin-installer
+          uses: actions/upload-release-asset@v1
+          env:
+            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          with:
+            upload_url: ${{ steps.create_release.outputs.upload_url }}
+            asset_path: dist/*.dmg
+            asset_name: TimeBooking_x64.dmg
+            asset_content_type: application/octet-stream
+        - name: Upload linux deb
+          id: upload-linux-deb
+          uses: actions/upload-release-asset@v1
+          env:
+            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          with:
+            upload_url: ${{ steps.create_release.outputs.upload_url }}
+            asset_path: dist/*amd64.deb
+            asset_name: timebooking_amd64.deb
+            asset_content_type: application/vnd.debian.binary-package
