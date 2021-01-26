@@ -50,14 +50,18 @@ jobs:
          run: |
           npm run zip:win32
           npm run zip:win64
+       - name: Cleanup artifact
+         run: | 
+          mkdir upload-artifacts/
+          move dist/zips/* upload-artifacts
+          move dist/installers/win32/*.exe upload-artifacts
+          move dist/installers/win64/*.exe upload-artifacts
        - name: Archive production artifacts
          uses: actions/upload-artifact@v2
          with:
           name: WindowsArtifacts
           path: |
-            dist/zips
-            dist/installers/win64/*.exe
-            dist/installers/win32/*.exe
+          upload-artifacts
    createUploadArtifact:
      name: Upload releases
      #needs: ["buildLinux", "buildWindows"]
