@@ -18,13 +18,18 @@ jobs:
           sudo npm install -g electron-installer-debian
           npm install
           npm run build
+       - name: Create installers
+          run: |
+           npm run setup:deb
+           npm run setup
        - name: Create zips
          run: |
           npm run zip
        - name: Archive production artifacts
          uses: actions/upload-artifact@v2
          with:
-          name: Create build artifacts
+          name: LinuxWindowsArtifacts
           path: |
             dist/zips
+            dist/installers
            
