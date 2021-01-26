@@ -73,8 +73,16 @@ jobs:
          with:
            path: dist
        - name: Prepare upload folder
-         run: mkdir artifact-upload/
+         run: |
+          mkdir artifact-upload/
+          mv dist/LinuxArtifacts/* artifact-upload/
        - name: List data
          run: ls -la dist/LinuxArtifacts
        - name: List upload data
-         run: ls -la dist/LinuxArtifacts
+         run: ls -la artifact-upload
+       - name: Archive production artifacts
+         uses: actions/upload-artifact@v2
+         with:
+          name: buildArtifacts
+          path: |
+           upload-artifacts
