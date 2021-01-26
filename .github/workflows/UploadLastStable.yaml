@@ -65,4 +65,4 @@ jobs:
          with:
            path: dist
        - name: List data
-         run: ls -la dist/
+         run: ls -la dist/LinuxArtifacts
