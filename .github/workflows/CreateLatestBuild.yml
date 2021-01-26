@@ -12,7 +12,6 @@ jobs:
        - name: Add dependencies
          run: |
           sudo apt install wine-stable
-          sudo apt install wine32-stable
           sudo apt install mono-complete
        - name: Create builds
          run: |
@@ -22,7 +21,7 @@ jobs:
        - name: Create installers
          run: |
            npm run setup:deb
-           npm run setup
+           npm run setup:win64
        - name: Create zips
          run: |
           npm run zip
