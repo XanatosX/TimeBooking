@@ -16,8 +16,8 @@ jobs:
        - name: Create builds
          run: |
           sudo npm install -g electron-installer-debian
-          sudo npm install
-          sudo npm run build
+          npm install
+          npm run build
        - name: List content
          run: |
            cd dist/
