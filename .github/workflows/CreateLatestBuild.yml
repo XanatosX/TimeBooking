@@ -11,9 +11,9 @@ jobs:
          uses: actions/checkout@v2
        - name: Create builds
          run: |
-          npm install -g electron-installer-debian
-          npm install
-          npm run build
+          sudo npm install -g electron-installer-debian
+          sudo npm install
+          sudo npm run build
        - name: List content
          run: |
            cd dist/
