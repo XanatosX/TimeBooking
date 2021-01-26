@@ -1,4 +1,4 @@
-name: Create Linux build artifacts (amd64)
+name: Upload last stable
 
 on:
   push:
