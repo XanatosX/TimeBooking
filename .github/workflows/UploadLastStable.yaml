@@ -24,7 +24,7 @@ jobs:
          run: | 
           mkdir upload-artifacts/
           mv dist/zips/* upload-artifacts
-          mv dist/installers/* upload-artifacts
+          mv dist/installers/linux* upload-artifacts
        - name: Archive production artifacts
          uses: actions/upload-artifact@v2
          with:
