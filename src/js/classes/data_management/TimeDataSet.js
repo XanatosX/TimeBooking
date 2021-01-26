@@ -1,3 +1,5 @@
+const TimeFormatter = require('./../util/TimeFormatter');
+
 /**
  * This class contains a single start and end date
  */
@@ -9,6 +11,10 @@ class TimeDataSet {
   constructor () {
     this.startTime = null;
     this.endTime = null;
+    this.timeIngored = null;
+    this.isBooked = null;
+    this.setTimeIngnored(false);
+    this.setTimeBooked(false);
     this.description = '';
   }
 
@@ -26,6 +32,37 @@ class TimeDataSet {
    */
   getDescription () {
     return this.description;
+  }
+
+  /**
+   * Should we ignore the entry?
+   * @param {boolean} isIgnored 
+   */
+  setTimeIngnored(isIgnored) {
+    this.timeIngored = isIgnored;
+  }
+
+  /**
+   * Set if this is already booked
+   * @param {boolean} isBooked 
+   */
+  setTimeBooked(isBooked) {
+    this.isBooked = isBooked;
+  }
+
+  /**
+   * Should the dataset be counted
+   */
+  isGettingCounted() {
+    return (!this.timeIngored);
+  }
+
+  /**
+   *  Is this already booked
+   * @returns {boolean}
+   */
+  isAlreadyBooked() {
+    return this.isBooked;
   }
 
   /**
@@ -54,10 +91,32 @@ class TimeDataSet {
   }
 
   /**
+  * This method will get you the raw start date of this container
+  */
+  getRawStartTime () {
+    return this.startTime;
+  }
+
+  /**
    * This method will get you the start date of this container
    */
   getStartTime () {
     return this.convertToTime(this.startTime);
+  }
+
+  /**
+   * Get the start date as real date
+   * @returns {Date}
+   */
+  getStartDate() {
+    return new Date(this.getRawStartTime());
+  }
+
+  /**
+  * This method will get you the raw end date of this container
+  */
+  getRawEndTime () {
+    return this.endTime;
   }
 
   /**
@@ -73,6 +132,14 @@ class TimeDataSet {
    */
   getEndTime () {
     return this.convertToTime(this.endTime);
+  }
+
+  /**
+   * Get the end date as real date
+   * @returns {Date}
+   */
+  getEndDate() {
+    return new Date(this.getRawEndTime());
   }
 
   /**
@@ -94,16 +161,7 @@ class TimeDataSet {
    * This method will return you a well formated time ready to display
    */
   getFormatedTime () {
-    let returnString = '';
-    let value = this.getWorkTime();
-    let minutes = Math.floor((value / (1000 * 60)) % 60);
-    let hours = Math.floor((value / (1000 * 60 * 60)) % 24);
-
-    hours = (hours < 10) ? '0' + hours : hours;
-    minutes = (minutes < 10) ? '0' + minutes : minutes;
-
-    returnString = hours + ' h ' + minutes + ' m';
-    return returnString;
+    return TimeFormatter.toHumanReadable(this.getWorkTime());
   }
 
   /**
@@ -113,6 +171,8 @@ class TimeDataSet {
     var data = {};
     data['startTime'] = this.startTime;
     data['endTime'] = this.endTime;
+    data['counted'] = this.isGettingCounted();
+    data['booked'] = this.isAlreadyBooked();
     data['description'] = this.description;
 
     return data;
@@ -129,6 +189,12 @@ class TimeDataSet {
 
     this.startTime = data.startTime;
     this.endTime = data.endTime;
+    if (data.counted !== undefined) {
+      this.setTimeIngnored(!data.counted);
+    }
+    if (data.booked !== undefined) {
+      this.setTimeBooked(data.booked);
+    }
     if (data.description !== undefined) {
       this.description = data.description;
     }

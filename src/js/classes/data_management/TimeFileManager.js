@@ -12,14 +12,12 @@ class TimeFileManager {
    * @param  {String} path
    * @param  {Date} dateTime
    */
-  constructor (path, dateTime) {
-    this.path = path + '/bookings/';
+  constructor (path, project, dateTime) {
+    this.path = path + '/bookings/' + project + '/';
+    this.today = dateTime;
     if (!fs.existsSync(this.path)) {
-      fs.mkdirSync(this.path);
+      fs.mkdirSync(this.path, { recursive: true });
     }
-    let day = String(dateTime.getDate()).padStart(2, '0');
-    let month = String(dateTime.getMonth() + 1).padStart(2, '0');
-    this.todayFile = dateTime.getFullYear() + month + day;
   }
 
   /**
@@ -35,14 +33,33 @@ class TimeFileManager {
    * This method will load the file from today
    */
   loadTodayFile () {
-    return this.loadFile(this.todayFile);
+    return this.loadFileByTime(this.today);
   }
 
-  
+  getFileNameFromTime(dateTime)
+  {
+    let day = String(dateTime.getDate()).padStart(2, '0');
+    let month = String(dateTime.getMonth() + 1).padStart(2, '0');
+    return dateTime.getFullYear() + month + day;
+  }
+
+  /**
+   * This method will load you an file from the disk
+   * 
+   * @param  {Date} time
+   * @returns {TimeContainer}
+   */
+  loadFileByTime(dateTime)
+  {
+    let name = this.getFileNameFromTime(dateTime);
+    return this.loadFile(name)
+  }
+
   /**
    * This method will load you an file from the disk
    * 
    * @param  {String} name
+   * @returns {TimeContainer}
    */
   loadFile (name) {
     let path = this.path + name + '.json';
@@ -67,7 +84,8 @@ class TimeFileManager {
    * @param  {Object} json
    */
   saveFile (json) {
-    fs.writeFileSync(this.path + this.todayFile + '.json', json, 'utf8', (err) => {
+    let name = this.getFileNameFromTime(this.today);
+    fs.writeFileSync(this.path + name + '.json', json, 'utf8', (err) => {
       if (err) {
         return false;
       }

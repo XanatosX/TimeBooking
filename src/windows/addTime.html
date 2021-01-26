@@ -1,25 +1,49 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <meta charset="UTF-8">
-    <title>Add new timing</title>
-    <link rel="stylesheet" href="../../assets/css/buttons.css">
-    <link rel="stylesheet" href="../../assets/css/addTime.css">
-    <script src="../scripts/addTime.js"></script>
-  </head>
-  <body>
-    <div>
-      <label for="start-timestamp">Start time:</label>
-      <input id="start-timestamp" type="time" name=""/>
-      <label for="end-timestamp">End time:</label>
-      <input id="end-timestamp" type="time" name=""/>
-      <label for="description">Description:</label>
-      <input id="description" type="text" placeholder="Put your description here ..."/>
-    </div>
-    <br/>
-    <div class='pageEnd'>
-      <button class='btn btn-green btn-left' id='saveButton'>Save</button>
-      <button class='btn btn-red btn-right' id='closeButton'>Close</button>
-    </div>
-  </body>
+
+<head>
+  <meta charset="UTF-8">
+  <title data-langkey="addNewTiming"></title>
+  <link rel="stylesheet" href="../../node_modules/bootstrap/dist/css/bootstrap.min.css" />
+  <script src="../../src/js/scripts/addTime.js"></script>
+</head>
+
+<body>
+  <div class="container" style="margin-top: 1em;">
+    <form>
+      <div class="form-group row align-items-center">
+        <label for="start-timestamp" class="col-sm-4 col-form-label" data-langkey="startTime"></label>
+        <div class="col-sm-8" >
+          <input id="start-timestamp" type="time" name=""/>
+        </div>
+      </div>
+      <div class="form-group row align-items-center">
+        <label for="end-timestamp" class="col-sm-4 col-form-label" data-langkey="endTime"></label>
+        <div class="col-sm-8" >
+          <input id="end-timestamp" type="time" name=""/>
+        </div>
+      </div>
+      <div class="form-group row align-items-center">
+        <label for="description" data-langkey="description" class="col-sm-4 col-form-label"></label>
+        <div class="col-sm-8" >
+          <input id="description" type="text" placeholder="Put your description here ..."/>
+        </div>
+      </div>
+      <div class="form-group row align-items-center">
+        <label for="ignoreTime" data-langkey="ignoreTime" class="col-sm-4 col-form-label"></label>
+        <div class="col-sm-8" >
+          <input id="ignoreTime" type="checkbox"/>
+        </div>
+      </div>
+    </form>
+      <div class="form-group row"></div>
+        <button class='btn btn-success' id='saveButton' data-langkey="saveAndClose"></button>
+        <button class='btn btn-danger' id='closeButton' data-langkey="close"></button>
+      </div>
+    </form>
+
+  </div>
+
+</body>
+
 </html>
