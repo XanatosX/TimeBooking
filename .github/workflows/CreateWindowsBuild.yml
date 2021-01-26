@@ -1,4 +1,4 @@
-name: Create Windows build artifacts (amd64)
+name: Create Windows build artifacts
 
 on: push
   #workflow_run:
@@ -32,5 +32,6 @@ jobs:
           name: WindowsArtifacts
           path: |
             dist/zips
-            dist/installers/linux
+            dist/installers/win64
+            dist/installers/win32
            
