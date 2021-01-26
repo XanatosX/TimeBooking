@@ -27,7 +27,7 @@ jobs:
        - name: Archive production artifacts
          uses: actions/upload-artifact@v2
          with:
-          name: LinuxWindowsArtifacts
+          name: WindowsArtifacts
           path: |
             dist/zips
             dist/installers/linux
