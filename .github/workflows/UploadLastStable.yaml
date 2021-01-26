@@ -1,9 +1,9 @@
 name: Upload last stable
 
-on:
-  push:
-    branches:
-      - develop
+on: push
+  #push:
+    #branches:
+      #- develop
 jobs:
    buildLinux:
      name: Create Linux artifact
@@ -136,7 +136,7 @@ jobs:
             tag_name: ${{ github.ref }}-${{ GITHUB.RUN_NUMBER }}
             release_name: Latest unstable
             body: This is the latest build version
-            draft: false
+            draft: true
             prerelease: true
         - name: Upload linux zip
           id: upload-linux-zip
@@ -145,7 +145,7 @@ jobs:
             GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           with:
             upload_url: ${{ steps.create_release.outputs.upload_url }}
-            asset_path: dist/TimeBooking-linux-x64.zip
+            asset_path: dist/*-linux-x64.zip
             asset_name: Latest_TimeBooking-linux-x64.zip
             asset_content_type: application/zip
         - name: Upload windows 32 zip
@@ -155,7 +155,7 @@ jobs:
             GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           with:
             upload_url: ${{ steps.create_release.outputs.upload_url }}
-            asset_path: dist/TimeBooking-win32-ia32.zip
+            asset_path: dist/*-win32-ia32.zip
             asset_name: Latest_TimeBooking-win32.zip
             asset_content_type: application/zip
         - name: Upload windows 64 zip
@@ -165,7 +165,7 @@ jobs:
             GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           with:
             upload_url: ${{ steps.create_release.outputs.upload_url }}
-            asset_path: dist/TimeBooking-win32-x64.zip
+            asset_path: dist/*-win32-x64.zip
             asset_name: Latest_TimeBooking-win64.zip
             asset_content_type: application/zip
         - name: Upload windows 32 installer
@@ -175,8 +175,8 @@ jobs:
             GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           with:
             upload_url: ${{ steps.create_release.outputs.upload_url }}
-            asset_path: dist/TimeBooking_win32-0.0.1-setup.exe
-            asset_name: Latest_TimeBooking_win32-0.0.1-setup.exe
+            asset_path: dist/*_win32-*-setup.exe
+            asset_name: Latest_TimeBooking_win32-setup.exe
             asset_content_type: application/octet-stream
         - name: Upload windows 64 installer
           id: upload-win64-installer
@@ -185,8 +185,8 @@ jobs:
             GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           with:
             upload_url: ${{ steps.create_release.outputs.upload_url }}
-            asset_path: dist/TimeBooking_win64-0.0.1-setup.exe
-            asset_name: Latest_TimeBooking_win64-0.0.1-setup.exe
+            asset_path: dist/*_win64*-setup.exe
+            asset_name: Latest_TimeBooking_win64-setup.exe
             asset_content_type: application/octet-stream
         - name: Upload darwin zip
           id: upload-darwin-zip
@@ -195,7 +195,7 @@ jobs:
             GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           with:
             upload_url: ${{ steps.create_release.outputs.upload_url }}
-            asset_path: dist/TimeBooking-darwin-x64.zip
+            asset_path: dist/*-darwin-x64.zip
             asset_name: Latest_TimeBooking-darwin-x64.zip
             asset_content_type: application/zip
         - name: Upload darwin installer
@@ -205,7 +205,7 @@ jobs:
             GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           with:
             upload_url: ${{ steps.create_release.outputs.upload_url }}
-            asset_path: dist/TimeBooking.dmg
+            asset_path: dist/*.dmg
             asset_name: Latest_TimeBooking_x64.dmg
             asset_content_type: application/octet-stream
         - name: Upload linux deb
@@ -215,6 +215,6 @@ jobs:
             GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           with:
             upload_url: ${{ steps.create_release.outputs.upload_url }}
-            asset_path: dist/timebooking_0.0.1_amd64.deb
-            asset_name: timebooking_0.0.1_amd64.deb
+            asset_path: dist/*amd64.deb
+            asset_name: timebooking_amd64.deb
             asset_content_type: application/vnd.debian.binary-package
