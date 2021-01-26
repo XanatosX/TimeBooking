@@ -21,7 +21,7 @@ jobs:
          run: |
           npm run zip:linux
        - name: Cleanup artifact
-         run | 
+         run: | 
           mv dist/zips/* dist
           mv dist/installers/* dist
           rmdir dist/zips
@@ -59,7 +59,7 @@ jobs:
             dist/zips
             dist/installers/win64/*.exe
             dist/installers/win32/*.exe
-   createAndUploadRelease:
+   createUploadArtifact:
      name: Upload releases
      #needs: ["buildLinux", "buildWindows"]
      needs: ["buildLinux"]
