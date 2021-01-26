@@ -12,6 +12,7 @@ jobs:
        - name: Add dependencies
          run: |
           sudo apt install wine-stable
+          sudo apt install wine32-stable
           sudo apt install mono-complete
        - name: Create builds
          run: |
