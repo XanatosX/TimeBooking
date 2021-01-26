@@ -62,6 +62,28 @@ jobs:
           name: WindowsArtifacts
           path: |
            upload-artifacts
+   buildDarwin:
+     name: Create darwin artifact
+     runs-on: macos-latest
+     steps:
+       - name: Clone repository
+         uses: actions/checkout@v2
+       - name: Create build
+         run: |
+          npm install
+          npm run build:darwin
+       - name: Create installers
+         run: |
+           npm run setup:darwin
+       - name: Create zips
+         run: |
+          npm run zip:darwin
+       - name: Archive production artifacts
+         uses: actions/upload-artifact@v2
+         with:
+          name: DarwinArtifacts
+          path: |
+           upload-artifacts
    createUploadArtifact:
      name: Upload releases
      #needs: ["buildLinux", "buildWindows"]
