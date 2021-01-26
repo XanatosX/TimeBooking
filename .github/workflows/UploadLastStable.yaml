@@ -4,7 +4,7 @@ on: push
 
 jobs:
    buildLinux:
-     name: Create linux artifact
+     name: Create Linux artifact
      runs-on: ubuntu-latest
      steps:
        - name: Clone repository
@@ -64,4 +64,4 @@ jobs:
          with:
            path: dist
        - name: List data
-         run: ls-la
+         run: ls -la
