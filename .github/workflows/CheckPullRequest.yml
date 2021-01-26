@@ -9,7 +9,7 @@ jobs:
      steps:
        - name: Clone repository
          uses: actions/checkout@v2
-     - name: Install npm dependencies
-       run: |
-          ls -la
-          npm install
+       - name: Install npm dependencies
+         run: |
+           ls -la
+           npm install
