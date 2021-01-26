@@ -1,10 +1,10 @@
 name: Create Windows build artifacts
 
-on: push
-  #workflow_run:
-    #workflows: ["Create Linux build artifacts (amd64)"]
-    #types: 
-      #- completed
+on:
+  workflow_run:
+    workflows: ["Create Linux build artifacts (amd64)"]
+    types: 
+      - completed
 
 jobs:
    build:
