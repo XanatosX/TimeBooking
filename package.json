@@ -1,5 +1,6 @@
 {
   "name": "timebooking",
+  "productName": "Time Booking",
   "version": "0.0.1",
   "description": "This project will allow you to log your worktime",
   "homepage": "https://github.com/XanatosX/TimeBooking",
@@ -18,8 +19,8 @@
     "build:linux": "electron-packager . timebooking --out=dist/ --platform=linux  --arch=x64 --ignore=build/ --ignore=builds/ --overwrite",
     "build:darwin": "electron-packager . timebooking --out=dist/ --platform=darwin  --arch=x64 --ignore=build/ --ignore=builds/ --overwrite",
     "setup": "npm run setup:win32 && npm run setup:win64",
-    "setup:win32": "electron-installer-windows --src dist/timebooking-win32-ia32/ --dest dist/installers/win32/",
-    "setup:win64": "electron-installer-windows --src dist/timebooking-win32-x64/ --dest dist/installers/win64/",
+    "setup:win32": "electron-installer-windows --src dist/timebooking-win32-ia32/ --dest dist/installers/win32/ --name TimeBooking-win32",
+    "setup:win64": "electron-installer-windows --src dist/timebooking-win32-x64/ --dest dist/installers/win64/  --name TimeBooking-win64",
     "setup:darwin": "electron-installer-dmg dist/timebooking-darwin-x64/timebooking.app TimeBooking --out=dist/installers/darwin",
     "setup:deb": "electron-installer-debian --src dist/timebooking-linux-x64/ --dest dist/installers/linux --arch amd64",
     "zip": "npm run zip:win64 && npm run zip:win32 && npm run zip:linux && npm run zip:darwin",
