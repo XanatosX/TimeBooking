@@ -64,4 +64,4 @@ jobs:
          with:
            path: dist
        - name: List data
-         run: ls -la
+         run: tree
