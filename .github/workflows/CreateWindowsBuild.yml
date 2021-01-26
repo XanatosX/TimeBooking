@@ -1,9 +1,7 @@
 name: Create Windows build artifacts
 
 on:
-  workflow_run:
     workflows: ["Create Linux build artifacts (amd64)"]
-    types: 
       - completed
 
 jobs:
