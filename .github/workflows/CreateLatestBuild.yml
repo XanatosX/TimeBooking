@@ -1,4 +1,4 @@
-name: Create Windows/Linux build artifacts
+name: Create Linux build artifacts (amd64)
 
 on: push
 
@@ -9,29 +9,22 @@ jobs:
      steps:
        - name: Clone repository
          uses: actions/checkout@v2
-       - name: Add dependencies
-         run: |
-          sudo apt install wine-stable
-          sudo apt install mono-complete
-       - name: Create builds
+       - name: Create build
          run: |
           sudo npm install -g electron-installer-debian
           npm install
-          npm run build
+          npm run build:linux
        - name: Create installers
          run: |
            npm run setup:deb
-           npm run setup:win64
        - name: Create zips
          run: |
-          npm run zip
+          npm run zip:linux
        - name: Archive production artifacts
          uses: actions/upload-artifact@v2
          with:
           name: LinuxWindowsArtifacts
           path: |
             dist/zips
-            dist/installers/win64*.exe
-            dist/installers/win32*.exe
             dist/installers/linux
            
