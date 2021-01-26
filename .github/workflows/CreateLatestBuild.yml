@@ -1,0 +1,18 @@
+name: Check pull request
+
+on: push
+
+jobs:
+   build:
+     name: Check pull request
+     runs-on: ubuntu-latest
+     steps:
+       - name: Clone repository
+         uses: actions/checkout@v2
+       - name: Create builds
+         run: bash ./build/linuxBuild.sh
+       - name: List content
+         run: |
+           cd dist/
+           ls -la
+           
