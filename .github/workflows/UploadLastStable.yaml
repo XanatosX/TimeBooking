@@ -93,7 +93,7 @@ jobs:
           uses: actions/download-artifact@v2
           with:
             name: buildArtifacts
-            path: dist/
+            path: dist
         - name: Create Release
           id: create_release
           uses: actions/create-release@v1
@@ -112,7 +112,7 @@ jobs:
             GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           with:
             upload_url: ${{ steps.create_release.outputs.upload_url }}
-            asset_path: dist/artifact-upload\TimeBooking-linux-x64.zip
+            asset_path: dist/artifact-upload/TimeBooking-linux-x64.zip
             asset_name: Latest_TimeBooking-linux-x64.zip
             asset_content_type: application/zip
         - name: Upload linux deb
@@ -122,6 +122,6 @@ jobs:
             GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           with:
             upload_url: ${{ steps.create_release.outputs.upload_url }}
-            asset_path: dist/artifact-upload\timebooking_0.0.1_amd64.deb
+            asset_path: dist/artifact-upload/timebooking_0.0.1_amd64.deb
             asset_name: timebooking_0.0.1_amd64.deb
             asset_content_type: application/vnd.debian.binary-package
