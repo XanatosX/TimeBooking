@@ -56,6 +56,7 @@ jobs:
             dist/installers/win32/*.exe
    createAndUploadRelease:
      name: Upload releases
+     needs: ["buildLinux", "buildWindows"]
      runs-on: ubuntu-latest
      steps:
        - name: Download artifacts
