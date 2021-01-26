@@ -76,8 +76,6 @@ jobs:
          run: |
           mkdir artifact-upload/
           mv dist/LinuxArtifacts/* artifact-upload/
-       - name: List data
-         run: ls -la dist/LinuxArtifacts
        - name: List upload data
          run: ls -la artifact-upload
        - name: Archive production artifacts
@@ -85,7 +83,7 @@ jobs:
          with:
           name: buildArtifacts
           path: |
-           upload-artifacts
+           artifact-upload
    createLatestBuild:
       name: Latest unstable build
       needs: ["createUploadArtifact"]
