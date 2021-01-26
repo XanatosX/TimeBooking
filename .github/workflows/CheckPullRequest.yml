@@ -1,0 +1,11 @@
+name: Check pull request
+
+on: push
+
+jobs:
+   build:
+     name: Check pull request
+     runs-on: ubuntu-20.04
+     steps:
+     - name: Install npm dependencies
+       run: npm install
