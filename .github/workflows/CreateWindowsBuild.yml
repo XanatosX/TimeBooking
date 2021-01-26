@@ -1,29 +1,31 @@
 name: Create Windows build artifacts (amd64)
 
-on:
-  workflow_run:
-    workflows: ["Create Linux build artifacts (amd64)"]
-    types: 
-      - completed
+on: push
+  #workflow_run:
+    #workflows: ["Create Linux build artifacts (amd64)"]
+    #types: 
+      #- completed
 
 jobs:
    build:
      name: Create Windows artifact
-     runs-on: ubuntu-latest
+     runs-on: windows-latest
      steps:
        - name: Clone repository
          uses: actions/checkout@v2
        - name: Create build
          run: |
-          sudo npm install -g electron-installer-debian
           npm install
-          npm run build:linux
+          npm run build:win64
+          npm run build:win32
        - name: Create installers
          run: |
-           npm run setup:deb
+           npm run setup:win64
+           npm run build:win32
        - name: Create zips
          run: |
-          npm run zip:linux
+          npm run zip:win64
+          npm run zip:win32
        - name: Archive production artifacts
          uses: actions/upload-artifact@v2
          with:
