@@ -1,8 +1,10 @@
 const path = require('path')
+const { exec } = require('child_process');
 const url = require('url')
 const { electron, app, Menu, BrowserWindow, globalShortcut } = require('electron')
 const LanguageManager = require('./../classes/translation/LanguageManager.js');
-const SettingsManager = require('./../classes/settings/SettingsManager.js')
+const SettingsManager = require('./../classes/settings/SettingsManager.js');
+const ContentSwitcher = require('../classes/util/ContentSwitcher.js');
 
 try {
   require('electron-reload')(__dirname)
@@ -16,7 +18,9 @@ var settingsFolder = app.getPath('userData')
 var settingsManager = new SettingsManager(settingsFolder);
 var languageManager;
 
-
+/**
+ * Create the main window
+ */
 function createWindow() {
   settingOpen = false;
   win = new BrowserWindow({
@@ -39,6 +43,7 @@ function createWindow() {
     protocol: 'file:',
     slashes: true
   }))
+  //win.openDevTools();
 
   win.on('closed', () => {
     globalShortcut.unregisterAll()
@@ -49,6 +54,9 @@ function createWindow() {
   createGlobalShortcuts()
 }
 
+/**
+ * Create the application menu and set it
+ */
 function createApplicationMenu() {
   var menu = Menu.buildFromTemplate([
     {
@@ -80,9 +88,10 @@ function createApplicationMenu() {
         }
       ]
     }, {
-      label: languageManager.getTranslation("projects"),
-      enabled: false,
-      id: "projectMenu"
+      label: languageManager.getTranslation("reportABug"),
+      click() {
+        exec("start https://github.com/XanatosX/TimeBooking/issues");
+      }
     }
   ])
   Menu.setApplicationMenu(menu)
@@ -96,14 +105,16 @@ function reloadAllWindows() {
   windows.forEach( item => item.reload());
 }
 
+/**
+ * Open the settings menu
+ */
 function openSettingsMenu() {
-  win.loadURL(url.format({
-    pathname: path.join(__dirname, '../../windows/settings.html'),
-    protocol: 'file:',
-    slashes: true
-  }));
+  ContentSwitcher.switchToWindow('settings', win);
 }
 
+/**
+ * Set the global shortcuts
+ */
 function createGlobalShortcuts() {
   globalShortcut.register('f5', () => reloadAllWindows());
 }

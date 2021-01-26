@@ -89,6 +89,9 @@ class TableManager {
         return returnValue;
     }
 
+    /**
+     * Create the needed base parts of the table
+     */
     createTableParts() {
         let header = document.createElement('thead');
         header.setAttribute('id', this.tableId + '_header');
@@ -105,6 +108,9 @@ class TableManager {
         this.headerBody.innerHTML = '';
     }
 
+    /**
+     * Clear the whole table
+     */
     clearTable() {
         this.table.innerHTML = '';
         this.createTableParts();

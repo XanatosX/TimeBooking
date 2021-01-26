@@ -14,8 +14,6 @@ var settings
 var filename
 var manager
 var languageManager = new LanguageManager(remote.app.getAppPath() + "/language");
-var dateFormatter = new DateFormatter();
-var contentSwitcher = new ContentSwitcher();
 var projectManager = new ProjectManager(remote.app.getPath('userData'));
 var addProjectWidth = 800;
 var addProjectHeight = 800;
@@ -51,6 +49,9 @@ document.addEventListener('DOMContentLoaded', function () {
   fillSettingsContainer()
 })
 
+/**
+ * Add all the listeners
+ */
 function addListner () {
   let elements = crawlElements(document.getElementById('settingsContent'), 'input')
   //let workdaysDiv = document.getElementById('workdays')
@@ -81,16 +82,16 @@ function addListner () {
   })
 
   dateFormat.addEventListener('change', () => {
-    dateFormatter.setFormat(dateFormat.value);
-    exampleDate.innerHTML = ": " + dateFormatter.getHumanReadable(new Date());
+    DateFormatter.setFormat(dateFormat.value);
+    exampleDate.innerHTML = ": " + DateFormatter.getHumanReadable(new Date());
   });
 
   console.log(dateFormat.value);
   if (dateFormat.value == "") {
-    dateFormat.value = dateFormatter.getDefaultFormat();
+    dateFormat.value = DateFormatter.getDefaultFormat();
   }
-  dateFormatter.setFormat(dateFormat.value);
-  exampleDate.innerHTML = ": " + dateFormatter.getHumanReadable(new Date());
+  DateFormatter.setFormat(dateFormat.value);
+  exampleDate.innerHTML = ": " + DateFormatter.getHumanReadable(new Date());
 
 
   saveButton.addEventListener('click', function () {
@@ -110,7 +111,6 @@ function addListner () {
   })
 
   saveAndCloseButton.addEventListener('click', function () {
-    console.log(settings);
     save()
     close()
   })
@@ -122,6 +122,9 @@ function addListner () {
   addNewProjectButton.addEventListener('click', () => addNewProject());
 }
 
+/**
+ * Fill in the settings
+ */
 function fillSettingsWindow () {
   let fields = crawlElements(document.getElementById('settingsContent'), 'input')
   let settingsObject = settings.getObject()
@@ -140,6 +143,9 @@ function fillSettingsWindow () {
   }
 }
 
+/**
+ * Fill in all the settings
+ */
 function fillSettingsContainer () {
   let data = crawlElements(document.getElementById('settingsContent'), 'input')
   data.forEach( function (element) {
@@ -183,6 +189,11 @@ function fillSettingsContainer () {
   })
 }
 
+/**
+ * Crawl the elements and search everything that is matching
+ * @param {*} root 
+ * @param {string} name 
+ */
 function crawlElements (root, name) {
   let returnValue = []
   if (root === null || root.childNodes === null || root.childNodes.length === 0) {
@@ -202,18 +213,27 @@ function crawlElements (root, name) {
   return returnValue
 }
 
+/**
+ * Save the settings
+ */
 function save() {
   manager.save(filename, settings.getWritable());
   console.log("delete!");
   projectManager.writeProjectFile();
 }
 
+/**
+ * Close the settings
+ */
 function close () {
   projectManager.clearTempProjectFile();
   let window = remote.getCurrentWindow();
-  contentSwitcher.switchToWindow('index', window);
+  ContentSwitcher.switchToWindow('index', window);
 }
 
+/**
+ * Add a new project
+ */
 function addNewProject() {
   let addProjectModal = new Modal(remote.getCurrentWindow(), addProjectWidth, addProjectHeight, 'addProject', () => buildReloadProjectTable());
   if (isDebug) {
@@ -223,11 +243,17 @@ function addNewProject() {
   addProjectModal.show();
 }
 
+/**
+ * Reload the project table
+ */
 function buildReloadProjectTable() {
   projectManager.reloadProjects();
   buildProjectTable();
 }
 
+/**
+ * Build the project table
+ */
 function buildProjectTable() {
   let tableBody = document.getElementById('projectTableBody');
   tableBody.innerHTML = '';

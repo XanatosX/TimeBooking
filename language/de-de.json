@@ -6,6 +6,7 @@
         "reload": "Neu laden (F5)",
         "exit": "Beenden",
         "en-us": "Englisch (USA)",
+        "de-de": "Deutsch",
         "addNewTiming": "Neue {addTime}",
         "yesterday": "Gestern",
         "today": "Heute",
@@ -48,6 +49,12 @@
         "onlyWorkdays": "Nur Arbeitstage",
         "date": "Datum",
         "workedTime": "Gearbeitete Zeit",
-        "projects": "Projekte"
+        "projects": "Projekte",
+        "projectName": "Projekt name",
+        "addProject" : "Neues Projekt hinzufügen",
+        "reportABug": "Fehler melden",
+        "timeBooked": "Zeit bereits gebucht",
+        "projectSelect": "Projekt",
+        "acceptAndClose": "Akzeptieren und {close}"
     }
 }

@@ -62,15 +62,27 @@ document.addEventListener('DOMContentLoaded', function () {
   addKeyPress();
 }, false);
 
+/**
+ * Set the time for a given element
+ * @param {Object} element 
+ * @param {Date} timeInput 
+ */
 function setTime (element, timeInput) {
   var time = String(timeInput.getHours()).padStart(2, '0') + ':' + String(timeInput.getMinutes()).padStart(2, '0');
   element.value = time;
 }
 
+/**
+ * Add a newpress for pressing enter
+ */
 function addKeyPress () {
   window.addEventListener('keyup', KeyUp, true);
 }
 
+/**
+ * The key up event
+ * @param {Object} event 
+ */
 function KeyUp (event) {
   if (event.keyCode === 27) {
     close();
@@ -80,6 +92,9 @@ function KeyUp (event) {
   }
 }
 
+/**
+ * Add all the event listeners
+ */
 function addListener () {
   var closeBtn = document.getElementById('closeButton');
   var saveBtn = document.getElementById('saveButton');
@@ -91,11 +106,17 @@ function addListener () {
   });
 }
 
+/**
+ * Close this modal
+ */
 function close () {
   var window = remote.getCurrentWindow();
   window.close();
 }
 
+/**
+ * Save the modal data
+ */
 function save () {
   var timeStart = document.getElementById('start-timestamp');
   var timeEnd = document.getElementById('end-timestamp');

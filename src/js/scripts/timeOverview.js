@@ -4,6 +4,7 @@ const TimeContainer = require('../classes/data_management/TimeContainer.js');
 const SettingsManager = require('./../classes/settings/SettingsManager.js');
 const LanguageManager = require('./../classes/translation/LanguageManager.js');
 const DateFormatter = require("./../classes/util/DateFormatter.js");
+const TimeFormatter = require("./../classes/util/TimeFormatter.js");
 const { remote } = require('electron');
 
 var timeManager;
@@ -12,7 +13,6 @@ var settings;
 var manager;
 var settingsFolder = remote.app.getPath('userData')
 var languageManager = new LanguageManager(remote.app.getAppPath() + "/language");
-var dateFormatter = new DateFormatter();
 
 document.addEventListener('DOMContentLoaded', function () {
     settingsManager = new SettingsManager(settingsFolder);
@@ -22,7 +22,8 @@ document.addEventListener('DOMContentLoaded', function () {
       languageManager.setLanguage(language);
     }
     languageManager.applyTranslation(document);
-    dateFormatter.setFormat(settings.getSetting("dateFormat"))
+    DateFormatter.setFormat(settings.getSetting("dateFormat"))
+    DateFormatter.buildDayTable(languageManager);
 
     let current = new Date(Date.now());
     manager = new TableManager('tableContainer');
@@ -35,6 +36,9 @@ document.addEventListener('DOMContentLoaded', function () {
     createWeeklyDataTable();
   }, false);
 
+  /**
+   * Add all the events
+   */
   function addEvents() {
     let weekButton = document.getElementById('showWeekTime');
     let monthButton = document.getElementById('showMonthTime');
@@ -80,7 +84,9 @@ document.addEventListener('DOMContentLoaded', function () {
     let totalTiming = 0;
     for (let key in timings) {
         let currentTimings = timings[key];
-        let date = currentTimings['date'];
+        console.log(currentTimings);
+        let date = DateFormatter.getTranslatedDate(currentTimings.rawDate);
+        date += " " + currentTimings['date'];
         let timingVal = currentTimings['timings'].getCompleteWorkTime();
         totalTiming += timingVal;
         manager.addRow({
@@ -88,7 +94,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 name: date
             },
             1: {
-                name: toHumanReadable(timingVal)
+                name: TimeFormatter.toHumanReadable(timingVal)
             }
         });
     }
@@ -98,11 +104,15 @@ document.addEventListener('DOMContentLoaded', function () {
             name: languageManager.getTranslation("totalWorktime")
         },
         1: {
-            name: toHumanReadable(totalTiming) + " / " + getWorkingHours(getPreviousMonday(new Date(Date.now())), getNextSunday(new Date(Date.now()))) + " h"
+            name: TimeFormatter.toHumanReadable(totalTiming) + " / " + getWorkingHours(getPreviousMonday(new Date(Date.now())), getNextSunday(new Date(Date.now()))) + " h"
         }
     });
   }
 
+  /**
+   * Get the previous monday
+   * @param {Date} date 
+   */
   function getPreviousMonday(date) {
     let day = date.getDay() - 1;
     let returnValue = date;
@@ -113,6 +123,10 @@ document.addEventListener('DOMContentLoaded', function () {
     return returnValue;
   }
 
+  /**
+   * Get the next sunday
+   * @param {Date} date 
+   */
   function getNextSunday(date) {
     
     let day = date.getDay();
@@ -125,6 +139,9 @@ document.addEventListener('DOMContentLoaded', function () {
     return returnValue;
   }
 
+  /**
+   * Get all the allowed days
+   */
   function getAllowedDays () {
         let showAll = getOverrideValue();
         let returnDays = [];
@@ -153,6 +170,11 @@ document.addEventListener('DOMContentLoaded', function () {
         return returnDays;
   }
 
+  /**
+   * Get all the dates we need to count for the overview
+   * @param {Date} firstDate 
+   * @param {Date} lastDate 
+   */
   function getDaysToCount (firstDate, lastDate) {
     lastDate.setDate(lastDate.getDate() + 1);
     let diffTime = Math.abs(lastDate.getTime() - firstDate.getTime());
@@ -171,8 +193,9 @@ document.addEventListener('DOMContentLoaded', function () {
   }
 
   /**
-   * 
+   * Get all the timings
    * @param {Date} firstDate 
+   * @param {Date} lastDate 
    */
   function getTimings(firstDate, lastDate) {
     let allowedDays = getAllowedDays();
@@ -194,12 +217,13 @@ document.addEventListener('DOMContentLoaded', function () {
         let dataSet = datesToLoad[key];
         let fileDate = new Date(dataSet);
 
-        let content = timeManager.loadFile(getFileNameFromDate(fileDate));
+        let content = timeManager.loadFileByTime(fileDate);
         if (content === null) {
             content = new TimeContainer();
         }
         let object = {
-            'date': dateFormatter.getHumanReadable(fileDate),
+            'rawDate': fileDate,
+            'date': DateFormatter.getHumanReadable(fileDate),
             'timings': content
         };
         TimesToReturn[key] = object;
@@ -207,13 +231,16 @@ document.addEventListener('DOMContentLoaded', function () {
     return TimesToReturn;
   }
 
+  /**
+   * Get the working hours
+   * @param {Date} firstDate 
+   * @param {Date} lastDate 
+   */
   function getWorkingHours (firstDate, lastDate) {
       let allowedDays = getAllowedDays();
       let daysToCount = getDaysToCount(firstDate, lastDate);
 
       let workingHours = 0;
-      console.log(allowedDays);
-      console.log(daysToCount);
       for (let i = 0; i < daysToCount; i++) {
         let currentDay = new Date().setDate(firstDate.getDate() + i);
         let currentDate = new Date(currentDay);
@@ -229,20 +256,3 @@ document.addEventListener('DOMContentLoaded', function () {
       return workingHours;
 
   }
-
-  function toHumanReadable (workTime) {
-    workTime = workTime / 1000;
-    workTime = workTime / 60;
-    
-    let hours = (workTime / 60);
-    let realHours = Math.floor(hours);
-    let minutes = (hours - realHours) * 60;
-    let realMinutes = Math.round(minutes);
-
-  return realHours + " h " + realMinutes + " m";
-  }
-
-  function getFileNameFromDate (date) {
-      return date.getFullYear() + String(date.getMonth() + 1).padStart(2, '0') + String(date.getDate()).padStart(2, '0');
-  }
-  

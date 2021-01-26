@@ -14,8 +14,17 @@
 
 <body>
   <div class="container" style="margin-top: 1em;">
+    <div class="row" id="projectSelectionRow">
+      <label for="projectSelect" class="mr-2" data-langKey="projectSelect"></label>
+      <select class="form-select" data-setting="project" id="projectSelect">
+      </select>
+      <div class="btn-group mb-2" role="group">
+
+      </div>
+    </div>
     <div class="row">
       <div class="col-sm-12 col-md-12">
+
         <div class="btn-group mr-2" role="group">
           <button class='btn btn-primary' id='goLeft' data-langKey="yesterday">Yesterday</button>
           <button class='btn btn-success' id='today' data-langKey="today">Today</button>
@@ -24,15 +33,13 @@
         <button class='btn btn-warning' id='goRight' data-langKey="tomorrow">Tomorrow</button>
       </div>
     </div>
-    <div>
-
-    </div>
     <br />
     <div>
       <table class="table table-striped" id='TimeBooking'>
         <thead>
           <tr>
             <th data-langKey="timeIgnored"></th>
+            <th data-langKey="timeBooked"></th>
             <th data-langKey="startTime"></th>
             <th data-langKey="endTime"></th>
             <th data-langKey="description"></th>

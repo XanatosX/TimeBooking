@@ -2,8 +2,15 @@ const FileReader = require('./LanguageFileReader.js');
 const LanguageName = require('./LanguageName.js');
 var fs = require('fs');
 
+/**
+ * This manager will translate strings to any language
+ */
 class LanguageManager {
 
+    /**
+     * Create a new instance of this class
+     * @param {String} path 
+     */
     constructor(path) {
         this.reader = new FileReader();
 
@@ -16,6 +23,9 @@ class LanguageManager {
         this.setLanguage("en-us");
     }
 
+    /**
+     * Create a list with all the language files
+     */
     createFileList() {  
         let returnData = [];
         if (!fs.existsSync(this.path)) {
@@ -29,10 +39,17 @@ class LanguageManager {
         return convertedData;
     }
 
+    /**
+     * Get the file path for the current languge
+     */
     getFilePath() {
         return this.getSpecificFilePath(this.language);
     }
 
+    /**
+     * Get the file path to a specific language
+     * @param {String} name 
+     */
     getSpecificFilePath(name) {
         return this.path + "/" + name + this.reader.getFileEnding();
     }
@@ -51,6 +68,9 @@ class LanguageManager {
         this.fallback = this.fallback === null ? this.language : this.fallback;
     }
 
+    /**
+     * Load all the translations
+     */
     loadTranslation() {
         if (this.languageFile === null || this.fallbackFile === null) {
             this.languageFile = this.reader.readFile(this.getFilePath());
@@ -59,11 +79,19 @@ class LanguageManager {
         return this.languageFile;
     }
 
+    /**
+     * Get the translation for a given key
+     * @param {String} key 
+     */
     getTranslation(key) {
         let value = this.getRawTranslation(key);
         return value === null ? "No translation for '" + key + "'" : value;
     }
 
+    /**
+     * Get the raw translation for a given key
+     * @param {String} key 
+     */
     getRawTranslation(key) {
         this.loadTranslation();
         if (this.languageFile === null) {
@@ -90,10 +118,17 @@ class LanguageManager {
         return value;
     }
 
+    /**
+     * Get the whole language file
+     */
     getTranslationContainer() {
         return this.languageFile;
     }
 
+    /**
+     * Translate the whole document
+     * @param {Document} document 
+     */
     applyTranslation(document) {
         let elements = document.getElementsByTagName("*");
         for (let element of elements) {
@@ -105,6 +140,9 @@ class LanguageManager {
         }
     }
 
+    /**
+     * Get all the avaiable languages
+     */
     getAvailableLanguages() {
         let returnData = [];
         for(let index in this.files) {

@@ -2,10 +2,13 @@ const url = require('url')
 const path = require('path');
 const { BrowserWindow } = require('electron');
 
+var switcher = null;
+
 /**
  * Helper to switch the window
  */
 class ContentSwitcher {
+    
     /**
      * Switch the current window to a new one
      * @param {string} newWindowName 
@@ -27,4 +30,5 @@ class ContentSwitcher {
     }
 }
 
-module.exports = ContentSwitcher;
+switcher = switcher === null ? new ContentSwitcher() : switcher;
+module.exports = switcher;

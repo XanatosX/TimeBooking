@@ -16,9 +16,8 @@ class TimeFileManager {
     this.path = path + '/bookings/' + project + '/';
     this.today = dateTime;
     if (!fs.existsSync(this.path)) {
-      fs.mkdirSync(this.path);
+      fs.mkdirSync(this.path, { recursive: true });
     }
-
   }
 
   /**
@@ -48,6 +47,7 @@ class TimeFileManager {
    * This method will load you an file from the disk
    * 
    * @param  {Date} time
+   * @returns {TimeContainer}
    */
   loadFileByTime(dateTime)
   {
@@ -59,6 +59,7 @@ class TimeFileManager {
    * This method will load you an file from the disk
    * 
    * @param  {String} name
+   * @returns {TimeContainer}
    */
   loadFile (name) {
     let path = this.path + name + '.json';

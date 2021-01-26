@@ -5,7 +5,6 @@ const SettingsManager = require('./../js/classes/settings/SettingsManager.js');
 const ProjectManager = require('./../js/classes/data_management/ProjectManagment/ProjectManager');
 const ProjectData = require('./../js/classes/data_management/ProjectManagment/ProjectData.js');
 
-
 var settingsFolder = remote.app.getPath('userData');
 var settingsManager = new SettingsManager(settingsFolder);
 var languageManager = new LanguageManager(remote.app.getAppPath() + "/language");
@@ -13,7 +12,6 @@ var projectManager = new ProjectManager(settingsFolder);
 var project = null;
 
 document.addEventListener('DOMContentLoaded', function () {
-    
     Window.openDevTools();
     settingsManager = new SettingsManager(settingsFolder);
     settings = settingsManager.load("mainSettings");
@@ -46,19 +44,28 @@ ipcRenderer.on('id', (event, message) => {
     console.log(project);
   });
 
+  /**
+   * This method will setup all the events
+   */
 function setupEvents() {
     let closeButton = document.getElementById('closeButton');
     closeButton.addEventListener('click', () => close())
 
-    let saveAndCloseButton = document.getElementById('saveAndCloseButton');
-    saveAndCloseButton.addEventListener('click', () => saveAndClose())
+    let acceptAndCloseButton = document.getElementById('acceptAndCloseButton');
+    acceptAndCloseButton.addEventListener('click', () => acceptAndClose())
 }
 
-function saveAndClose() {
+/**
+ * This method will save and close
+ */
+function acceptAndClose() {
     save();
     close();
 }
 
+/**
+ * This method will save the changes to the temp config
+ */
 function save() {
     let nameBox = document.getElementById('projectName');
     let name = nameBox.value;
@@ -76,6 +83,9 @@ function save() {
     console.log('save');
 }
 
+/**
+ * Close this form
+ */
 function close() {
     var window = remote.getCurrentWindow();
     window.close();

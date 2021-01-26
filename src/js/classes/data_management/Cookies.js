@@ -3,6 +3,7 @@
    * This class will allow you to save and load cookies 
    */
   class Cookies {
+    
   /**
    * The constructor of the cookies class
    * 
@@ -11,6 +12,7 @@
   constructor (electron) {
     this.session = electron.remote.session.fromPartition('persist:name');
   }
+
   /**
    * This method will create a new cookie
    * 

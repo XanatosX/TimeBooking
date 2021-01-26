@@ -1,10 +1,31 @@
+var dateFormatter = null;
+
+/**
+ * Date time formatter utility
+ */
 class DateFormatter {
+    /**
+     * Create a new instance of this class
+     */
     constructor() {
         this.format = null
         this.defaultFormat = "mm/dd/yyyy"
         this.setFormat(this.defaultFormat);
+
+        this.dayLookup = [];
+        this.dayLookup.push("Monday");
+        this.dayLookup.push("Tuesday");
+        this.dayLookup.push("Wednesday");
+        this.dayLookup.push("Thursday");
+        this.dayLookup.push("Friday");
+        this.dayLookup.push("Saturday");
+        this.dayLookup.push("Sunday");
     }
 
+    /**
+     * Set a new format
+     * @param {String} newFormat 
+     */
     setFormat(newFormat) {
         if (newFormat === null || newFormat === undefined || newFormat === "") {
             return;
@@ -12,10 +33,17 @@ class DateFormatter {
         this.format = newFormat.toLowerCase();
     }
 
+    /**
+     * Get the default format
+     */
     getDefaultFormat() {
         return this.defaultFormat;
     }
 
+    /**
+     * Get a human readable date
+     * @param {Date} date 
+     */
     getHumanReadable(date) {
         let year = date.getFullYear();
         let month = String(date.getMonth() + 1).padStart(2, '0');
@@ -26,6 +54,12 @@ class DateFormatter {
         return readableString
     }
 
+    /**
+     * Replace the entry with numbers
+     * @param {String} baseString
+     * @param {String} stringToReplace 
+     * @param {Int32Array} number 
+     */
     replaceEntryWithNumber(baseString, stringToReplace, number) {
         let stringNumber = number.toString();
         for(let i = 0; i < this.getOccurences(stringToReplace); i++) {
@@ -36,6 +70,10 @@ class DateFormatter {
         return baseString;
     }
 
+    /**
+     * Get all the occurentsin the string
+     * @param {String} stringToSearch 
+     */
     getOccurences(stringToSearch) {
         let returnValue = 0;
         for(let i = 0; i < this.format.length; i++) {
@@ -44,6 +82,33 @@ class DateFormatter {
 
         return returnValue;
     }
+
+    /**
+     * Build the day table
+     * @param {LanguageManager} languageManager 
+     */
+    buildDayTable(languageManager) {
+        this.dayLookup = [];
+        this.dayLookup.push(languageManager.getTranslation("sunday"));
+        this.dayLookup.push(languageManager.getTranslation("monday"));
+        this.dayLookup.push(languageManager.getTranslation("tuesday"));
+        this.dayLookup.push(languageManager.getTranslation("wednesday"));
+        this.dayLookup.push(languageManager.getTranslation("thursday"));
+        this.dayLookup.push(languageManager.getTranslation("friday"));
+        this.dayLookup.push(languageManager.getTranslation("saturday"));
+    }
+
+    /**
+     * Get the translated date
+     * @param {Date} date 
+     */
+    getTranslatedDate(date) {
+        if (date === null || date === undefined) {
+            return "Missing date";
+        }
+        return this.dayLookup[date.getDay()];
+    }
 }
 
-module.exports = DateFormatter;
+dateFormatter = dateFormatter === null ? new DateFormatter() : dateFormatter;
+module.exports = dateFormatter;

@@ -54,6 +54,10 @@
         "workedTime": "WorkedTime",
         "projects": "Projects",
         "projectName": "Project name",
-        "addProject" : "Add new project"
+        "addProject" : "Add new project",
+        "reportABug": "Report a bug",
+        "timeBooked": "Time already booked",
+        "projectSelect": "Project",
+        "acceptAndClose": "Accept and {close}"
     }
 }

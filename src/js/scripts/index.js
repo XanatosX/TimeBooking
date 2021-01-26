@@ -8,6 +8,8 @@ const CookieManager = require('../classes/data_management/Cookies.js');
 const SettingsManager = require('./../classes/settings/SettingsManager.js')
 const LanguageManager = require('./../classes/translation/LanguageManager.js');
 const DateFormatter = require("./../classes/util/DateFormatter.js");
+const ProjectManager = require('./../classes/data_management/ProjectManagment/ProjectManager');
+const { MenuItem } = require('electron');
 
 var time = new Date();
 
@@ -15,7 +17,8 @@ var cookiesManager = new CookieManager(electron);
 var settingsFolder = remote.app.getPath('userData')
 var settingsManager = new SettingsManager(settingsFolder);
 var languageManager = new LanguageManager(remote.app.getAppPath() + "/language");
-var dateFormatter = new DateFormatter();
+var projectManager = new ProjectManager(remote.app.getPath('userData'));
+var timeManager = null;
 var isDebug = false;
 var addTimeModalWidth = 600;
 var addTimeModalHeight = 250;
@@ -23,15 +26,19 @@ var selectedProject;
 
 document.addEventListener('DOMContentLoaded', function () {
   Window.closeDevTools();
+  console.log(projectManager);
   let settings = settingsManager.load("mainSettings");
   selectedProject = settings.getSetting("project");
   selectedProject = selectedProject === null ? 'default' : selectedProject;
+  if (projectManager.getProjectByFolder(selectedProject) === undefined) {
+    selectedProject = 'default';
+  }
   let language = settings.getSetting("language");
   if (language !== null) {
     languageManager.setLanguage(language);
   }
   languageManager.applyTranslation(document);
-  dateFormatter.setFormat(settings.getSetting("dateFormat"))
+  DateFormatter.setFormat(settings.getSetting("dateFormat"))
   isDebug = settings.getSetting("debug");
 
   isDebug = isDebug == null ? false : isDebug;
@@ -47,17 +54,59 @@ document.addEventListener('DOMContentLoaded', function () {
     cookiesManager.clearCookies();
     fillTable();
   });
+  createTimeManagerInstance();
+
+
+  fillProjectSelection();
   addListener();
   fillTable();
 }, false);
 
+/**
+ * Fill the project selection on page top
+ */
+function fillProjectSelection() {
+  let selection = document.getElementById('projectSelect');
+  let selectionGroup = document.getElementById('projectSelectionRow');
 
+  projectManager.reloadProjects();
+  let projects = projectManager.getProjects();
+  if (projects === null || projects === undefined) {
+    return;
+  }
+  
+  if (projects.length === 1) {
+    selectionGroup.setAttribute('hidden', 'true');
+    return;
+  }
+  selectionGroup.removeAttribute('hidden');
+  projects.forEach(project => {
+    let option = document.createElement('option');
+    option.innerHTML = project.getName();
+    option.setAttribute('value', project.getId());
+    option.setAttribute('data-folder', project.getFolder());
+    if (project.getFolder() === selectedProject) {
+      option.setAttribute('selected', true);
+    }
+    selection.append(option);
+  })
+}
 
+/**
+ * Create a new instance of the time manager
+ */
+function createTimeManagerInstance() {
+  timeManager = new TimeFileManager(remote.app.getPath('userData'), selectedProject, time);
+}
+
+/**
+ * Add all the liseners
+ */
 function addListener () {
-
   let todayButton = document.getElementById('today');
   let leftTimeButton = document.getElementById('goLeft');
   let rightTimeButton = document.getElementById('goRight');
+  let projectSelect = document.getElementById('projectSelect');
 
   let addTimeButton = document.getElementById('addStartTime');
   let timeOverviewButton = document.getElementById('timeOverview');
@@ -105,16 +154,35 @@ function addListener () {
     time.setDate(time.getDate() + 1);
     fillTable();
   });
+
+  projectSelect.addEventListener('change', item => {
+    let target = item.target;
+    let id = target.value;
+    let project = projectManager.getProjectById(id);
+    
+    let settings = settingsManager.load('mainSettings');
+    selectedProject = project.getFolder();
+    settings.addSetting('project', selectedProject);
+    settingsManager.save('mainSettings', settings.getWritable());
+    createTimeManagerInstance();
+    console.log(timeManager);
+    fillTable();
+  })
 }
 
+/**
+ * Fill out the table with the time data sets
+ */
 function fillTable () {
   showTodayButton();
   var tableBody = document.getElementById('tableBody');
   var date = document.getElementById('currentDate');
-  date.innerHTML = ": " + dateFormatter.getHumanReadable(time);
+  date.innerHTML = ": " + DateFormatter.getHumanReadable(time);
   tableBody.innerHTML = '';
 
   var container = loadTimings(time);
+  console.log(time);
+  console.log(container);
 
   if (container === null) {
     return;
@@ -122,32 +190,65 @@ function fillTable () {
   var times = container.getTimes();
 
   var index = 0;
-  times.forEach(function (item) {
+  times.forEach(function (element) {
     var row = document.createElement('tr');
     var cell = document.createElement('td');
     let checkbox = document.createElement('input');
     checkbox.setAttribute('type', 'checkbox');
-    if (!item.isGettingCounted()) {
+    checkbox.setAttribute('class', 'form-check-input');
+    if (!element.isGettingCounted()) {
       checkbox.setAttribute('checked', true);
     }
     checkbox.setAttribute('type', 'checkbox');
     checkbox.setAttribute('disabled', 'true');
     cell.appendChild(checkbox);
     row.appendChild(cell);
+
+    
+    var timeBookedCell = document.createElement('td');
+    let timeBookedCheckbox = document.createElement('input');
+    timeBookedCheckbox.setAttribute('type', 'checkbox');
+    timeBookedCheckbox.setAttribute('class', 'form-check-input');
+    timeBookedCheckbox.setAttribute('data-id', index);
+    let enabled = true;
+    if (element.getEndTime() === "" || !element.isGettingCounted()) {
+      timeBookedCheckbox.setAttribute('disabled', 'true');
+      enabled = false;
+    }
+    if (enabled && element.isAlreadyBooked() && element.isGettingCounted()) {
+      timeBookedCheckbox.setAttribute('checked', true);
+    }
+    timeBookedCheckbox.addEventListener('change', (checkbox) => {
+      let target = checkbox.target;
+      let checked = target.checked;
+      let id = target.dataset.id;
+      element.setTimeBooked(checked);
+      let newDataset = new TimeDataSet();
+      newDataset.setStartTime(element.getStartDate());
+      newDataset.setEndTime(element.getEndDate());
+      newDataset.setDescription(element.getDescription());
+      newDataset.setTimeIngnored(!element.isGettingCounted());
+      newDataset.setTimeBooked(checked);
+      updateTimeData(id, newDataset)
+    })
+    timeBookedCell.appendChild(timeBookedCheckbox);
+    row.appendChild(timeBookedCell);
+
+
     var cell = document.createElement('td');
-    cell.textContent = item.getStartTime();
+    cell.textContent = element.getStartTime();
     row.appendChild(cell);
 
     cell = document.createElement('td');
-    cell.textContent = item.getEndTime();
+    cell.textContent = element.getEndTime();
     row.appendChild(cell);
 
     cell = document.createElement('td');
-    cell.textContent = item.getDescription();
+    cell.textContent = element.getDescription();
     row.appendChild(cell);
 
     cell = document.createElement('td');
-    cell.textContent = item.getFormatedTime();
+    cell.textContent = element.getFormatedTime();
     row.appendChild(cell);
 
     var actionCell = document.createElement('td');
@@ -183,7 +284,7 @@ function fillTable () {
     editButton.textContent = languageManager.getTranslation("edit");
     
 
-    if (item.getEndTime() == "")
+    if (element.getEndTime() == "")
     {
       var setEndTimeButton = document.createElement('button');
       setEndTimeButton.setAttribute('class', 'btn btn-success');
@@ -236,6 +337,9 @@ function fillTable () {
   tableBody.appendChild(endRow);
 }
 
+/**
+ * Show the today button or hide it if not needed
+ */
 function showTodayButton()
 {
   let todayButton = document.getElementById('today');
@@ -252,6 +356,10 @@ function showTodayButton()
   todayButton.removeAttribute("style");
 }
 
+/**
+ * Delete a timing by the given id
+ * @param {Int32Array} id 
+ */
 function deleteTiming (id) {
   var container = loadTimings(time);
   if (container === undefined) {
@@ -259,20 +367,21 @@ function deleteTiming (id) {
   }
 
   container.deleteDataSet(id);
-
-  var writer = new TimeFileManager(remote.app.getPath('userData'), selectedProject, time);
-  writer.saveFile(container.getWritable());
+  timeManager.saveFile(container.getWritable());
 
   var timeStr = String(time.getTime());
   cookiesManager.setCookie('time', timeStr);
-  Window.reload();
+  fillTable();
 }
 
+/**
+ * End the timing for this block
+ * @param {Int32Array} id 
+ */
 function endTiming (id) {
   console.log(time);
   let container = loadTimings(time);
-  let writer = new TimeFileManager(remote.app.getPath('userData'), selectedProject, time);
-  let dataSet = writer.loadFileByTime(time).getTimeById(id);
+  let dataSet = timeManager.loadFileByTime(time).getTimeById(id);
 
   
   let newDataSet = new TimeDataSet();
@@ -285,16 +394,36 @@ function endTiming (id) {
   container.addTime(newDataSet);
   console.log(container.getWritable());
   console.log(time);
-  writer.saveFile(container.getWritable());
+  timeManager.saveFile(container.getWritable());
   fillTable();
 }
 
+/**
+ * Load the timings for the current date
+ * @param {Date} dateTime 
+ * @returns {TimeContainer}
+ */
 function loadTimings (dateTime) {
-  var folder = remote.app.getPath('userData');
-  var manager = new TimeFileManager(folder, selectedProject, dateTime);
-  return manager.loadTodayFile();
+  return timeManager.loadFileByTime(dateTime);
 }
 
+/**
+ * Update the time data
+ * @param {Int32Array} id 
+ * @param {TimeContainer} newTimeData 
+ */
+function updateTimeData(id, newTimeData) {
+  deleteTiming(id);
+  var container = loadTimings(time);
+  container.addTime(newTimeData);
+  timeManager.saveFile(container.getWritable());
+  fillTable();
+}
+
+/**
+ * Get the difference between
+ * @param {Int32Array} value 
+ */
 function getDifference (value) {
   var minutes = Math.floor((value / (1000 * 60)) % 60);
   var hours = Math.floor((value / (1000 * 60 * 60)) % 24);

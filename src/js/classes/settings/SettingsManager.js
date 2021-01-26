@@ -14,7 +14,7 @@ class SettingsManager {
     this.path = path;
     this.path = path + '/settings/';
     if (!fs.existsSync(this.path)) {
-      fs.mkdirSync(this.path);
+      fs.mkdirSync(this.path, { recursive: true });
     }
   }
 

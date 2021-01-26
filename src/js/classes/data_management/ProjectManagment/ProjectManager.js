@@ -4,7 +4,14 @@ const { type } = require('os');
 const { join } = require('path')
 const ProjectData = require('./ProjectData');
 
+/**
+ * Project manager class
+ */
 class ProjectManager {
+    /**
+     * Create a new instance of this class
+     * @param {String} rootFolder 
+     */
     constructor(rootFolder) {
         this.rootFolder = rootFolder;
         this.projectFolder = rootFolder + "/bookings/";
@@ -12,10 +19,16 @@ class ProjectManager {
         this.projects = this.loadProjectFiles();
     }
 
+    /**
+     * Reload all the projects
+     */
     reloadProjects() {
         this.projects = this.loadProjectFiles();
     }
 
+    /**
+     * Scan the project folder for new directories
+     */
     scanForProjects() {
         let returnData = [];
         if (!fs.existsSync(this.projectFolder)) {
@@ -28,9 +41,15 @@ class ProjectManager {
         return returnData;
     }
 
+    /**
+     * Load the project file
+     */
     loadProjectFiles() {
         let returnProjects = [];
         let scannedProjects = this.scanForProjects();
+        if (!scannedProjects.includes('default')) {
+            scannedProjects.push('default');
+        }
         if (!fs.existsSync(this.projectFileFolder)) {
             console.log("Create project file folder: " + this.projectFileFolder);
             fs.mkdirSync(this.projectFileFolder);
@@ -64,26 +83,37 @@ class ProjectManager {
         for(let index in returnProjects) {
             returnProjects[index].setId(index);
         }
-        if (!fs.existsSync(this.getTempProjectFile())) {
-
-        }
         console.log(returnProjects);
 
         return returnProjects;
     }
 
+    /**
+     * Get the path to the temp project file
+     */
     getTempProjectFile() {
         return this.projectFileFolder + 'newProjects.json';
     }
 
+    /**
+     * Get the path to the project file
+     */
     getProjectFile() {
         return this.projectFileFolder + 'projects.json';
     }
 
+    /**
+     * Get the path to a project folder
+     * @param {String} projectName 
+     */
     getProjectFolder(projectName) {
         return this.projectFolder + projectName;
     }
 
+    /**
+     * Read the project file
+     * @param {Array} folderData 
+     */
     readProjectFile(folderData) {
         let newPath = this.getTempProjectFile();
         let path = this.getProjectFile();
@@ -131,6 +161,9 @@ class ProjectManager {
         return returnData;
     }
 
+    /**
+     * Write the project file
+     */
     writeProjectFile() {
         console.log("write Project file!");
         let writeComplete = this.writeData(this.projects, this.getProjectFile());
@@ -157,13 +190,7 @@ class ProjectManager {
             let project = this.getProjectByFolder(folderName);
             if (project === undefined) {
                 console.log("Project is missing folder getting deleted!");
-                let folder = this.getProjectFolder(folderName);
-                let files = fs.readdirSync(folder);
-                files.forEach(file => {
-                    let fullPath = folder + '/' + file;
-                    fs.unlinkSync(fullPath);
-                });
-                fs.rmdirSync(this.getProjectFolder(folderName));
+                this.deleteProjectFolder(folderName);
             }
 
         })
@@ -171,10 +198,16 @@ class ProjectManager {
         return writeComplete;
     }
 
+    /**
+     * Write the temp project file
+     */
     writeTempProjectFile() {
         return this.writeData(this.projects, this.getTempProjectFile());
     }
 
+    /**
+     * Clear the temp project file
+     */
     clearTempProjectFile() {
         if (!fs.existsSync(this.getTempProjectFile())) {
             return true;
@@ -188,6 +221,11 @@ class ProjectManager {
         
     }
 
+    /**
+     * Write the data to the disc
+     * @param {ProjectData} projectData 
+     * @param {String} path 
+     */
     writeData(projectData, path) {
         console.log(path);
         if (this.projects !== undefined) {
@@ -224,6 +262,9 @@ class ProjectManager {
         return true;
     }
 
+    /**
+     * Get the highest id
+     */
     getHighestId() {
         let returnId = 0;
         this.projects.forEach(project => {
@@ -233,6 +274,10 @@ class ProjectManager {
         return returnId;
     }
 
+    /**
+     * Add a new project
+     * @param {ProjectData} projectData 
+     */
     addProject(projectData) {
         let found = this.getProjectByFolder(projectData.getFolder());
         if (found !== undefined) {
@@ -251,6 +296,11 @@ class ProjectManager {
         return true;
     }
 
+    /**
+     * Replace a project
+     * @param {ProjectData} oldProject 
+     * @param {ProjectData} newProject 
+     */
     replaceProject(oldProject, newProject) {
         let id = oldProject.getId();
         let deleteComplete = this.deleteProjectById(id);
@@ -261,10 +311,18 @@ class ProjectManager {
         return this.addProject(newProject);
     }
 
+    /**
+     * Delete a project
+     * @param {ProjectData} project 
+     */
     deleteProject(project) {
         return this.deleteProjectById(project.getId());
     }
 
+    /**
+     * Delete a project by the id
+     * @param {Int31Array} id 
+     */
     deleteProjectById(id) {
         let index = this.projects.findIndex(project => project.getId() == id);
         console.log(id);
@@ -277,21 +335,41 @@ class ProjectManager {
         return true;
     }
 
-    deleteProjectFolder(project) {
-        let folderToDelete = project.getFolder();
-        let fullPath = this.projectFolder + project.getFolder();
-        console.log('Delete folder at ' + fullPath);
+    /**
+     * 
+     * @param {*} project 
+     */
+    deleteProjectFolder(folderName) {
+        let folder = this.getProjectFolder(folderName);
+        console.log('Delete folder at ' + folder);
+        let files = fs.readdirSync(folder);
+        files.forEach(file => {
+            let fullPath = folder + '/' + file;
+            fs.unlinkSync(fullPath);
+        });
+        fs.rmdirSync(this.getProjectFolder(folderName));
     }
 
+    /**
+     * Get a project by the folder
+     * @param {String} folder 
+     */
     getProjectByFolder(folder) {
         return this.projects.find(project => project.getFolder() === folder);
     }
 
+    /**
+     * Get a project by the id
+     * @param {Int32Array} id 
+     */
     getProjectById (id) {
         let realId = parseInt(id);
         return this.projects.find(project => project.getId() === realId);
     }
 
+    /**
+     * Get all project
+     */
     getProjects() {
         return this.projects;
     }

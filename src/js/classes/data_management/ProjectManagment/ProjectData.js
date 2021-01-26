@@ -1,5 +1,9 @@
+/**
+ * This class repsrenst some project data
+ */
 class ProjectData {
     /**
+     * Create a new instance of this
      * @param {string} name 
      * @param {string} folder 
      */
@@ -10,6 +14,10 @@ class ProjectData {
         this.folder = folder;
     }
 
+    /**
+     * Set the id for this project
+     * @param {Int32Array} newId 
+     */
     setId(newId) {
         if (this.locked) {
             return;
@@ -20,11 +28,16 @@ class ProjectData {
         this.locked = true;
     }
 
+    /**
+     * Get the project id
+     * @returns Int32Array
+     */
     getId() {
         return this.id;
     }
 
     /**
+     * Get the project Name
      * @returns string
      */
     getName() {
@@ -32,6 +45,7 @@ class ProjectData {
     }
 
     /**
+     * Get the project Folder
      * @returns string
      */
     getFolder() {
