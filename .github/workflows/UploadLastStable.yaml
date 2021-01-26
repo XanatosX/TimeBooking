@@ -1,0 +1,64 @@
+name: Create Linux build artifacts (amd64)
+
+on: push
+
+jobs:
+   buildLinux:
+     name: Create linux artifact
+     runs-on: ubuntu-latest
+     steps:
+       - name: Clone repository
+         uses: actions/checkout@v2
+       - name: Create build
+         run: |
+          sudo npm install -g electron-installer-debian
+          npm install
+          npm run build:linux
+       - name: Create installers
+         run: |
+           npm run setup:deb
+       - name: Create zips
+         run: |
+          npm run zip:linux
+       - name: Archive production artifacts
+         uses: actions/upload-artifact@v2
+         with:
+          name: LinuxArtifacts
+          path: |
+            dist/zips
+            dist/installers/linux   build:
+   buildWindows:
+     name: Create Windows artifact
+     runs-on: windows-latest
+     steps:
+       - name: Clone repository
+         uses: actions/checkout@v2
+       - name: Create build
+         run: |
+          npm install
+          npm run build:win32
+          npm run build:win64
+       - name: Create installers
+         run: |
+           npm run setup:win32
+           npm run setup:win64
+       - name: Create zips
+         run: |
+          npm run zip:win32
+          npm run zip:win64
+       - name: Archive production artifacts
+         uses: actions/upload-artifact@v2
+         with:
+          name: WindowsArtifacts
+          path: |
+            dist/zips
+            dist/installers/win64/*.exe
+            dist/installers/win32/*.exe
+   createAndUploadRelease:
+     name: Upload releases
+     runs-on: ubuntu-latest
+       - name: Download artifacts
+         uses: actions/download-artifact@v2
+           path: dist
+       - name: List data
+         run: ls-la
