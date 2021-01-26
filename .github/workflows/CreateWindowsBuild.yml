@@ -1,8 +1,6 @@
 name: Create Windows build artifacts
 
-on:
-    workflows: ["Create Linux build artifacts (amd64)"]
-      - completed
+on: push
 
 jobs:
    build:
@@ -15,16 +13,16 @@ jobs:
        - name: Create build
          run: |
           npm install
-          npm run build:win64
           npm run build:win32
+          npm run build:win64
        - name: Create installers
          run: |
+           npm run setup:win32
            npm run setup:win64
-           npm run build:win32
        - name: Create zips
          run: |
-          npm run zip:win64
           npm run zip:win32
+          npm run zip:win64
        - name: Archive production artifacts
          uses: actions/upload-artifact@v2
          with:
