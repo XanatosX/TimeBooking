@@ -167,7 +167,7 @@ jobs:
             asset_name: Latest_TimeBooking-win64.zip
             asset_content_type: application/zip
         - name: Upload windows 32 installer
-          id: upload-win64-installer
+          id: upload-win32-installer
           uses: actions/upload-release-asset@v1
           env:
             GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
