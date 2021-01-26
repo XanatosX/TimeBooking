@@ -92,8 +92,7 @@ jobs:
            upload-artifacts
    createUploadArtifact:
      name: Upload releases
-     #needs: ["buildLinux", "buildWindows", "buildDarwin"]
-     needs: ["buildLinux"]
+     needs: ["buildLinux", "buildWindows", "buildDarwin"]
      runs-on: ubuntu-latest
      steps:
        - name: Download artifacts
@@ -104,12 +103,14 @@ jobs:
          run: |
           mkdir artifact-upload/
           mv dist/LinuxArtifacts/* artifact-upload/
+          mv dist/WindowsArtifacts/* artifact-upload/
+          mv dist/DarwinArtifacts/* artifact-upload/
        - name: List upload data
          run: ls -la artifact-upload
        - name: Archive production artifacts
          uses: actions/upload-artifact@v2
          with:
-          name: buildArtifacts
+          name: BuildArtifacts
           path: |
            artifact-upload
    createLatestBuild:
@@ -120,7 +121,7 @@ jobs:
         - name: Download artifacts
           uses: actions/download-artifact@v2
           with:
-            name: buildArtifacts
+            name: BuildArtifacts
             path: dist
         - name: Read folder content
           run: ls -la dist
@@ -135,15 +136,76 @@ jobs:
             body: This is the latest build version
             draft: true
             prerelease: true
-        - name: Upload zips
-          id: upload-zips
+        - name: Upload linux zip
+          id: upload-linux-zip
           uses: actions/upload-release-asset@v1
           env:
             GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           with:
             upload_url: ${{ steps.create_release.outputs.upload_url }}
-            asset_path: dist/*.zip
+            asset_path: dist/TimeBooking-linux-x64.zip
+            asset_name: Latest_TimeBooking-linux-x64.zip
             asset_content_type: application/zip
+        - name: Upload windows 32 zip
+          id: upload-win32-zip
+          uses: actions/upload-release-asset@v1
+          env:
+            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          with:
+            upload_url: ${{ steps.create_release.outputs.upload_url }}
+            asset_path: dist/TimeBooking-win32-ia32.zip
+            asset_name: Latest_TimeBooking-win32.zip
+            asset_content_type: application/zip
+        - name: Upload windows 64 zip
+          id: upload-win64-zip
+          uses: actions/upload-release-asset@v1
+          env:
+            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          with:
+            upload_url: ${{ steps.create_release.outputs.upload_url }}
+            asset_path: dist/TimeBooking-win32-x64.zip
+            asset_name: Latest_TimeBooking-win64.zip
+            asset_content_type: application/zip
+        - name: Upload windows 32 installer
+          id: upload-win64-installer
+          uses: actions/upload-release-asset@v1
+          env:
+            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          with:
+            upload_url: ${{ steps.create_release.outputs.upload_url }}
+            asset_path: dist/TimeBooking_win32-0.0.1-setup.exe
+            asset_name: Latest_TimeBooking_win32-0.0.1-setup.exe
+            asset_content_type: application/octet-stream
+        - name: Upload windows 64 installer
+          id: upload-win64-installer
+          uses: actions/upload-release-asset@v1
+          env:
+            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          with:
+            upload_url: ${{ steps.create_release.outputs.upload_url }}
+            asset_path: dist/TimeBooking_win64-0.0.1-setup.exe
+            asset_name: Latest_TimeBooking_win64-0.0.1-setup.exe
+            asset_content_type: application/octet-stream
+        - name: Upload darwin zip
+          id: upload-darwin-installer
+          uses: actions/upload-release-asset@v1
+          env:
+            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          with:
+            upload_url: ${{ steps.create_release.outputs.upload_url }}
+            asset_path: dist/TimeBooking-darwin-x64.zip
+            asset_name: Latest_TimeBooking-darwin-x64.zip
+            asset_content_type: application/zip
+        - name: Upload darwin installer
+          id: upload-darwin-installer
+          uses: actions/upload-release-asset@v1
+          env:
+            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          with:
+            upload_url: ${{ steps.create_release.outputs.upload_url }}
+            asset_path: dist/TimeBooking.dmg
+            asset_name: Latest_TimeBooking_x64.dmg
+            asset_content_type: application/octet-stream
         - name: Upload linux deb
           id: upload-linux-deb
           uses: actions/upload-release-asset@v1
