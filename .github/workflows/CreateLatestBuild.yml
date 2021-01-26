@@ -1,4 +1,4 @@
-name: Create build artifacts
+name: Create Windows/Linux build artifacts
 
 on: push
 
