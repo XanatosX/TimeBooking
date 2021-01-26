@@ -8,7 +8,6 @@ on:
 
 jobs:
    build:
-     if: github.event.pull_request.merged == true
      name: Create Windows artifact
      runs-on: windows-latest
      steps:
