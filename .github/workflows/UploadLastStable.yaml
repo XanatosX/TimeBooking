@@ -22,16 +22,15 @@ jobs:
           npm run zip:linux
        - name: Cleanup artifact
          run: | 
-          mv dist/zips/* dist
-          mv dist/installers/* dist
-          rmdir dist/zips
-          rmdir dist/installers
+          mkdir upload-artifacts/
+          mv dist/zips/* upload-artifacts
+          mv dist/installers/* upload-artifacts
        - name: Archive production artifacts
          uses: actions/upload-artifact@v2
          with:
           name: LinuxArtifacts
           path: |
-            dist/
+            upload-artifacts/
    buildWindows:
      name: Create Windows artifact
      runs-on: windows-latest
