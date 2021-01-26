@@ -9,6 +9,10 @@ jobs:
      steps:
        - name: Clone repository
          uses: actions/checkout@v2
+       - name: Add dependencies
+         run: |
+          sudo apt install wine
+          sudo apt install mono-complete
        - name: Create builds
          run: |
           sudo npm install -g electron-installer-debian
