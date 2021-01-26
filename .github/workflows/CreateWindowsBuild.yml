@@ -8,7 +8,7 @@ on:
 
 jobs:
    build:
-     name: Check pull request
+     name: Create Windows artifact
      runs-on: ubuntu-latest
      steps:
        - name: Clone repository

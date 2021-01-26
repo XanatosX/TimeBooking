@@ -4,7 +4,7 @@ on: push
 
 jobs:
    build:
-     name: Check pull request
+     name: Create linux artifact
      runs-on: ubuntu-latest
      steps:
        - name: Clone repository
