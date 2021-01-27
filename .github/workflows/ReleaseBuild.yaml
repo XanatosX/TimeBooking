@@ -12,7 +12,7 @@ jobs:
      steps:
        - name: Get current tag
          run: |
-          tag="$(cut -d'/' -f3' <<< '$GITHUB_REF')"
+          tag="$(cut -d'/' -f3 <<< '$GITHUB_REF')"
           echo $tag
    buildLinux:
      if: true == false
