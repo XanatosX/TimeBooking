@@ -1,10 +1,10 @@
-name: Upload last stable
+name: Release build
 
 on:
   push:
     tags:
      - '*'
-     
+
 jobs:
    buildLinux:
      name: Create Linux artifact
