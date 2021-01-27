@@ -11,7 +11,7 @@ jobs:
      runs-on: ubuntu-latest
      steps:
         - name: Get current tag
-          run: echo {{ $env:GITHUB_REF }}
+          run: echo $GITHUB_REF
    buildLinux:
      if: true == false
      name: Create Linux artifact
