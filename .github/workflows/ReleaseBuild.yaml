@@ -11,7 +11,9 @@ jobs:
      runs-on: ubuntu-latest
      steps:
         - name: Get current tag
-          run: echo $GITHUB_REF
+          run: |
+          tag="$(cut -d'/' -f3' <<< '$GITHUB_REF')"
+          echo $tag
    buildLinux:
      if: true == false
      name: Create Linux artifact
