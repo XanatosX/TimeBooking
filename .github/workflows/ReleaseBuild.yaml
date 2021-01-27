@@ -1,9 +1,9 @@
 name: Upload last stable
 
-on: push
-  #push:
-    #tags:
-     #- '*'
+on:
+  push:
+    tags:
+     - '*'
 jobs:
    buildLinux:
      name: Create Linux artifact
@@ -128,7 +128,9 @@ jobs:
             name: BuildArtifacts
             path: dist
         - name: Get Current Tag
-          run: echo "::set-env name=tag::$(($env:GITHUB_REF -split '/')[-1] -replace ' ','')"
+          run: echo $env:GITHUB_REF
+          #run: echo "action_state=yellow" >> $GITHUB_ENV
+          #run: echo "::set-env name=tag::$(($env:GITHUB_REF -split '/')[-1] -replace ' ','')"
         - name: Read folder content
           run: ls -la dist
         - name: Create Release
