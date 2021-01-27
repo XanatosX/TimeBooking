@@ -2,8 +2,10 @@ name: Release build
 
 on:
   push:
+    #branches:
+    #  -master
     tags:
-     - '*'
+     - '*.*.*'
 
 jobs:
    buildLinux:
