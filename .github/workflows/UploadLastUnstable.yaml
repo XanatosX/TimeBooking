@@ -1,9 +1,10 @@
-name: Upload last stable
+name: Upload last unstable
 
-on:
+on: 
   push:
     branches:
       - develop
+
 jobs:
    buildLinux:
      name: Create Linux artifact
@@ -27,6 +28,9 @@ jobs:
           mkdir upload-artifacts/
           mv dist/zips/* upload-artifacts
           mv dist/installers/linux/* upload-artifacts
+       - name: Rename artifacts
+         run: | 
+          mv upload-artifacts/*_amd64.deb upload-artifacts/timebooking_amd64.deb
        - name: Archive production artifacts
          uses: actions/upload-artifact@v2
          with:
@@ -58,6 +62,10 @@ jobs:
           move dist/zips/* upload-artifacts
           move dist/installers/win32/*.exe upload-artifacts
           move dist/installers/win64/*.exe upload-artifacts
+       - name: Rename artifact
+         run: |
+          move upload-artifacts/TimeBooking_win32-*setup.exe upload-artifacts/TimeBooking_win32-setup.exe
+          move upload-artifacts/TimeBooking_win64-*setup.exe upload-artifacts/TimeBooking_win64-setup.exe
        - name: Archive production artifacts
          uses: actions/upload-artifact@v2
          with:
@@ -175,8 +183,8 @@ jobs:
             GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           with:
             upload_url: ${{ steps.create_release.outputs.upload_url }}
-            asset_path: dist/TimeBooking_win32-0.0.1-setup.exe
-            asset_name: Latest_TimeBooking_win32-0.0.1-setup.exe
+            asset_path: dist/TimeBooking_win32-setup.exe
+            asset_name: Latest_TimeBooking_win32-setup.exe
             asset_content_type: application/octet-stream
         - name: Upload windows 64 installer
           id: upload-win64-installer
@@ -185,8 +193,8 @@ jobs:
             GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           with:
             upload_url: ${{ steps.create_release.outputs.upload_url }}
-            asset_path: dist/TimeBooking_win64-0.0.1-setup.exe
-            asset_name: Latest_TimeBooking_win64-0.0.1-setup.exe
+            asset_path: dist/TimeBooking_win64-setup.exe
+            asset_name: Latest_TimeBooking_win64-setup.exe
             asset_content_type: application/octet-stream
         - name: Upload darwin zip
           id: upload-darwin-zip
@@ -215,6 +223,6 @@ jobs:
             GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           with:
             upload_url: ${{ steps.create_release.outputs.upload_url }}
-            asset_path: dist/timebooking_0.0.1_amd64.deb
-            asset_name: timebooking_0.0.1_amd64.deb
+            asset_path: dist/timebooking_amd64.deb
+            asset_name: timebooking_amd64.deb
             asset_content_type: application/vnd.debian.binary-package
