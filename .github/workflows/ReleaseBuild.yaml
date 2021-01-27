@@ -10,8 +10,8 @@ jobs:
      name: Get tags
      runs-on: ubuntu-latest
      steps:
-        - name: Get current tag
-          run: |
+       - name: Get current tag
+         run: |
           tag="$(cut -d'/' -f3' <<< '$GITHUB_REF')"
           echo $tag
    buildLinux:
