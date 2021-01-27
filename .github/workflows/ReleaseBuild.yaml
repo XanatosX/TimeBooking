@@ -2,8 +2,6 @@ name: Release build
 
 on:
   push:
-    #branches:
-    #  -master
     tags:
      - '*.*.*'
 
@@ -202,7 +200,7 @@ jobs:
           with:
             upload_url: ${{ steps.create_release.outputs.upload_url }}
             asset_path: dist/TimeBooking_win32-setup.exe
-            asset_name: TimeBooking-${{ env.RELEASE_VERSION }}-_win32-setup.exe
+            asset_name: TimeBooking-${{ env.RELEASE_VERSION }}-win32-setup.exe
             asset_content_type: application/octet-stream
         - name: Upload windows 64 installer
           id: upload-win64-installer
