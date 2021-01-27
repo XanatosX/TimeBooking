@@ -158,7 +158,7 @@ jobs:
             GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           with:
             tag_name: ${{ github.ref }}-${{ GITHUB.RUN_NUMBER }}
-            release_name: Release - ${{ env.RELEASE_VERSION }}
+            release_name: Release - Version ${{ env.RELEASE_VERSION }}
             body: Body goes here!
             draft: true
             prerelease: false
@@ -180,7 +180,7 @@ jobs:
           with:
             upload_url: ${{ steps.create_release.outputs.upload_url }}
             asset_path: dist/TimeBooking-win32-ia32.zip
-            asset_name: TimeBooking-win32.zip
+            asset_name: TimeBooking-${{ env.RELEASE_VERSION }}-win32.zip
             asset_content_type: application/zip
         - name: Upload windows 64 zip
           id: upload-win64-zip
@@ -190,7 +190,7 @@ jobs:
           with:
             upload_url: ${{ steps.create_release.outputs.upload_url }}
             asset_path: dist/TimeBooking-win32-x64.zip
-            asset_name: TimeBooking-win64.zip
+            asset_name: TimeBooking-${{ env.RELEASE_VERSION }}-win64.zip
             asset_content_type: application/zip
         - name: Upload windows 32 installer
           id: upload-win32-installer
@@ -200,7 +200,7 @@ jobs:
           with:
             upload_url: ${{ steps.create_release.outputs.upload_url }}
             asset_path: dist/TimeBooking_win32-setup.exe
-            asset_name: TimeBooking_win32-setup.exe
+            asset_name: TimeBooking-${{ env.RELEASE_VERSION }-_win32-setup.exe
             asset_content_type: application/octet-stream
         - name: Upload windows 64 installer
           id: upload-win64-installer
@@ -220,7 +220,7 @@ jobs:
           with:
             upload_url: ${{ steps.create_release.outputs.upload_url }}
             asset_path: dist/TimeBooking-darwin-x64.zip
-            asset_name: TimeBooking-darwin-x64.zip
+            asset_name: TimeBooking-${{ env.RELEASE_VERSION }}-darwin-x64.zip
             asset_content_type: application/zip
         - name: Upload darwin installer
           id: upload-darwin-installer
@@ -230,7 +230,7 @@ jobs:
           with:
             upload_url: ${{ steps.create_release.outputs.upload_url }}
             asset_path: dist/TimeBooking.dmg
-            asset_name: TimeBooking_x64.dmg
+            asset_name: TimeBooking-${{ env.RELEASE_VERSION }}-x64.dmg
             asset_content_type: application/octet-stream
         - name: Upload linux deb
           id: upload-linux-deb
@@ -240,5 +240,5 @@ jobs:
           with:
             upload_url: ${{ steps.create_release.outputs.upload_url }}
             asset_path: dist/timebooking_amd64.deb
-            asset_name: timebooking_amd64.deb
+            asset_name: timebooking-${{ env.RELEASE_VERSION }}-amd64.deb
             asset_content_type: application/vnd.debian.binary-package
