@@ -4,6 +4,7 @@ on:
   push:
     tags:
      - '*'
+     
 jobs:
    buildLinux:
      name: Create Linux artifact
