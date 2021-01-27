@@ -1,4 +1,4 @@
-name: Upload last stable
+name: Upload last unstable
 
 on: push
   #push:
