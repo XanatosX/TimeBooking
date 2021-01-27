@@ -1,10 +1,10 @@
-name: Upload last stable
+name: Release build
 
 on:
   push:
     tags:
-     - '*'
-     
+     - '*.*.*'
+
 jobs:
    buildLinux:
      name: Create Linux artifact
@@ -12,8 +12,8 @@ jobs:
      steps:
        - name: Clone repository
          uses: actions/checkout@v2
-         #with: 
-           #ref: master
+         with: 
+            ref: master
        - name: Create build
          run: |
           sudo npm install -g electron-installer-debian
@@ -30,6 +30,9 @@ jobs:
           mkdir upload-artifacts/
           mv dist/zips/* upload-artifacts
           mv dist/installers/linux/* upload-artifacts
+       - name: Rename artifacts
+         run: | 
+          mv upload-artifacts/*_amd64.deb upload-artifacts/TimeBooking_amd64.deb
        - name: Archive production artifacts
          uses: actions/upload-artifact@v2
          with:
@@ -42,6 +45,8 @@ jobs:
      steps:
        - name: Clone repository
          uses: actions/checkout@v2
+         with: 
+            ref: master
        - name: Create build
          run: |
           npm install
@@ -61,6 +66,10 @@ jobs:
           move dist/zips/* upload-artifacts
           move dist/installers/win32/*.exe upload-artifacts
           move dist/installers/win64/*.exe upload-artifacts
+       - name: Rename artifact
+         run: |
+          move upload-artifacts/TimeBooking_win32-*setup.exe upload-artifacts/TimeBooking_win32-setup.exe
+          move upload-artifacts/TimeBooking_win64-*setup.exe upload-artifacts/TimeBooking_win64-setup.exe
        - name: Archive production artifacts
          uses: actions/upload-artifact@v2
          with:
@@ -73,6 +82,8 @@ jobs:
      steps:
        - name: Clone repository
          uses: actions/checkout@v2
+         with: 
+            ref: master
        - name: Create build
          run: |
           npm install macos-alias --save-dev
@@ -123,15 +134,21 @@ jobs:
       needs: ["createUploadArtifact"]
       runs-on: ubuntu-latest
       steps:
+        - name: Clone repository
+          uses: actions/checkout@v2
+          with: 
+            ref: master
+        - name: Get release tag
+          run: echo "RELEASE_VERSION=${GITHUB_REF#refs/*/}" >> $GITHUB_ENV
+        - name: Check release version
+          run: |
+           echo $RELEASE_VERSION
+           echo ${{ env.RELEASE_VERSION }}
         - name: Download artifacts
           uses: actions/download-artifact@v2
           with:
             name: BuildArtifacts
             path: dist
-        - name: Get Current Tag
-          run: echo $env:GITHUB_REF
-          #run: echo "action_state=yellow" >> $GITHUB_ENV
-          #run: echo "::set-env name=tag::$(($env:GITHUB_REF -split '/')[-1] -replace ' ','')"
         - name: Read folder content
           run: ls -la dist
         - name: Create Release
@@ -141,7 +158,7 @@ jobs:
             GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           with:
             tag_name: ${{ github.ref }}-${{ GITHUB.RUN_NUMBER }}
-            release_name: Release - ${{ env.tag }}
+            release_name: Release - Version ${{ env.RELEASE_VERSION }}
             body: Body goes here!
             draft: true
             prerelease: false
@@ -152,8 +169,8 @@ jobs:
             GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           with:
             upload_url: ${{ steps.create_release.outputs.upload_url }}
-            asset_path: dist/*-linux-x64.zip
-            asset_name: TimeBooking-linux-x64.zip
+            asset_path: dist/TimeBooking-linux-x64.zip
+            asset_name: TimeBooking-${{ env.RELEASE_VERSION }}-linux-x64.zip
             asset_content_type: application/zip
         - name: Upload windows 32 zip
           id: upload-win32-zip
@@ -162,8 +179,8 @@ jobs:
             GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           with:
             upload_url: ${{ steps.create_release.outputs.upload_url }}
-            asset_path: dist/*-win32-ia32.zip
-            asset_name: TimeBooking-win32.zip
+            asset_path: dist/TimeBooking-win32-ia32.zip
+            asset_name: TimeBooking-${{ env.RELEASE_VERSION }}-win32.zip
             asset_content_type: application/zip
         - name: Upload windows 64 zip
           id: upload-win64-zip
@@ -172,8 +189,8 @@ jobs:
             GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           with:
             upload_url: ${{ steps.create_release.outputs.upload_url }}
-            asset_path: dist/*-win32-x64.zip
-            asset_name: TimeBooking-win64.zip
+            asset_path: dist/TimeBooking-win32-x64.zip
+            asset_name: TimeBooking-${{ env.RELEASE_VERSION }}-win64.zip
             asset_content_type: application/zip
         - name: Upload windows 32 installer
           id: upload-win32-installer
@@ -182,8 +199,8 @@ jobs:
             GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           with:
             upload_url: ${{ steps.create_release.outputs.upload_url }}
-            asset_path: dist/*_win32-*-setup.exe
-            asset_name: TimeBooking_win32-setup.exe
+            asset_path: dist/TimeBooking_win32-setup.exe
+            asset_name: TimeBooking-${{ env.RELEASE_VERSION }}-win32-setup.exe
             asset_content_type: application/octet-stream
         - name: Upload windows 64 installer
           id: upload-win64-installer
@@ -192,8 +209,8 @@ jobs:
             GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           with:
             upload_url: ${{ steps.create_release.outputs.upload_url }}
-            asset_path: dist/*_win64*-setup.exe
-            asset_name: TimeBooking_win64-setup.exe
+            asset_path: dist/TimeBooking_win64-setup.exe
+            asset_name: TimeBooking-${{ env.RELEASE_VERSION }}-win64-setup.exe
             asset_content_type: application/octet-stream
         - name: Upload darwin zip
           id: upload-darwin-zip
@@ -202,8 +219,8 @@ jobs:
             GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           with:
             upload_url: ${{ steps.create_release.outputs.upload_url }}
-            asset_path: dist/*-darwin-x64.zip
-            asset_name: TimeBooking-darwin-x64.zip
+            asset_path: dist/TimeBooking-darwin-x64.zip
+            asset_name: TimeBooking-${{ env.RELEASE_VERSION }}-darwin-x64.zip
             asset_content_type: application/zip
         - name: Upload darwin installer
           id: upload-darwin-installer
@@ -212,8 +229,8 @@ jobs:
             GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           with:
             upload_url: ${{ steps.create_release.outputs.upload_url }}
-            asset_path: dist/*.dmg
-            asset_name: TimeBooking_x64.dmg
+            asset_path: dist/TimeBooking.dmg
+            asset_name: TimeBooking-${{ env.RELEASE_VERSION }}-x64.dmg
             asset_content_type: application/octet-stream
         - name: Upload linux deb
           id: upload-linux-deb
@@ -222,6 +239,6 @@ jobs:
             GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           with:
             upload_url: ${{ steps.create_release.outputs.upload_url }}
-            asset_path: dist/*amd64.deb
-            asset_name: timebooking_amd64.deb
+            asset_path: dist/TimeBooking_amd64.deb
+            asset_name: TimeBooking-${{ env.RELEASE_VERSION }}-amd64.deb
             asset_content_type: application/vnd.debian.binary-package
