@@ -6,7 +6,11 @@ on:
      - '*'
 
 jobs:
+   getTag:
+        - name: Get current tag
+          run: echo {{ $env:GITHUB_REF }}
    buildLinux:
+     if: true == false
      name: Create Linux artifact
      runs-on: ubuntu-latest
      steps:
@@ -37,6 +41,7 @@ jobs:
           path: |
             upload-artifacts/
    buildWindows:
+     if: true == false
      name: Create Windows artifact
      runs-on: windows-latest
      steps:
@@ -68,6 +73,7 @@ jobs:
           path: |
            upload-artifacts
    buildDarwin:
+     if: true == false
      name: Create Darwin artifact
      runs-on: macos-latest
      steps:
@@ -96,6 +102,7 @@ jobs:
           path: |
            upload-artifacts
    createUploadArtifact:
+     if: true == false
      name: Upload releases
      needs: ["buildLinux", "buildWindows", "buildDarwin"]
      runs-on: ubuntu-latest
@@ -119,6 +126,7 @@ jobs:
           path: |
            artifact-upload
    createReleaseBuild:
+      if: true == false
       name: Release build
       needs: ["createUploadArtifact"]
       runs-on: ubuntu-latest
@@ -128,8 +136,6 @@ jobs:
           with:
             name: BuildArtifacts
             path: dist
-        - name: Get Current Tag
-          run: echo $env:GITHUB_REF
           #run: echo "action_state=yellow" >> $GITHUB_ENV
           #run: echo "::set-env name=tag::$(($env:GITHUB_REF -split '/')[-1] -replace ' ','')"
         - name: Read folder content
