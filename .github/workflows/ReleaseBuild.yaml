@@ -21,7 +21,6 @@ jobs:
           echo $RELEASE_VERSION
           echo ${{ env.RELEASE_VERSION }}
    buildLinux:
-     if: true == false
      name: Create Linux artifact
      needs: ["getTag"]
      runs-on: ubuntu-latest
@@ -30,6 +29,10 @@ jobs:
          uses: actions/checkout@v2
          #with: 
            #ref: master
+       - name: Check release version
+         run: |
+          echo $RELEASE_VERSION
+          echo ${{ env.RELEASE_VERSION }}
        - name: Create build
          run: |
           sudo npm install -g electron-installer-debian
