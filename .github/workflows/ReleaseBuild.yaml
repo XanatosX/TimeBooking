@@ -32,7 +32,7 @@ jobs:
           mv dist/installers/linux/* upload-artifacts
        - name: Rename artifacts
          run: | 
-          mv upload-artifacts/*_amd64.deb upload-artifacts/timebooking_amd64.deb
+          mv upload-artifacts/*_amd64.deb upload-artifacts/TimeBooking_amd64.deb
        - name: Archive production artifacts
          uses: actions/upload-artifact@v2
          with:
@@ -239,6 +239,6 @@ jobs:
             GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           with:
             upload_url: ${{ steps.create_release.outputs.upload_url }}
-            asset_path: dist/timebooking_amd64.deb
-            asset_name: timebooking-${{ env.RELEASE_VERSION }}-amd64.deb
+            asset_path: dist/TimeBooking_amd64.deb
+            asset_name: TimeBooking-${{ env.RELEASE_VERSION }}-amd64.deb
             asset_content_type: application/vnd.debian.binary-package
