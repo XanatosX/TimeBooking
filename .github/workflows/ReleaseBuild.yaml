@@ -12,8 +12,6 @@ jobs:
      steps:
        - name: Get current tag
          run: |
-          echo ${{GITHUB_REF}}
-          echo ${{env.GITHUB_REF}}
           tag="$(cut -d'/' -f3 <<< '${{GITHUB_REF}}')"
           echo $tag
    buildLinux:
