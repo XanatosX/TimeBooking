@@ -12,11 +12,12 @@ jobs:
      steps:
        - name: Get current tag
          run: |
-          tag="$(cut -d'/' -f3 <<< '${GITHUB_REF}')"
+          tag="$(cut -d'/' -f3 <<< '${{env.GITHUB_REF}}')"
           echo $tag
    buildLinux:
      if: true == false
      name: Create Linux artifact
+     needs: ["getTag"]
      runs-on: ubuntu-latest
      steps:
        - name: Clone repository
@@ -48,6 +49,7 @@ jobs:
    buildWindows:
      if: true == false
      name: Create Windows artifact
+     needs: ["getTag"]
      runs-on: windows-latest
      steps:
        - name: Clone repository
@@ -80,6 +82,7 @@ jobs:
    buildDarwin:
      if: true == false
      name: Create Darwin artifact
+     needs: ["getTag"]
      runs-on: macos-latest
      steps:
        - name: Clone repository
