@@ -3,12 +3,98 @@ name: Check pull request
 on: [pull_request]
 
 jobs:
-   build:
-     name: Check pull request
+   buildLinux:
+     name: Check pull request Linux artifact
      runs-on: ubuntu-latest
      steps:
        - name: Clone repository
          uses: actions/checkout@v2
-       - name: Install npm dependencies
-         run: npm install
+       - name: Create build
+         run: |
+          sudo npm install -g electron-installer-debian
+          npm install
+          npm run build:linux
+       - name: Create installers
+         run: |
+           npm run setup:deb
+       - name: Create zips
+         run: |
+          npm run zip:linux
+       - name: Cleanup artifact
+         run: | 
+          mkdir upload-artifacts/
+          mv dist/zips/* upload-artifacts
+          mv dist/installers/linux/* upload-artifacts
+       - name: Rename artifacts
+         run: | 
+          mv upload-artifacts/*_amd64.deb upload-artifacts/timebooking_amd64.deb
+       - name: Archive production artifacts
+         uses: actions/upload-artifact@v2
+         with:
+          name: LinuxArtifacts
+          path: |
+            upload-artifacts/
+   buildWindows:
+     name: Check pull request Windows artifact
+     runs-on: windows-latest
+     steps:
+       - name: Clone repository
+         uses: actions/checkout@v2
+       - name: Create build
+         run: |
+          npm install
+          npm run build:win32
+          npm run build:win64
+       - name: Create installers
+         run: |
+           npm run setup:win32
+           npm run setup:win64
+       - name: Create zips
+         run: |
+          npm run zip:win32
+          npm run zip:win64
+       - name: Cleanup artifact
+         run: |
+          mkdir upload-artifacts/
+          move dist/zips/* upload-artifacts
+          move dist/installers/win32/*.exe upload-artifacts
+          move dist/installers/win64/*.exe upload-artifacts
+       - name: Rename artifact
+         run: |
+          move upload-artifacts/TimeBooking_win32-*setup.exe upload-artifacts/TimeBooking_win32-setup.exe
+          move upload-artifacts/TimeBooking_win64-*setup.exe upload-artifacts/TimeBooking_win64-setup.exe
+       - name: Archive production artifacts
+         uses: actions/upload-artifact@v2
+         with:
+          name: WindowsArtifacts
+          path: |
+           upload-artifacts
+   buildDarwin:
+     name: Check pull request Darwin artifact
+     runs-on: macos-latest
+     steps:
+       - name: Clone repository
+         uses: actions/checkout@v2
+       - name: Create build
+         run: |
+          npm install macos-alias --save-dev
+          npm install
+          npm run build:darwin
+       - name: Create installers
+         run: |
+           npm run setup:darwin
+       - name: Create zips
+         run: |
+          npm run zip:darwin
+       - name: Cleanup artifact
+         run: | 
+          mkdir upload-artifacts/
+          mv dist/zips/* upload-artifacts
+          mv dist/installers/darwin/* upload-artifacts
+       - name: Archive production artifacts
+         uses: actions/upload-artifact@v2
+         with:
+          name: DarwinArtifacts
+          path: |
+           upload-artifacts
            
