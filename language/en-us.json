@@ -58,6 +58,8 @@
         "reportABug": "Report a bug",
         "timeBooked": "Time already booked",
         "projectSelect": "Project",
-        "acceptAndClose": "Accept and {close}"
+        "acceptAndClose": "Accept and {close}",
+        "missingStartDate": "Please enter a start date",
+        "wrongEndDate": "Please enter a end date which is after the start date"
     }
 }

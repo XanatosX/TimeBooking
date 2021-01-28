@@ -118,6 +118,7 @@ function close () {
  * Save the modal data
  */
 function save () {
+  clearError();
   var timeStart = document.getElementById('start-timestamp');
   var timeEnd = document.getElementById('end-timestamp');
   var description = document.getElementById('description');
@@ -132,7 +133,8 @@ function save () {
   var newDataSet = new TimeDataSet();
   let timeIngored = ignoreTime.checked;
 
-  if (timeStart.value === undefined) {
+  if (timeStart.value === undefined || timeStart.value === "") {
+    addError(languageManager.getTranslation('missingStartDate'));
     return;
   }
 
@@ -147,6 +149,10 @@ function save () {
   date += String(today.getDate()).padStart(2, '0');
   var startStamp = new Date(date + startTime);
   var endStamp = new Date(date + endTime);
+  if (endStamp != null && endStamp < startStamp) {
+    addError(languageManager.getTranslation('wrongEndDate'));
+    return;
+  }
   newDataSet.setStartTime(startStamp);
   if (endStamp !== null) {
     newDataSet.setEndTime(endStamp);
@@ -165,4 +171,26 @@ function save () {
   manager.saveFile(container.getWritable());
 
   close();
+}
+
+/**
+ * Clear all the errors
+ */
+function clearError() {
+  let errorDiv = document.getElementById('errorZone');
+  errorDiv.innerHTML = '';
+}
+
+/**
+ * Add a new error to the form
+ * @param {String} data 
+ */
+function addError(data) {
+  let newError = document.createElement('div');
+  newError.setAttribute('class', 'alert alert-danger');
+  newError.setAttribute('role', 'alert');
+  newError.innerHTML = data;
+
+  let errorDiv = document.getElementById('errorZone');
+  errorDiv.append(newError);
 }
