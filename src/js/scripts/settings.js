@@ -9,6 +9,10 @@ const ContentSwitcher = require('./../classes/util/ContentSwitcher');
 const Modal = require('./../classes/electron_extension/Modal');
 const TableManager = require('./../classes/electron_extension/TableManager');
 const ProjectManager = require('./../classes/data_management/ProjectManagment/ProjectManager');
+const ThemeSwitcher = require('../classes/theme/ThemeSwitcher');
+
+ThemeSwitcher.useDarkMode(remote.nativeTheme.shouldUseDarkColors);
+ThemeSwitcher.applyMode(document);
 
 var settings
 var filename
