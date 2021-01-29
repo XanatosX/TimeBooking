@@ -14,28 +14,29 @@
       <div class="form-group row align-items-center">
         <label for="start-timestamp" class="col-sm-4 col-form-label" data-langkey="startTime"></label>
         <div class="col-sm-8" >
-          <input id="start-timestamp" type="time" name=""/>
+          <input class="form-control" id="start-timestamp" type="time" name=""/>
         </div>
       </div>
       <div class="form-group row align-items-center">
         <label for="end-timestamp" class="col-sm-4 col-form-label" data-langkey="endTime"></label>
         <div class="col-sm-8" >
-          <input id="end-timestamp" type="time" name=""/>
+          <input class="form-control" id="end-timestamp" type="time" name=""/>
         </div>
       </div>
       <div class="form-group row align-items-center">
         <label for="description" data-langkey="description" class="col-sm-4 col-form-label"></label>
         <div class="col-sm-8" >
-          <input id="description" type="text" placeholder="Put your description here ..."/>
+          <input class="form-control" id="description" type="text" placeholder="Put your description here ..."/>
         </div>
       </div>
       <div class="form-group row align-items-center">
         <label for="ignoreTime" data-langkey="ignoreTime" class="col-sm-4 col-form-label"></label>
         <div class="col-sm-8" >
-          <input id="ignoreTime" type="checkbox"/>
+          <input class="form-check-input" id="ignoreTime" type="checkbox"/>
         </div>
       </div>
     </form>
+    <div id="errorZone"></div>
       <div class="form-group row"></div>
         <button class='btn btn-success' id='saveButton' data-langkey="saveAndClose"></button>
         <button class='btn btn-danger' id='closeButton' data-langkey="close"></button>
