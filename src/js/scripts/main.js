@@ -1,7 +1,7 @@
 const path = require('path')
 const { exec } = require('child_process');
 const url = require('url')
-const { electron, app, Menu, BrowserWindow, globalShortcut } = require('electron')
+const { electron, app, Menu, BrowserWindow, globalShortcut, nativeTheme } = require('electron')
 const LanguageManager = require('./../classes/translation/LanguageManager.js');
 const SettingsManager = require('./../classes/settings/SettingsManager.js');
 const ContentSwitcher = require('../classes/util/ContentSwitcher.js');
@@ -22,6 +22,7 @@ var languageManager;
  * Create the main window
  */
 function createWindow() {
+  nativeTheme.themeSource = 'light';
   settingOpen = false;
   win = new BrowserWindow({
     width: 800,
@@ -43,7 +44,7 @@ function createWindow() {
     protocol: 'file:',
     slashes: true
   }))
-  //win.openDevTools();
+  win.openDevTools();
 
   win.on('closed', () => {
     globalShortcut.unregisterAll()

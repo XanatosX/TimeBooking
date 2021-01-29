@@ -5,7 +5,11 @@ const TimeContainer = require('./../js/classes/data_management/TimeContainer.js'
 const TimeDataSet = require('./../js/classes/data_management/TimeDataSet.js');
 const LanguageManager = require('./../js/classes/translation/LanguageManager.js');
 const SettingsManager = require('./../js/classes/settings/SettingsManager.js')
+const ThemeSwitcher = require('./../js/classes/theme/ThemeSwitcher');
 const remote = electron.remote;
+
+ThemeSwitcher.useDarkMode(remote.nativeTheme.shouldUseDarkColors);
+ThemeSwitcher.applyMode(document);
 
 var today = null;
 var id = null;

@@ -9,7 +9,10 @@ const SettingsManager = require('./../classes/settings/SettingsManager.js')
 const LanguageManager = require('./../classes/translation/LanguageManager.js');
 const DateFormatter = require("./../classes/util/DateFormatter.js");
 const ProjectManager = require('./../classes/data_management/ProjectManagment/ProjectManager');
-const { MenuItem } = require('electron');
+const ThemeSwitcher = require('../classes/theme/ThemeSwitcher');
+
+ThemeSwitcher.useDarkMode(remote.nativeTheme.shouldUseDarkColors);
+ThemeSwitcher.applyMode(document);
 
 var time = new Date();
 
