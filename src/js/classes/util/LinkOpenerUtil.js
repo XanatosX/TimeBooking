@@ -1,4 +1,5 @@
-const { remote } = require('electron');
+const electron = require('electron');
+const remote = electron.remote;
 const { exec } = require('child_process');
 
 var linkOpenerUtil = null;
@@ -10,7 +11,15 @@ class LinkOpenerUtil {
      * Create a new instance
      */
     constructor() {
-        this.platform = remote.process.platform;
+        this.platform = null;
+    }
+
+    /**
+     * Set the platform
+     * @param {string} platform 
+     */
+    setPlatform(platform) {
+        this.platform = platform;
     }
 
     /**
