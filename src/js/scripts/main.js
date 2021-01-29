@@ -1,20 +1,21 @@
-const path = require('path')
-const { exec } = require('child_process');
-const url = require('url')
-const { electron, app, Menu, BrowserWindow, globalShortcut, nativeTheme } = require('electron')
-const LanguageManager = require('./../classes/translation/LanguageManager.js');
-const SettingsManager = require('./../classes/settings/SettingsManager.js');
-const ContentSwitcher = require('../classes/util/ContentSwitcher.js');
+const path = require("path")
+const { exec } = require("child_process");
+const url = require("url")
+const { electron, app, Menu, BrowserWindow, globalShortcut, nativeTheme, nativeImage } = require("electron")
+const LanguageManager = require("./../classes/translation/LanguageManager.js");
+const SettingsManager = require("./../classes/settings/SettingsManager.js");
+const ContentSwitcher = require("../classes/util/ContentSwitcher.js");
+const iconUtil = require("../classes/util/IconUtil.js");
 
 try {
-  require('electron-reload')(__dirname)
+  require("electron-reload")(__dirname)
 } catch (ex) {
-  console.log('We are not debugging this, right? RIGHT?');
+  console.log("We are not debugging this, right? RIGHT?");
 }
 
 var win
 var settingOpen;
-var settingsFolder = app.getPath('userData')
+var settingsFolder = app.getPath("userData")
 var settingsManager = new SettingsManager(settingsFolder);
 var languageManager;
 
@@ -22,10 +23,14 @@ var languageManager;
  * Create the main window
  */
 function createWindow() {
+  iconUtil.setIsDark(nativeTheme.shouldUseDarkColors);
   settingOpen = false;
   win = new BrowserWindow({
     width: 800,
     height: 600,
+    titleBarStyle: "hidden",
+    frame: false,
+    icon: nativeImage.createFromPath(iconUtil.getIcon("application.ico")),
     webPreferences: {
       nodeIntegration: true
     }
@@ -39,25 +44,28 @@ function createWindow() {
   }
 
   win.loadURL(url.format({
-    pathname: path.join(__dirname, '../../windows/index.html'),
-    protocol: 'file:',
+    pathname: path.join(__dirname, "../../windows/index.html"),
+    protocol: "file:",
     slashes: true
   }))
-  win.openDevTools();
+  //win.openDevTools();
 
-  win.on('closed', () => {
+  win.on("closed", () => {
     globalShortcut.unregisterAll()
     win = null
   })
 
   createApplicationMenu()
   createGlobalShortcuts()
+  
+  win.removeMenu();
 }
 
 /**
  * Create the application menu and set it
  */
 function createApplicationMenu() {
+  iconUtil.setBasePath("../" + iconUtil.getDefaultPath());
   var menu = Menu.buildFromTemplate([
     {
       label: languageManager.getTranslation("file"),
@@ -65,10 +73,12 @@ function createApplicationMenu() {
         {
           label: languageManager.getTranslation("settings"),
           click() {
-            openSettingsMenu()
+              openSettingsMenu()
           }
+          //@todo get this icon thing into a working state!
+          //icon: iconUtil.getIcon("settings.png")
         },
-        { type: 'separator' },
+        { type: "separator" },
         {
           label: languageManager.getTranslation("exit"),
           click() {
@@ -81,7 +91,7 @@ function createApplicationMenu() {
       submenu: [
         {
           label: languageManager.getTranslation("reload"),
-          accelorator: 'f5',
+          accelorator: "f5",
           click() {
             reloadAllWindows();
           }
@@ -109,27 +119,27 @@ function reloadAllWindows() {
  * Open the settings menu
  */
 function openSettingsMenu() {
-  ContentSwitcher.switchToWindow('settings', win);
+  ContentSwitcher.switchToWindow("settings", win);
 }
 
 /**
  * Set the global shortcuts
  */
 function createGlobalShortcuts() {
-  globalShortcut.register('f5', () => reloadAllWindows());
+  globalShortcut.register("f5", () => reloadAllWindows());
 }
 
-app.on('ready', () => {
+app.on("ready", () => {
   createWindow()
 });
 
-app.on('windwos-all-closed', () => {
-  if (process.platform !== 'darwin') {
+app.on("windwos-all-closed", () => {
+  if (process.platform !== "darwin") {
     app.quit()
   }
 })
 
-app.on('activate', () => {
+app.on("activate", () => {
   if (win === null) {
     createWindow()
   }
