@@ -66,8 +66,6 @@ function createWindow() {
  */
 function createApplicationMenu() {
   iconUtil.setBasePath("../" + iconUtil.getDefaultPath());
-  //let tray = nativeImage.createFromPath();
-  //console.log(tray);
   var menu = Menu.buildFromTemplate([
     {
       label: languageManager.getTranslation("file"),
@@ -77,6 +75,7 @@ function createApplicationMenu() {
           click() {
               openSettingsMenu()
           }
+          //@todo get this icon thing into a working state!
           //icon: iconUtil.getIcon("settings.png")
         },
         { type: 'separator' },
