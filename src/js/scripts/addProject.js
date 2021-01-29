@@ -1,9 +1,13 @@
-const { electron, remote, ipcRenderer } = require('electron');
+const { electron, remote, ipcRenderer } = require("electron");
 const Window = remote.getCurrentWindow();
-const LanguageManager = require('./../js/classes/translation/LanguageManager.js');
-const SettingsManager = require('./../js/classes/settings/SettingsManager.js');
-const ProjectManager = require('./../js/classes/data_management/ProjectManagment/ProjectManager');
-const ProjectData = require('./../js/classes/data_management/ProjectManagment/ProjectData.js');
+const LanguageManager = require("./../js/classes/translation/LanguageManager.js");
+const SettingsManager = require("./../js/classes/settings/SettingsManager.js");
+const ProjectManager = require("./../js/classes/data_management/ProjectManagment/ProjectManager");
+const ProjectData = require("./../js/classes/data_management/ProjectManagment/ProjectData.js");
+const ThemeSwitcher = require("../classes/theme/ThemeSwitcher");
+
+ThemeSwitcher.useDarkMode(remote.nativeTheme.shouldUseDarkColors);
+ThemeSwitcher.applyMode(document);
 
 var settingsFolder = remote.app.getPath('userData');
 var settingsManager = new SettingsManager(settingsFolder);
