@@ -1,12 +1,13 @@
-const { Themebar } = require('custom-electron-titlebar');
-const IconUtil = require('../classes/util/IconUtil');
-const CustomTitlebar = require('custom-electron-titlebar');
 const { remote } = require('electron');
+const { Themebar } = require('custom-electron-titlebar');
+const CustomTitlebar = require('custom-electron-titlebar');
+const IconUtil = require('../classes/util/IconUtil');
+
 
 document.addEventListener('DOMContentLoaded', function () {
     let platform = process.platform;
     let color = remote.nativeTheme.shouldUseDarkColors ? '#444' : '#fff';
-    IconUtil.isDark(remote.nativeTheme.shouldUseDarkColors);
+    IconUtil.setIsDark(remote.nativeTheme.shouldUseDarkColors);
     let themebar = null;
     switch (platform) {
         case "darwin":
@@ -19,7 +20,7 @@ document.addEventListener('DOMContentLoaded', function () {
     console.log(platform);
     new CustomTitlebar.Titlebar({
         backgroundColor: CustomTitlebar.Color.fromHex(color),
-        iconsTheme: themebar,
-        icon: IconUtil.getIcon("application.ico")
+        iconsTheme: themebar
+        //icon: IconUtil.getIcon("application.png")
     });
 });

@@ -23,7 +23,7 @@ var languageManager;
  * Create the main window
  */
 function createWindow() {
-  iconUtil.isDark(nativeTheme.shouldUseDarkColors);
+  iconUtil.setIsDark(nativeTheme.shouldUseDarkColors);
   settingOpen = false;
   win = new BrowserWindow({
     width: 800,
