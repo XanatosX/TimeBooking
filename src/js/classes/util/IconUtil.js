@@ -33,7 +33,7 @@ class IconUtil {
      * Get the default path
      */
     getDefaultPath() {
-        return "../../assets/"
+        return "../../assets/";
     }
 
     /**
@@ -60,7 +60,6 @@ class IconUtil {
      * @param {string} name 
      */
     getIcon(name) {
-        console.log(this.basePath + this.mode + "/" + name);
         return this.basePath + this.mode + "/" + name;
     }
 }
