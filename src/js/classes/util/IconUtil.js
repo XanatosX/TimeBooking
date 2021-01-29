@@ -1,5 +1,3 @@
-const { icon } = require("@fortawesome/fontawesome-svg-core");
-
 let iconUtil = null;
 class IconUtil {
 

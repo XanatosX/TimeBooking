@@ -5,7 +5,6 @@ const { electron, app, Menu, BrowserWindow, globalShortcut, nativeTheme, nativeI
 const LanguageManager = require('./../classes/translation/LanguageManager.js');
 const SettingsManager = require('./../classes/settings/SettingsManager.js');
 const ContentSwitcher = require('../classes/util/ContentSwitcher.js');
-const { faArrowLeft } = require('@fortawesome/free-solid-svg-icons');
 const iconUtil = require('../classes/util/IconUtil.js');
 
 try {
