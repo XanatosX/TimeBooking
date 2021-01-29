@@ -1,6 +1,6 @@
 const path = require('path')
-const { exec } = require('child_process');
 const url = require('url')
+const LinkOpenerUtil = require("./../classes/util/LinkOpenerUtil");
 const { electron, app, Menu, BrowserWindow, globalShortcut, nativeTheme } = require('electron')
 const LanguageManager = require('./../classes/translation/LanguageManager.js');
 const SettingsManager = require('./../classes/settings/SettingsManager.js');
@@ -90,7 +90,7 @@ function createApplicationMenu() {
     }, {
       label: languageManager.getTranslation("reportABug"),
       click() {
-        exec("start https://github.com/XanatosX/TimeBooking/issues");
+        LinkOpenerUtil.openLink("https://github.com/XanatosX/TimeBooking/issues");
       }
     }
   ])
