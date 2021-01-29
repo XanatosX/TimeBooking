@@ -22,7 +22,6 @@ var languageManager;
  * Create the main window
  */
 function createWindow() {
-  nativeTheme.themeSource = 'light';
   settingOpen = false;
   win = new BrowserWindow({
     width: 800,
