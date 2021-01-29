@@ -1,10 +1,12 @@
 const path = require('path')
 const { exec } = require('child_process');
 const url = require('url')
-const { electron, app, Menu, BrowserWindow, globalShortcut, nativeTheme } = require('electron')
+const { electron, app, Menu, BrowserWindow, globalShortcut, nativeTheme, nativeImage, Tray } = require('electron')
 const LanguageManager = require('./../classes/translation/LanguageManager.js');
 const SettingsManager = require('./../classes/settings/SettingsManager.js');
 const ContentSwitcher = require('../classes/util/ContentSwitcher.js');
+const { faArrowLeft } = require('@fortawesome/free-solid-svg-icons');
+const iconUtil = require('../classes/util/IconUtil.js');
 
 try {
   require('electron-reload')(__dirname)
@@ -22,10 +24,14 @@ var languageManager;
  * Create the main window
  */
 function createWindow() {
+  iconUtil.isDark(nativeTheme.shouldUseDarkColors);
   settingOpen = false;
   win = new BrowserWindow({
     width: 800,
     height: 600,
+    titleBarStyle: 'hidden',
+    frame: false,
+    icon: nativeImage.createFromPath(iconUtil.getIcon("application.ico")),
     webPreferences: {
       nodeIntegration: true
     }
@@ -52,6 +58,8 @@ function createWindow() {
 
   createApplicationMenu()
   createGlobalShortcuts()
+  
+  win.removeMenu();
 }
 
 /**
