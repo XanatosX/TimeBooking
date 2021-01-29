@@ -4,7 +4,7 @@ var themeSwitcher = null;
  */
 class ThemeSwitcher {
     constructor() {
-        this.currentMode = "light"
+        this.currentMode = "light";
         this.cssPath = "../../node_modules/bootstrap-dark-5/dist/bootstrap-dark.min.css";
     }
 
@@ -33,7 +33,7 @@ class ThemeSwitcher {
      * @param {*} document 
      */
     applyMode(document) {
-        if (document === null || document === undefined) {
+        if (document === null || typeof document === "undefined") {
             return;
         }
         if (this.currentMode === "dark") {
@@ -47,13 +47,13 @@ class ThemeSwitcher {
      * @param {*} document 
      */
     applyDarkMode(document) {
-        let linkElement = document.createElement('link');
-        linkElement.setAttribute('rel', 'stylesheet');
-        linkElement.setAttribute('id', 'dark-style');
-        linkElement.setAttribute('type', 'text/css');
-        linkElement.setAttribute('href', this.cssPath);
+        let linkElement = document.createElement("link");
+        linkElement.setAttribute("rel", "stylesheet");
+        linkElement.setAttribute("id", "dark-style");
+        linkElement.setAttribute("type", "text/css");
+        linkElement.setAttribute("href", this.cssPath);
         
-        document.getElementsByTagName('head')[0].appendChild(linkElement);
+        document.getElementsByTagName("head")[0].appendChild(linkElement);
     }
 }
 
