@@ -8,14 +8,14 @@ const ContentSwitcher = require("../classes/util/ContentSwitcher.js");
 const iconUtil = require("../classes/util/IconUtil.js");
 
 try {
-  require('electron-reload')(__dirname)
+  require("electron-reload")(__dirname)
 } catch (ex) {
-  console.log('We are not debugging this, right? RIGHT?');
+  console.log("We are not debugging this, right? RIGHT?");
 }
 
 var win
 var settingOpen;
-var settingsFolder = app.getPath('userData')
+var settingsFolder = app.getPath("userData")
 var settingsManager = new SettingsManager(settingsFolder);
 var languageManager;
 
@@ -28,7 +28,7 @@ function createWindow() {
   win = new BrowserWindow({
     width: 800,
     height: 600,
-    titleBarStyle: 'hidden',
+    titleBarStyle: "hidden",
     frame: false,
     icon: nativeImage.createFromPath(iconUtil.getIcon("application.ico")),
     webPreferences: {
@@ -44,13 +44,13 @@ function createWindow() {
   }
 
   win.loadURL(url.format({
-    pathname: path.join(__dirname, '../../windows/index.html'),
-    protocol: 'file:',
+    pathname: path.join(__dirname, "../../windows/index.html"),
+    protocol: "file:",
     slashes: true
   }))
   //win.openDevTools();
 
-  win.on('closed', () => {
+  win.on("closed", () => {
     globalShortcut.unregisterAll()
     win = null
   })
@@ -78,7 +78,7 @@ function createApplicationMenu() {
           //@todo get this icon thing into a working state!
           //icon: iconUtil.getIcon("settings.png")
         },
-        { type: 'separator' },
+        { type: "separator" },
         {
           label: languageManager.getTranslation("exit"),
           click() {
@@ -91,7 +91,7 @@ function createApplicationMenu() {
       submenu: [
         {
           label: languageManager.getTranslation("reload"),
-          accelorator: 'f5',
+          accelorator: "f5",
           click() {
             reloadAllWindows();
           }
@@ -119,27 +119,27 @@ function reloadAllWindows() {
  * Open the settings menu
  */
 function openSettingsMenu() {
-  ContentSwitcher.switchToWindow('settings', win);
+  ContentSwitcher.switchToWindow("settings", win);
 }
 
 /**
  * Set the global shortcuts
  */
 function createGlobalShortcuts() {
-  globalShortcut.register('f5', () => reloadAllWindows());
+  globalShortcut.register("f5", () => reloadAllWindows());
 }
 
-app.on('ready', () => {
+app.on("ready", () => {
   createWindow()
 });
 
-app.on('windwos-all-closed', () => {
-  if (process.platform !== 'darwin') {
+app.on("windwos-all-closed", () => {
+  if (process.platform !== "darwin") {
     app.quit()
   }
 })
 
-app.on('activate', () => {
+app.on("activate", () => {
   if (win === null) {
     createWindow()
   }
