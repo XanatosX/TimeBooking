@@ -29,10 +29,11 @@
     "zip:linux": "electron-installer-zip dist/timebooking-linux-x64/ dist/zips/TimeBooking-linux-x64.zip",
     "zip:darwin": "electron-installer-zip dist/timebooking-darwin-x64/ dist/zips/TimeBooking-darwin-x64.zip"
   },
-  "author": "Simon Aberle",
+  "author": "XanatosX",
   "license": "MIT",
   "dependencies": {
     "bootstrap": "^5.0.0-beta1",
+    "bootstrap-dark-5": "0.0.3",
     "child_process": "^1.0.2",
     "tiny-date-picker": "^3.0.0"
   },
