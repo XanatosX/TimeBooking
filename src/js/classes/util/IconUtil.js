@@ -1,4 +1,5 @@
-let iconUtil = null;
+var path = require("path");
+var iconUtil = null;
 /**
  * This class will help you to get the paths to the icon
  */
@@ -17,23 +18,18 @@ class IconUtil {
      * Reset the class
      */
     reset() {
-        this.basePath = this.getDefaultPath();
         this.setMode("light");
+        this.setBasePath(__dirname + "/../../../../resources/");
     }
 
     /**
      * Set a new base path
      * @param {string} newBasePath 
      */
-    setBasePath(newBasePath) {
+    setBasePath(newBasePath) {    
+        newBasePath = path.normalize(newBasePath);
+        newBasePath = path.resolve(newBasePath);
         this.basePath = newBasePath;
-    }
-
-    /**
-     * Get the default path
-     */
-    getDefaultPath() {
-        return "../../assets/";
     }
 
     /**
@@ -51,6 +47,7 @@ class IconUtil {
     setIsDark(isDark) {
         if (isDark) {
             this.setMode("dark");
+            return;
         }
         this.setMode("light");
     }
@@ -60,7 +57,20 @@ class IconUtil {
      * @param {string} name 
      */
     getIcon(name) {
-        return this.basePath + this.mode + "/" + name;
+        let correctPath = "../../resources/dark/application.png";
+        let realPath = this.basePath + path.sep + this.mode + path.sep + name;
+        console.log(correctPath);
+        console.log(path.resolve(correctPath));
+        console.log(realPath);
+        return realPath;
+    }
+
+    getRelativeIcon(base, name) {
+        let realPath = this.getIcon(name);
+        realPath = path.relative(base, realPath);
+        
+        console.log(realPath);
+        return realPath
     }
 }
 iconUtil = iconUtil === null ? new IconUtil() : iconUtil;
