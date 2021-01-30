@@ -1,13 +1,10 @@
 const path = require("path")
-const url = require("url")
-const { electron, app, Menu, BrowserWindow, globalShortcut, nativeTheme, nativeImage, Tray } = require("electron")
+const { app, Menu, BrowserWindow, globalShortcut, nativeTheme, nativeImage, Tray } = require("electron")
 const LanguageManager = require("./../classes/translation/LanguageManager.js");
 const SettingsManager = require("./../classes/settings/SettingsManager.js");
 const ContentSwitcher = require("../classes/util/ContentSwitcher.js");
 const LinkOpenerUtil = require("./../classes/util/LinkOpenerUtil");
 const iconUtil = require("../classes/util/IconUtil.js");
-const { writeSync } = require("fs");
-const { Console } = require("console");
 
 try {
   require("electron-reload")(__dirname)
@@ -47,7 +44,7 @@ function createWindow() {
   }
 
   showMainWindow();
-  win.openDevTools();
+  //win.openDevTools();
 
   win.on("closed", () => {
     globalShortcut.unregisterAll()
@@ -183,10 +180,10 @@ app.on("activate", () => {
   }
 })
 
+/**
+ * Add the tray icon
+ */
 function addTrayIcon() {
-  if (process.platform != "win32") {6
-    return;
-  }
   tray = new Tray(iconUtil.getUrlIconPath("application.png"));
   let contextMenu = Menu.buildFromTemplate(
     [
