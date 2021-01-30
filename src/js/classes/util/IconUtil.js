@@ -57,7 +57,6 @@ class IconUtil {
      * @param {string} name 
      */
     getIcon(name) {
-        let correctPath = "../../resources/dark/application.png";
         let realPath = this.basePath + path.sep + this.mode + path.sep + name;
         return realPath;
     }
