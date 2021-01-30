@@ -5,7 +5,7 @@ const LanguageManager = require("./../classes/translation/LanguageManager.js");
 const SettingsManager = require("./../classes/settings/SettingsManager.js");
 const ContentSwitcher = require("../classes/util/ContentSwitcher.js");
 const LinkOpenerUtil = require("./../classes/util/LinkOpenerUtil");
-const iconUtil = require("../classes/util/IconUtil.js");
+const iconUtil = require("./../classes/util/IconUtil.js");
 
 try {
   require("electron-reload")(__dirname)
@@ -30,7 +30,7 @@ function createWindow() {
     height: 600,
     titleBarStyle: "hidden",
     frame: false,
-    icon: nativeImage.createFromPath(iconUtil.getIcon("application.ico")),
+    icon: nativeImage.createFromPath(iconUtil.getIcon("application.png")),
     webPreferences: {
       nodeIntegration: true
     }
@@ -44,7 +44,7 @@ function createWindow() {
   }
 
   win.loadURL(url.format({
-    pathname: path.join(__dirname, "../../windows/index.html"),
+    pathname: path.join(__dirname, "../windows/index.html"),
     protocol: "file:",
     slashes: true
   }))
