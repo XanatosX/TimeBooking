@@ -69,6 +69,7 @@
         "issues": "Issues",
         "projectPage": "Project page",
         "license": "License",
-        "toFront": "Show"
+        "toFront": "Show",
+        "applicationToolTip": "{timeBooking} application"
     }
 }

@@ -158,6 +158,14 @@ function openSettingsMenu(shouldFocus) {
 }
 
 /**
+ * Open up the about menu
+ */
+function openAboutMenu() {
+  ContentSwitcher.switchToWindow("about", win);
+  win.focus();
+}
+
+/**
  * Set the global shortcuts
  */
 function createGlobalShortcuts() {
@@ -215,6 +223,16 @@ function addTrayIcon() {
         type: "normal",
         click() {
           win.focus();
+        }
+      },
+      {
+        type: "separator"
+      },
+      {
+        label: languageManager.getTranslation("about"),
+        type: "normal",
+        click() {
+          openAboutMenu();
         }
       },
       {
