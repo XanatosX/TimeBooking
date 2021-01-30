@@ -6,6 +6,7 @@ const LinkOpenerUtil = require("./../classes/util/LinkOpenerUtil");
 const SettingsManager = require("./../classes/settings/SettingsManager.js")
 const LanguageManager = require("./../classes/translation/LanguageManager.js");
 const linkOpenerUtil = require("./../classes/util/LinkOpenerUtil");
+const Modal = require("../classes/electron_extension/Modal.js");
 
 const version = require("../../../package.json").version;
 const author = require("../../../package.json").author;
@@ -38,7 +39,17 @@ function addEvents() {
     });
 
     let license = document.getElementById("licenseLink");
-    license.addEventListener("click" , () => {
+    license.addEventListener("click" , (element) => {
+        let target = element.target;
+        let data = target.dataset.markdown;
+        var markdownRenderer = new Modal(Window, 800, 800, "markdownRenderer", function () {
+        });
+        markdownRenderer.isDebug(true);
+        markdownRenderer.show();
+        let markdownModal = markdownRenderer.getWindow()
+        markdownModal.webContents.on('did-finish-load', () => {
+            markdownModal.webContents.send("file", data);
+        });
     });
 
     let issueLink = document.getElementById("issueLink");
