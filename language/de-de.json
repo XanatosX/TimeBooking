@@ -55,6 +55,13 @@
         "reportABug": "Fehler melden",
         "timeBooked": "Zeit bereits gebucht",
         "projectSelect": "Projekt",
-        "acceptAndClose": "Akzeptieren und {close}"
+        "acceptAndClose": "Akzeptieren und {close}",
+        "missingStartDate": "Bitte geben Sie eine Startzeit ein",
+        "wrongEndDate": "Die Endzeit muss nach der Startzeit sein",
+        "about": "Über",
+        "author": "Autor",
+        "projectPage": "Projekt seite",
+        "license": "Lizenz",
+        "issues": "Probleme (Issue)"
     }
 }

@@ -28,7 +28,7 @@
         "dateFormat": "Date format",
         "exampleDate": "Example date",
         "saveAndClose": "{save} and {close}",
-        "close": "close",
+        "close": "Close",
         "endNow": "End now",
         "settings": "Settings",
         "debug": "{menuDebug} console on",
@@ -58,6 +58,16 @@
         "reportABug": "Report a bug",
         "timeBooked": "Time already booked",
         "projectSelect": "Project",
-        "acceptAndClose": "Accept and {close}"
+        "acceptAndClose": "Accept and {close}",
+        "missingStartDate": "Please enter a start date",
+        "wrongEndDate": "Please enter a end date which is after the start date",
+        "about": "About",
+        "aboutTimeBooking": "{about} {timeBooking}",
+        "version": "Version",
+        "author": "Author",
+        "code": "Code hosting",
+        "issues": "Issues",
+        "projectPage": "Project page",
+        "license": "License"
     }
 }

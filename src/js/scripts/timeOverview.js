@@ -6,6 +6,10 @@ const LanguageManager = require('./../classes/translation/LanguageManager.js');
 const DateFormatter = require("./../classes/util/DateFormatter.js");
 const TimeFormatter = require("./../classes/util/TimeFormatter.js");
 const { remote } = require('electron');
+const ThemeSwitcher = require('../classes/theme/ThemeSwitcher');
+
+ThemeSwitcher.useDarkMode(remote.nativeTheme.shouldUseDarkColors);
+ThemeSwitcher.applyMode(document);
 
 var timeManager;
 var settingsManager;
