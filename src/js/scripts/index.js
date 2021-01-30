@@ -1,16 +1,16 @@
-const electron = require('electron');
+const electron = require("electron");
 const remote = electron.remote;
-const Modal = require('../classes/electron_extension/Modal.js');
+const Modal = require("../classes/electron_extension/Modal.js");
 const Window = electron.remote.getCurrentWindow();
-const TimeFileManager = require('../classes/data_management/TimeFileManager.js');
-const TimeDataSet  = require('../classes/data_management/TimeDataSet.js');
-const CookieManager = require('../classes/data_management/Cookies.js');
-const SettingsManager = require('./../classes/settings/SettingsManager.js')
-const LanguageManager = require('./../classes/translation/LanguageManager.js');
+const TimeFileManager = require("../classes/data_management/TimeFileManager.js");
+const TimeDataSet  = require("../classes/data_management/TimeDataSet.js");
+const CookieManager = require("../classes/data_management/Cookies.js");
+const SettingsManager = require("./../classes/settings/SettingsManager.js")
+const LanguageManager = require("./../classes/translation/LanguageManager.js");
 const DateFormatter = require("./../classes/util/DateFormatter.js");
-const ProjectManager = require('./../classes/data_management/ProjectManagement/ProjectManager');
-const ThemeSwitcher = require('../classes/theme/ThemeSwitcher');
-const { ipcRenderer } = require('electron');
+const ProjectManager = require("./../classes/data_management/ProjectManagement/ProjectManager");
+const ThemeSwitcher = require("../classes/theme/ThemeSwitcher");
+const { ipcRenderer } = require("electron");
 
 ThemeSwitcher.useDarkMode(remote.nativeTheme.shouldUseDarkColors);
 ThemeSwitcher.applyMode(document);
@@ -18,24 +18,24 @@ ThemeSwitcher.applyMode(document);
 var time = new Date();
 
 var cookiesManager = new CookieManager(electron);
-var settingsFolder = remote.app.getPath('userData')
+var settingsFolder = remote.app.getPath("userData")
 var settingsManager = new SettingsManager(settingsFolder);
 var languageManager = new LanguageManager(remote.app.getAppPath() + "/resources/language");
-var projectManager = new ProjectManager(remote.app.getPath('userData'));
+var projectManager = new ProjectManager(remote.app.getPath("userData"));
 var timeManager = null;
 var isDebug = false;
 var addTimeModalWidth = 600;
 var addTimeModalHeight = 250;
 var selectedProject;
 
-document.addEventListener('DOMContentLoaded', function () {
+document.addEventListener("DOMContentLoaded", function () {
   Window.closeDevTools();
   console.log(projectManager);
   let settings = settingsManager.load("mainSettings");
   selectedProject = settings.getSetting("project");
-  selectedProject = selectedProject === null ? 'default' : selectedProject;
+  selectedProject = selectedProject === null ? "default" : selectedProject;
   if (projectManager.getProjectByFolder(selectedProject) === undefined) {
-    selectedProject = 'default';
+    selectedProject = "default";
   }
   let language = settings.getSetting("language");
   if (language !== null) {
@@ -49,7 +49,7 @@ document.addEventListener('DOMContentLoaded', function () {
   if (isDebug) {
     Window.openDevTools();
   }
-  cookiesManager.getCookie('time', function (index, data) {
+  cookiesManager.getCookie("time", function (index, data) {
     if (isNaN(data)) {
       return;
     }
@@ -70,8 +70,8 @@ document.addEventListener('DOMContentLoaded', function () {
  * Fill the project selection on page top
  */
 function fillProjectSelection() {
-  let selection = document.getElementById('projectSelect');
-  let selectionGroup = document.getElementById('projectSelectionRow');
+  let selection = document.getElementById("projectSelect");
+  let selectionGroup = document.getElementById("projectSelectionRow");
 
   projectManager.reloadProjects();
   let projects = projectManager.getProjects();
@@ -80,17 +80,17 @@ function fillProjectSelection() {
   }
   
   if (projects.length === 1) {
-    selectionGroup.setAttribute('hidden', 'true');
+    selectionGroup.setAttribute("hidden", "true");
     return;
   }
-  selectionGroup.removeAttribute('hidden');
+  selectionGroup.removeAttribute("hidden");
   projects.forEach(project => {
-    let option = document.createElement('option');
+    let option = document.createElement("option");
     option.innerHTML = project.getName();
-    option.setAttribute('value', project.getId());
-    option.setAttribute('data-folder', project.getFolder());
+    option.setAttribute("value", project.getId());
+    option.setAttribute("data-folder", project.getFolder());
     if (project.getFolder() === selectedProject) {
-      option.setAttribute('selected', true);
+      option.setAttribute("selected", true);
     }
     selection.append(option);
   })
@@ -100,22 +100,22 @@ function fillProjectSelection() {
  * Create a new instance of the time manager
  */
 function createTimeManagerInstance() {
-  timeManager = new TimeFileManager(remote.app.getPath('userData'), selectedProject, time);
+  timeManager = new TimeFileManager(remote.app.getPath("userData"), selectedProject, time);
 }
 
 /**
  * Add all the liseners
  */
 function addListener () {
-  let todayButton = document.getElementById('today');
-  let leftTimeButton = document.getElementById('goLeft');
-  let rightTimeButton = document.getElementById('goRight');
-  let projectSelect = document.getElementById('projectSelect');
+  let todayButton = document.getElementById("today");
+  let leftTimeButton = document.getElementById("goLeft");
+  let rightTimeButton = document.getElementById("goRight");
+  let projectSelect = document.getElementById("projectSelect");
 
-  let addTimeButton = document.getElementById('addStartTime');
-  let timeOverviewButton = document.getElementById('timeOverview');
+  let addTimeButton = document.getElementById("addStartTime");
+  let timeOverviewButton = document.getElementById("timeOverview");
 
-  addTimeButton.addEventListener('click', () => {
+  addTimeButton.addEventListener("click", () => {
     OpenAddTime();
   });
 
@@ -123,9 +123,9 @@ function addListener () {
    * Open the add time modal
    */
   function OpenAddTime() {
-    var addTime = new Modal(Window, addTimeModalWidth, addTimeModalHeight, 'addTime', function () {
+    var addTime = new Modal(Window, addTimeModalWidth, addTimeModalHeight, "addTime", function () {
       var timeStr = String(time.getTime());
-      cookiesManager.setCookie('time', timeStr);
+      cookiesManager.setCookie("time", timeStr);
       Window.reload();
     });
     if (isDebug) {
@@ -135,8 +135,8 @@ function addListener () {
     addTime.show();
     var win = addTime.getWindow();
 
-    win.webContents.on('did-finish-load', () => {
-      win.webContents.send('time', time.getTime());
+    win.webContents.on("did-finish-load", () => {
+      win.webContents.send("time", time.getTime());
     });
   }
 
@@ -144,8 +144,8 @@ function addListener () {
     OpenAddTime();
   });
 
-  timeOverviewButton.addEventListener('click', function (event) {
-    let timeOverviewModal = new Modal(Window, 800, 650, 'timeOverview', function () {
+  timeOverviewButton.addEventListener("click", function (event) {
+    let timeOverviewModal = new Modal(Window, 800, 650, "timeOverview", function () {
 
     });
     if (isDebug) {
@@ -154,31 +154,31 @@ function addListener () {
     timeOverviewModal.show();
   });
 
-  todayButton.addEventListener('click', function (event) {
+  todayButton.addEventListener("click", function (event) {
     time = new Date();
     fillTable();
   });
 
-  leftTimeButton.addEventListener('click', function (event) {
+  leftTimeButton.addEventListener("click", function (event) {
     time.setDate(time.getDate() - 1);
     fillTable();
   });
 
   
-  rightTimeButton.addEventListener('click', function (event) {
+  rightTimeButton.addEventListener("click", function (event) {
     time.setDate(time.getDate() + 1);
     fillTable();
   });
 
-  projectSelect.addEventListener('change', item => {
+  projectSelect.addEventListener("change", item => {
     let target = item.target;
     let id = target.value;
     let project = projectManager.getProjectById(id);
     
-    let settings = settingsManager.load('mainSettings');
+    let settings = settingsManager.load("mainSettings");
     selectedProject = project.getFolder();
-    settings.addSetting('project', selectedProject);
-    settingsManager.save('mainSettings', settings.getWritable());
+    settings.addSetting("project", selectedProject);
+    settingsManager.save("mainSettings", settings.getWritable());
     createTimeManagerInstance();
     console.log(timeManager);
     fillTable();
@@ -190,10 +190,10 @@ function addListener () {
  */
 function fillTable () {
   showTodayButton();
-  var tableBody = document.getElementById('tableBody');
-  var date = document.getElementById('currentDate');
+  var tableBody = document.getElementById("tableBody");
+  var date = document.getElementById("currentDate");
   date.innerHTML = ": " + DateFormatter.getHumanReadable(time);
-  tableBody.innerHTML = '';
+  tableBody.innerHTML = "";
 
   var container = loadTimings(time);
   console.log(time);
@@ -206,34 +206,34 @@ function fillTable () {
 
   var index = 0;
   times.forEach(function (element) {
-    var row = document.createElement('tr');
-    var cell = document.createElement('td');
-    let checkbox = document.createElement('input');
-    checkbox.setAttribute('type', 'checkbox');
-    checkbox.setAttribute('class', 'form-check-input');
+    var row = document.createElement("tr");
+    var cell = document.createElement("td");
+    let checkbox = document.createElement("input");
+    checkbox.setAttribute("type", "checkbox");
+    checkbox.setAttribute("class", "form-check-input");
     if (!element.isGettingCounted()) {
-      checkbox.setAttribute('checked', true);
+      checkbox.setAttribute("checked", true);
     }
-    checkbox.setAttribute('type', 'checkbox');
-    checkbox.setAttribute('disabled', 'true');
+    checkbox.setAttribute("type", "checkbox");
+    checkbox.setAttribute("disabled", "true");
     cell.appendChild(checkbox);
     row.appendChild(cell);
 
     
-    var timeBookedCell = document.createElement('td');
-    let timeBookedCheckbox = document.createElement('input');
-    timeBookedCheckbox.setAttribute('type', 'checkbox');
-    timeBookedCheckbox.setAttribute('class', 'form-check-input');
-    timeBookedCheckbox.setAttribute('data-id', index);
+    var timeBookedCell = document.createElement("td");
+    let timeBookedCheckbox = document.createElement("input");
+    timeBookedCheckbox.setAttribute("type", "checkbox");
+    timeBookedCheckbox.setAttribute("class", "form-check-input");
+    timeBookedCheckbox.setAttribute("data-id", index);
     let enabled = true;
     if (element.getEndTime() === "" || !element.isGettingCounted()) {
-      timeBookedCheckbox.setAttribute('disabled', 'true');
+      timeBookedCheckbox.setAttribute("disabled", "true");
       enabled = false;
     }
     if (enabled && element.isAlreadyBooked() && element.isGettingCounted()) {
-      timeBookedCheckbox.setAttribute('checked', true);
+      timeBookedCheckbox.setAttribute("checked", true);
     }
-    timeBookedCheckbox.addEventListener('change', (checkbox) => {
+    timeBookedCheckbox.addEventListener("change", (checkbox) => {
       let target = checkbox.target;
       let checked = target.checked;
       let id = target.dataset.id;
@@ -250,38 +250,38 @@ function fillTable () {
     row.appendChild(timeBookedCell);
 
 
-    var cell = document.createElement('td');
+    var cell = document.createElement("td");
     cell.textContent = element.getStartTime();
     row.appendChild(cell);
 
-    cell = document.createElement('td');
+    cell = document.createElement("td");
     cell.textContent = element.getEndTime();
     row.appendChild(cell);
 
-    cell = document.createElement('td');
+    cell = document.createElement("td");
     cell.textContent = element.getDescription();
     row.appendChild(cell);
 
-    cell = document.createElement('td');
+    cell = document.createElement("td");
     cell.textContent = element.getFormatedTime();
     row.appendChild(cell);
 
-    var actionCell = document.createElement('td');
-    let actionButtonGroup = document.createElement('div');
-    let secondButtonGroup = document.createElement('div');
-    actionButtonGroup.setAttribute('class', "btn-group mr-2");
-    secondButtonGroup.setAttribute('class', "btn-group mr-2");
-    actionButtonGroup.setAttribute('role', "group");
-    secondButtonGroup.setAttribute('role', "group");
+    var actionCell = document.createElement("td");
+    let actionButtonGroup = document.createElement("div");
+    let secondButtonGroup = document.createElement("div");
+    actionButtonGroup.setAttribute("class", "btn-group mr-2");
+    secondButtonGroup.setAttribute("class", "btn-group mr-2");
+    actionButtonGroup.setAttribute("role", "group");
+    secondButtonGroup.setAttribute("role", "group");
 
-    var editButton = document.createElement('button');
-    editButton.setAttribute('class', 'btn btn-warning');
-    editButton.setAttribute('data-id', index);
-    editButton.addEventListener('click', function () {
-      var id = this.getAttribute('data-id');
-      var addTime = new Modal(Window, addTimeModalWidth, addTimeModalHeight, 'addTime', function () {
+    var editButton = document.createElement("button");
+    editButton.setAttribute("class", "btn btn-warning");
+    editButton.setAttribute("data-id", index);
+    editButton.addEventListener("click", function () {
+      var id = this.getAttribute("data-id");
+      var addTime = new Modal(Window, addTimeModalWidth, addTimeModalHeight, "addTime", function () {
         var timeStr = String(time.getTime());
-        cookiesManager.setCookie('time', timeStr);
+        cookiesManager.setCookie("time", timeStr);
         Window.reload();
       });
       if (isDebug) {
@@ -291,9 +291,9 @@ function fillTable () {
       var win = addTime.getWindow();
       var container = loadTimings(time);
       var times = container.getTimes();
-      win.webContents.on('did-finish-load', () => {
-        win.webContents.send('id', id);
-        win.webContents.send('edit', times[id]);
+      win.webContents.on("did-finish-load", () => {
+        win.webContents.send("id", id);
+        win.webContents.send("edit", times[id]);
       });
     });
     editButton.textContent = languageManager.getTranslation("edit");
@@ -301,23 +301,23 @@ function fillTable () {
 
     if (element.getEndTime() == "")
     {
-      var setEndTimeButton = document.createElement('button');
-      setEndTimeButton.setAttribute('class', 'btn btn-success');
-      setEndTimeButton.setAttribute('data-id', index);
+      var setEndTimeButton = document.createElement("button");
+      setEndTimeButton.setAttribute("class", "btn btn-success");
+      setEndTimeButton.setAttribute("data-id", index);
       setEndTimeButton.textContent = languageManager.getTranslation("endNow");
-      setEndTimeButton.addEventListener('click', function (button) {
-        var id = this.getAttribute('data-id');
+      setEndTimeButton.addEventListener("click", function (button) {
+        var id = this.getAttribute("data-id");
         endTiming(id);
       });
       actionButtonGroup.appendChild(setEndTimeButton);
     }
     actionButtonGroup.appendChild(editButton);
 
-    var delButton = document.createElement('button');
-    delButton.setAttribute('class', 'btn btn-danger');
-    delButton.setAttribute('data-id', index);
-    delButton.addEventListener('click', function (button) {
-      var id = this.getAttribute('data-id');
+    var delButton = document.createElement("button");
+    delButton.setAttribute("class", "btn btn-danger");
+    delButton.setAttribute("data-id", index);
+    delButton.addEventListener("click", function (button) {
+      var id = this.getAttribute("data-id");
       deleteTiming(id);
     });
     delButton.textContent = languageManager.getTranslation("delete");
@@ -331,22 +331,22 @@ function fillTable () {
     index++;
   });
 
-  var endRow = document.createElement('tr');
-  var endCell = document.createElement('td');
-  endCell.setAttribute('colspan', '4');
+  var endRow = document.createElement("tr");
+  var endCell = document.createElement("td");
+  endCell.setAttribute("colspan", "4");
   endCell.textContent = languageManager.getTranslation("totalWorktime");
   endRow.appendChild(endCell);
 
-  var timeComplete = document.createElement('td');
+  var timeComplete = document.createElement("td");
   var workTimeToday = container.getCompleteWorkTime();
-  var workTimeTodayString = '';
+  var workTimeTodayString = "";
   if (workTimeToday !== undefined) {
     workTimeTodayString = getDifference(workTimeToday);
   }
   timeComplete.textContent = workTimeTodayString;
   endRow.appendChild(timeComplete);
 
-  var emptyCell = document.createElement('td');
+  var emptyCell = document.createElement("td");
   endRow.appendChild(emptyCell);
 
   tableBody.appendChild(endRow);
@@ -357,7 +357,7 @@ function fillTable () {
  */
 function showTodayButton()
 {
-  let todayButton = document.getElementById('today');
+  let todayButton = document.getElementById("today");
 
   let currentDate = new Date();
   
@@ -385,7 +385,7 @@ function deleteTiming (id) {
   timeManager.saveFile(container.getWritable());
 
   var timeStr = String(time.getTime());
-  cookiesManager.setCookie('time', timeStr);
+  cookiesManager.setCookie("time", timeStr);
   fillTable();
 }
 
@@ -443,8 +443,8 @@ function getDifference (value) {
   var minutes = Math.floor((value / (1000 * 60)) % 60);
   var hours = Math.floor((value / (1000 * 60 * 60)) % 24);
 
-  hours = (hours < 10) ? '0' + hours : hours;
-  minutes = (minutes < 10) ? '0' + minutes : minutes;
+  hours = (hours < 10) ? "0" + hours : hours;
+  minutes = (minutes < 10) ? "0" + minutes : minutes;
 
-  return hours + ' h ' + minutes + ' m';
+  return hours + " h " + minutes + " m";
 }
