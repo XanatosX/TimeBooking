@@ -65,7 +65,6 @@ function createWindow() {
  * Create the application menu and set it
  */
 function createApplicationMenu() {
-  iconUtil.setBasePath("../" + iconUtil.getDefaultPath());
   var menu = Menu.buildFromTemplate([
     {
       label: languageManager.getTranslation("file"),
