@@ -1,11 +1,13 @@
 const path = require("path")
 const url = require("url")
-const { electron, app, Menu, BrowserWindow, globalShortcut, nativeTheme, nativeImage } = require("electron")
+const { electron, app, Menu, BrowserWindow, globalShortcut, nativeTheme, nativeImage, Tray } = require("electron")
 const LanguageManager = require("./../classes/translation/LanguageManager.js");
 const SettingsManager = require("./../classes/settings/SettingsManager.js");
 const ContentSwitcher = require("../classes/util/ContentSwitcher.js");
 const LinkOpenerUtil = require("./../classes/util/LinkOpenerUtil");
 const iconUtil = require("../classes/util/IconUtil.js");
+const { writeSync } = require("fs");
+const { Console } = require("console");
 
 try {
   require("electron-reload")(__dirname)
@@ -13,6 +15,7 @@ try {
   console.log("We are not debugging this, right? RIGHT?");
 }
 
+var tray;
 var win
 var settingOpen;
 var settingsFolder = app.getPath("userData")
@@ -35,7 +38,7 @@ function createWindow() {
       nodeIntegration: true
     }
   })
-  languageManager = new LanguageManager(app.getAppPath() + "/language");
+  languageManager = new LanguageManager(app.getAppPath() + "/resources/language");
 
   let settings = settingsManager.load("mainSettings");
   let language = settings.getSetting("language");
@@ -43,22 +46,26 @@ function createWindow() {
     languageManager.setLanguage(language);
   }
 
-  win.loadURL(url.format({
-    pathname: path.join(__dirname, "../../windows/index.html"),
-    protocol: "file:",
-    slashes: true
-  }))
+  showMainWindow();
   win.openDevTools();
 
   win.on("closed", () => {
     globalShortcut.unregisterAll()
     win = null
-  })
+  });
 
   createApplicationMenu()
   createGlobalShortcuts()
   
   win.removeMenu();
+  addTrayIcon();
+}
+
+/**
+ * Show the main window
+ */
+function showMainWindow() {
+  ContentSwitcher.switchToWindow("index", win);
 }
 
 /**
@@ -81,7 +88,7 @@ function createApplicationMenu() {
         {
           label: languageManager.getTranslation("exit"),
           click() {
-            app.quit()
+            closeApplication();
           }
         }
       ]
@@ -104,11 +111,31 @@ function createApplicationMenu() {
     }, {
       label: languageManager.getTranslation("reportABug"),
       click() {
-        LinkOpenerUtil.openLink("https://github.com/XanatosX/TimeBooking/issues");
+        reportBug();
       }
     }
   ])
   Menu.setApplicationMenu(menu)
+}
+
+/**
+ * Report a bug
+ */
+function reportBug() {
+  LinkOpenerUtil.openLink("https://github.com/XanatosX/TimeBooking/issues");
+}
+
+/**
+ * Close the application
+ */
+function closeApplication() {
+  tray.destroy();
+  let windows = BrowserWindow.getAllWindows();
+  windows.forEach( item => {
+    item.closeDevTools();
+    item.close();
+  });
+  //win.close();
 }
 
 /**
@@ -126,8 +153,11 @@ function openAboutPage() {
 /**
  * Open the settings menu
  */
-function openSettingsMenu() {
+function openSettingsMenu(shouldFocus) {
   ContentSwitcher.switchToWindow("settings", win);
+  if (shouldFocus === true) {
+    win.focus();
+  }
 }
 
 /**
@@ -152,3 +182,64 @@ app.on("activate", () => {
     createWindow()
   }
 })
+
+function addTrayIcon() {
+  if (process.platform != "win32") {6
+    return;
+  }
+  tray = new Tray(iconUtil.getUrlIconPath("application.png"));
+  let contextMenu = Menu.buildFromTemplate(
+    [
+       {
+        label: languageManager.getTranslation("addTime"),
+        type: "normal",
+        click() {
+          showMainWindow();
+          win.webContents.once("did-finish-load", () => {
+            win.webContents.send("AddTime");
+          });
+        }
+      },   
+      {
+        type: "separator"
+      },
+      {
+        label: languageManager.getTranslation("settings"),
+        type: "normal",
+        click() {
+          openSettingsMenu(true);
+        }
+      },
+      {
+        type: "separator"
+      },
+      {
+        label: languageManager.getTranslation("toFront"),
+        type: "normal",
+        click() {
+          win.focus();
+        }
+      },
+      {
+        label: languageManager.getTranslation("reportABug"),
+        type: "normal",
+        click() {
+          reportBug();
+        }
+      },
+      {
+        type: "separator"
+      },
+      {
+        label: languageManager.getTranslation("close"),
+        type: "normal",
+        click() {
+          closeApplication()
+        }
+      }
+    ]
+  );
+  tray.setToolTip(languageManager.getTranslation("applicationToolTip"));
+  tray.setContextMenu(contextMenu);
+  tray.on("click", () => win.focus());
+}

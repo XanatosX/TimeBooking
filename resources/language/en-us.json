@@ -68,6 +68,7 @@
         "code": "Code hosting",
         "issues": "Issues",
         "projectPage": "Project page",
-        "license": "License"
+        "license": "License",
+        "toFront": "Show"
     }
 }

@@ -62,6 +62,7 @@
         "author": "Autor",
         "projectPage": "Projekt seite",
         "license": "Lizenz",
-        "issues": "Probleme (Issue)"
+        "issues": "Probleme (Issue)",
+        "toFront": "Anzeigen"
     }
 }

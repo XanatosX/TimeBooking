@@ -10,6 +10,7 @@ const LanguageManager = require('./../classes/translation/LanguageManager.js');
 const DateFormatter = require("./../classes/util/DateFormatter.js");
 const ProjectManager = require('./../classes/data_management/ProjectManagement/ProjectManager');
 const ThemeSwitcher = require('../classes/theme/ThemeSwitcher');
+const { ipcRenderer } = require('electron');
 
 ThemeSwitcher.useDarkMode(remote.nativeTheme.shouldUseDarkColors);
 ThemeSwitcher.applyMode(document);
@@ -19,7 +20,7 @@ var time = new Date();
 var cookiesManager = new CookieManager(electron);
 var settingsFolder = remote.app.getPath('userData')
 var settingsManager = new SettingsManager(settingsFolder);
-var languageManager = new LanguageManager(remote.app.getAppPath() + "/language");
+var languageManager = new LanguageManager(remote.app.getAppPath() + "/resources/language");
 var projectManager = new ProjectManager(remote.app.getPath('userData'));
 var timeManager = null;
 var isDebug = false;
@@ -114,7 +115,14 @@ function addListener () {
   let addTimeButton = document.getElementById('addStartTime');
   let timeOverviewButton = document.getElementById('timeOverview');
 
-  addTimeButton.addEventListener('click', function (event) {
+  addTimeButton.addEventListener('click', () => {
+    OpenAddTime();
+  });
+
+  /**
+   * Open the add time modal
+   */
+  function OpenAddTime() {
     var addTime = new Modal(Window, addTimeModalWidth, addTimeModalHeight, 'addTime', function () {
       var timeStr = String(time.getTime());
       cookiesManager.setCookie('time', timeStr);
@@ -130,6 +138,10 @@ function addListener () {
     win.webContents.on('did-finish-load', () => {
       win.webContents.send('time', time.getTime());
     });
+  }
+
+  ipcRenderer.on("AddTime", () => {
+    OpenAddTime();
   });
 
   timeOverviewButton.addEventListener('click', function (event) {

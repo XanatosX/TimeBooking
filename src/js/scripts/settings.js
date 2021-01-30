@@ -17,7 +17,7 @@ ThemeSwitcher.applyMode(document);
 var settings
 var filename
 var manager
-var languageManager = new LanguageManager(remote.app.getAppPath() + "/language");
+var languageManager = new LanguageManager(remote.app.getAppPath() + "/resources/language");
 var projectManager = new ProjectManager(remote.app.getPath('userData'));
 var addProjectWidth = 800;
 var addProjectHeight = 800;
