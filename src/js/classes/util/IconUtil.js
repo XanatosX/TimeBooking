@@ -65,12 +65,22 @@ class IconUtil {
         return realPath;
     }
 
+    getUrlIconPath(name) {
+        let returnPath = this.getIcon(name);
+        return returnPath.replace(/\\/g, "/");
+    }
+
     getRelativeIcon(base, name) {
         let realPath = this.getIcon(name);
         realPath = path.relative(base, realPath);
         
         console.log(realPath);
         return realPath
+    }
+
+    getUrlRelativeIconPath(base, name) {
+        let returnPath = this.getRelativeIcon(base, name);
+        return returnPath.replace(/\\/g, "/");
     }
 }
 iconUtil = iconUtil === null ? new IconUtil() : iconUtil;

@@ -44,11 +44,11 @@ function createWindow() {
   }
 
   win.loadURL(url.format({
-    pathname: path.join(__dirname, "../windows/index.html"),
+    pathname: path.join(__dirname, "../../windows/index.html"),
     protocol: "file:",
     slashes: true
   }))
-  //win.openDevTools();
+  win.openDevTools();
 
   win.on("closed", () => {
     globalShortcut.unregisterAll()
