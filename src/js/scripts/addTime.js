@@ -16,7 +16,7 @@ var id = null;
 var edit = false;
 var settingsFolder = remote.app.getPath('userData')
 var settingsManager = new SettingsManager(settingsFolder);
-var languageManager = new LanguageManager(remote.app.getAppPath() + "/language");
+var languageManager = new LanguageManager(remote.app.getAppPath() + "/resources/language");
 var selectedProject;
 
 ipcRenderer.on('time', (event, message) => {

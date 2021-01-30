@@ -13,7 +13,7 @@
   "scripts": {
     "start": "electron .",
     "release:win": "npm run build:win32 && npm run build:win64 && npm run setup:win32 && npm run setup:win64 && npm run zip:win32 && npm run setup:win64",
-    "release:linux": "npm run build:linux && npm run setup:linux && npm run zip:linux",
+    "release:deb": "npm run build:linux && npm run setup:deb && npm run zip:linux",
     "release:darwin": "npm run build:darwin && npm run setup:darwin && npm run zip:darwin",
     "build": "npm run build:win32 && npm run build:win64 && npm run build:linux && npm run build:darwin",
     "build:win32": "electron-packager . timebooking --out=dist/ --platform=win32  --arch=ia32 --ignore=build/ --ignore=builds/ --overwrite --icon=./resources/icon.ico",
