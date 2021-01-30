@@ -98,14 +98,14 @@ function createApplicationMenu() {
         }
       ]
     }, {
-      label: languageManager.getTranslation("reportABug"),
-      click() {
-        LinkOpenerUtil.openLink("https://github.com/XanatosX/TimeBooking/issues");
-      }
-    }, {
       label: languageManager.getTranslation("about"),
       click() {
         openAboutPage()
+      }
+    }, {
+      label: languageManager.getTranslation("reportABug"),
+      click() {
+        LinkOpenerUtil.openLink("https://github.com/XanatosX/TimeBooking/issues");
       }
     }
   ])
