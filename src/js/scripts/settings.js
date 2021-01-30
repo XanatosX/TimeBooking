@@ -8,7 +8,7 @@ const DateFormatter = require("./../classes/util/DateFormatter.js");
 const ContentSwitcher = require('./../classes/util/ContentSwitcher');
 const Modal = require('./../classes/electron_extension/Modal');
 const TableManager = require('./../classes/electron_extension/TableManager');
-const ProjectManager = require('./../classes/data_management/ProjectManagment/ProjectManager');
+const ProjectManager = require('./../classes/data_management/ProjectManagement/ProjectManager');
 const ThemeSwitcher = require('../classes/theme/ThemeSwitcher');
 
 ThemeSwitcher.useDarkMode(remote.nativeTheme.shouldUseDarkColors);
