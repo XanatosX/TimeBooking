@@ -18,7 +18,7 @@ ThemeSwitcher.applyMode(document);
 var time = new Date();
 
 var cookiesManager = new CookieManager(electron);
-var settingsFolder = remote.app.getPath("userData")
+var settingsFolder = remote.app.getPath("userData");
 var settingsManager = new SettingsManager(settingsFolder);
 var languageManager = new LanguageManager(remote.app.getAppPath() + "/resources/language");
 var projectManager = new ProjectManager(remote.app.getPath("userData"));
@@ -116,13 +116,13 @@ function addListener () {
   let timeOverviewButton = document.getElementById("timeOverview");
 
   addTimeButton.addEventListener("click", () => {
-    OpenAddTime();
+    openAddTime();
   });
 
   /**
    * Open the add time modal
    */
-  function OpenAddTime() {
+  function openAddTime() {
     var addTime = new Modal(Window, addTimeModalWidth, addTimeModalHeight, "addTime", function () {
       var timeStr = String(time.getTime());
       cookiesManager.setCookie("time", timeStr);
@@ -141,7 +141,7 @@ function addListener () {
   }
 
   ipcRenderer.on("AddTime", () => {
-    OpenAddTime();
+    openAddTime();
   });
 
   timeOverviewButton.addEventListener("click", function (event) {
@@ -250,7 +250,7 @@ function fillTable () {
     row.appendChild(timeBookedCell);
 
 
-    var cell = document.createElement("td");
+    cell = document.createElement("td");
     cell.textContent = element.getStartTime();
     row.appendChild(cell);
 
