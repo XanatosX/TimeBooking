@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title data-langkey="addProject"></title>
+    <link
+      rel="stylesheet"
+      href="../../node_modules/bootstrap/dist/css/bootstrap.min.css"
+    />
+    <script>
+      require("../js/scripts/renderer.js");
+      require("../../src/js/scripts/about.js");
+    </script>
+  </head>
+  <body>
+    <div class="container">
+      <div class="row">
+        <div class="col-sm"></div>
+        <div class="col-sm">
+          <h1 data-langkey="aboutTimeBooking"></h1>
+          <p>
+            <a data-langkey="version"><a id="version"></a></a>
+          </p>
+          <p>
+            <a data-langkey="author"></a><a id="author"></a>
+          </p>
+          <p>
+            <a data-langkey="code" id="github"></a>
+            <a href="#" id="projectPageLink" data-url="https://github.com/XanatosX/TimeBooking" data-langkey="projectPage"></a>
+          </p>
+          <p>
+            <a data-langkey="reportABug" id="bugs"></a>
+            <a href="#" id="issueLink" data-url="https://github.com/XanatosX/TimeBooking/issues" data-langkey="issues"></a>
+          </p>
+          <p>
+            <a href="#" data-langkey="license" data-markdown="LICENSE" id="licenseLink"></a>
+          </p>
+
+          <button id="close" class="btn btn-danger" data-langkey="close"></button>
+        </div>
+        <div class="col-sm"></div>
+      </div>
+    </div>
+  </body>
+</html>

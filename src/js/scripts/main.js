@@ -98,6 +98,11 @@ function createApplicationMenu() {
         }
       ]
     }, {
+      label: languageManager.getTranslation("about"),
+      click() {
+        openAboutPage()
+      }
+    }, {
       label: languageManager.getTranslation("reportABug"),
       click() {
         LinkOpenerUtil.openLink("https://github.com/XanatosX/TimeBooking/issues");
@@ -113,6 +118,10 @@ function createApplicationMenu() {
 function reloadAllWindows() {
   let windows = BrowserWindow.getAllWindows();
   windows.forEach( item => item.reload());
+}
+
+function openAboutPage() {
+  ContentSwitcher.switchToWindow("about", win);
 }
 
 /**

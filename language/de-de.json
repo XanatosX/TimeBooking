@@ -57,6 +57,7 @@
         "projectSelect": "Projekt",
         "acceptAndClose": "Akzeptieren und {close}",
         "missingStartDate": "Bitte geben Sie eine Startzeit ein",
-        "wrongEndDate": "Die Endzeit muss nach der Startzeit sein"
+        "wrongEndDate": "Die Endzeit muss nach der Startzeit sein",
+        "about": "Über"
     }
 }
