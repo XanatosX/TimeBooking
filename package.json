@@ -1,7 +1,7 @@
 {
   "name": "timebooking",
   "productName": "Time Booking",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "This project will allow you to log your worktime",
   "homepage": "https://github.com/XanatosX/TimeBooking",
   "bugs": "https://github.com/XanatosX/TimeBooking/issues",
