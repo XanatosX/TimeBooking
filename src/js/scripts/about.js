@@ -42,9 +42,9 @@ function addEvents() {
     license.addEventListener("click" , (element) => {
         let target = element.target;
         let data = target.dataset.markdown;
-        var markdownRenderer = new Modal(Window, 800, 800, "markdownRenderer", function () {
+        var markdownRenderer = new Modal(Window, 800, 550, "markdownRenderer", function () {
         });
-        markdownRenderer.isDebug(true);
+        //markdownRenderer.isDebug(false);
         markdownRenderer.show();
         let markdownModal = markdownRenderer.getWindow()
         markdownModal.webContents.on('did-finish-load', () => {

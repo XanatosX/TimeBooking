@@ -9,12 +9,18 @@ const fs = require("fs");
 ThemeSwitcher.useDarkMode(remote.nativeTheme.shouldUseDarkColors);
 ThemeSwitcher.applyMode(document);
 
-Window.openDevTools();
-//var settingsFolder = remote.app.getPath('userData');
-//var settingsManager = new SettingsManager(settingsFolder);
-//var languageManager = new LanguageManager(remote.app.getAppPath() + "/language");
+var settingsFolder = remote.app.getPath('userData');
+var settingsManager = new SettingsManager(settingsFolder);
+var languageManager = new LanguageManager(remote.app.getAppPath() + "/language");
 
 document.addEventListener('DOMContentLoaded', function () {
+    settingsManager = new SettingsManager(settingsFolder);
+    settings = settingsManager.load("mainSettings");
+    let language = settings.getSetting("language");
+    if (language !== null) {
+      languageManager.setLanguage(language);
+    }
+    languageManager.applyTranslation(document);
     let closeButton = document.getElementById('closeButton');
     closeButton.addEventListener('click', () => close())
 });
@@ -24,8 +30,7 @@ ipcRenderer.on('file', (event, message) => {
     let realPath =  basePath + "/" + message;
     console.log(realPath);
     if (!fs.existsSync(message)) {
-        //close();
-        return;
+        close();
     }
     let content = fs.readFileSync(message, 'utf-8');
     console.log(content);
