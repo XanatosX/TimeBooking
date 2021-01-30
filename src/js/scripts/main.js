@@ -5,7 +5,7 @@ const LanguageManager = require("./../classes/translation/LanguageManager.js");
 const SettingsManager = require("./../classes/settings/SettingsManager.js");
 const ContentSwitcher = require("../classes/util/ContentSwitcher.js");
 const LinkOpenerUtil = require("./../classes/util/LinkOpenerUtil");
-const iconUtil = require("./../classes/util/IconUtil.js");
+const iconUtil = require("../classes/util/IconUtil.js");
 
 try {
   require("electron-reload")(__dirname)
