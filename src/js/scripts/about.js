@@ -3,7 +3,7 @@ const Window = remote.getCurrentWindow();
 const ThemeSwitcher = require("./../classes/theme/ThemeSwitcher");
 const ContentSwitcher = require("./../classes/util/ContentSwitcher");
 const LinkOpenerUtil = require("./../classes/util/LinkOpenerUtil");
-const SettingsManager = require("./../classes/settings/SettingsManager.js")
+const SettingsManager = require("./../classes/settings/SettingsManager.js");
 const LanguageManager = require("./../classes/translation/LanguageManager.js");
 const linkOpenerUtil = require("./../classes/util/LinkOpenerUtil");
 const Modal = require("../classes/electron_extension/Modal.js");
@@ -14,7 +14,7 @@ const author = require("../../../package.json").author;
 
 ThemeSwitcher.useDarkMode(remote.nativeTheme.shouldUseDarkColors);
 ThemeSwitcher.applyMode(document);
-var settingsFolder = remote.app.getPath("userData")
+var settingsFolder = remote.app.getPath("userData");
 var settingsManager = new SettingsManager(settingsFolder);
 var languageManager = new LanguageManager(remote.app.getAppPath() + "/language");
 
@@ -46,7 +46,7 @@ function addEvents() {
         });
         markdownRenderer.show();
         let markdownModal = markdownRenderer.getWindow()
-        markdownModal.webContents.on('did-finish-load', () => {
+        markdownModal.webContents.on("did-finish-load", () => {
             markdownModal.webContents.send("file", data);
         });
     });
