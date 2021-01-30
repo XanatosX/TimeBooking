@@ -59,25 +59,36 @@ class IconUtil {
     getIcon(name) {
         let correctPath = "../../resources/dark/application.png";
         let realPath = this.basePath + path.sep + this.mode + path.sep + name;
-        console.log(correctPath);
-        console.log(path.resolve(correctPath));
-        console.log(realPath);
         return realPath;
     }
 
+    /**
+     * Get the url path to the icon
+     * @param {string} name 
+     */
     getUrlIconPath(name) {
         let returnPath = this.getIcon(name);
         return returnPath.replace(/\\/g, "/");
     }
 
+    /**
+     * Get the path relative to the base
+     * @param {string} base 
+     * @param {string} name 
+     */
     getRelativeIcon(base, name) {
         let realPath = this.getIcon(name);
         realPath = path.relative(base, realPath);
         
         console.log(realPath);
-        return realPath
+        return realPath;
     }
 
+    /**
+     * Get the path relative to the base as url
+     * @param {string} base 
+     * @param {string} name 
+     */
     getUrlRelativeIconPath(base, name) {
         let returnPath = this.getRelativeIcon(base, name);
         return returnPath.replace(/\\/g, "/");

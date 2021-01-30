@@ -8,9 +8,6 @@ document.addEventListener("DOMContentLoaded", function () {
     let platform = process.platform;
     let color = remote.nativeTheme.shouldUseDarkColors ? "#444" : "#fff";
     IconUtil.setIsDark(remote.nativeTheme.shouldUseDarkColors);
-    console.log(IconUtil.getIcon("application.png"));
-    console.log(__dirname);
-    console.log(IconUtil.getUrlRelativeIconPath(__dirname + "/../", "application.png"));
     let themebar = null;
     switch (platform) {
         case "darwin":
