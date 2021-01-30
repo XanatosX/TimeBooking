@@ -44,7 +44,6 @@ function addEvents() {
         let data = target.dataset.markdown;
         var markdownRenderer = new Modal(Window, 800, 550, "markdownRenderer", function () {
         });
-        //markdownRenderer.isDebug(false);
         markdownRenderer.show();
         let markdownModal = markdownRenderer.getWindow()
         markdownModal.webContents.on('did-finish-load', () => {
