@@ -40,7 +40,7 @@
     "tiny-date-picker": "^3.0.0"
   },
   "devDependencies": {
-    "electron": "^9.4.0",
+    "electron": "^11.5.0",
     "electron-installer-dmg": "^3.0.0",
     "electron-installer-windows": "^3.0.0",
     "electron-installer-zip": "^0.1.2",
