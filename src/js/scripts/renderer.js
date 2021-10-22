@@ -1,5 +1,5 @@
 const { remote } = require("electron");
-const { Themebar } = require("custom-electron-titlebar");
+const { Themebar, Titlebar } = require("custom-electron-titlebar");
 const CustomTitlebar = require("custom-electron-titlebar");
 const IconUtil = require("../classes/util/IconUtil");
 
@@ -17,9 +17,10 @@ document.addEventListener("DOMContentLoaded", function () {
             themebar = Themebar.win;
             break;
     }
+    console.log(IconUtil.getIcon("application.png"));
     new CustomTitlebar.Titlebar({
         backgroundColor: CustomTitlebar.Color.fromHex(color),
-        iconsTheme: themebar
-        //icon: IconUtil.getIcon("application.png")
+        iconsTheme: themebar,
+        icon: IconUtil.getUrlRelativeIconPath(__dirname + "/../", "application.png")
     });
 });

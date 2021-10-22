@@ -16,7 +16,7 @@ ThemeSwitcher.useDarkMode(remote.nativeTheme.shouldUseDarkColors);
 ThemeSwitcher.applyMode(document);
 var settingsFolder = remote.app.getPath("userData");
 var settingsManager = new SettingsManager(settingsFolder);
-var languageManager = new LanguageManager(remote.app.getAppPath() + "/language");
+var languageManager = new LanguageManager(remote.app.getAppPath() + "/resources/language");
 
 document.addEventListener("DOMContentLoaded", function () {
     let settings = settingsManager.load("mainSettings");
