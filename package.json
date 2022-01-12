@@ -36,7 +36,7 @@
     "bootstrap-dark-5": "0.0.3",
     "child_process": "^1.0.2",
     "custom-electron-titlebar": "^3.2.6",
-    "markdown-it": "^12.0.4",
+    "markdown-it": "^12.3.2",
     "tiny-date-picker": "^3.0.0"
   },
   "devDependencies": {
